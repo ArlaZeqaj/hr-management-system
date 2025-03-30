@@ -1,4 +1,4 @@
-package com.example.hrsystem;
+/*package com.example.hrsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,5 +22,18 @@ public class HrSystemApplication {
 	@GetMapping("/goodbye")
 	public String sayGoodbye() {
 		return "Goodbye from the main application!";
+	}
+}
+*/
+package com.example.hrsystem;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class HrSystemApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(HrSystemApplication.class, args);
 	}
 }
