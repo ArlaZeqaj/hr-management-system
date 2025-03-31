@@ -13,7 +13,7 @@ public class FirebaseConfig {
 
     public FirebaseConfig() throws IOException {
         FileInputStream serviceAccount =
-                new FileInputStream("src/main/resources/serviceAccountKey.json");  // Ensure correct path
+                new FileInputStream("FIREBASE_CONFIG_PATH");  // Ensure correct path
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
