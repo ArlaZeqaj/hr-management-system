@@ -1,4 +1,4 @@
-import { auth } from "./firebaseConfig"; // Import Firebase auth
+import { auth } from "../config/firebaseConfig"; // Import Firebase auth
 import axios from "axios"; // Install axios if not installed: npm install axios
 
 export const sendTokenToBackend = async () => {
