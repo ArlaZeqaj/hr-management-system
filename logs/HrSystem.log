@@ -1141,3 +1141,363 @@ jakarta.servlet.ServletException: Circular view path [error]: would dispatch bac
 2025-03-31T01:39:15.507+02:00  INFO 32296 --- [HrSystem] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-03-31T01:39:15.513+02:00  INFO 32296 --- [HrSystem] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2025-03-31T01:39:15.518+02:00  INFO 32296 --- [HrSystem] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-03-31T01:53:04.717+02:00  INFO 18868 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 20.0.1 with PID 18868 (C:\Users\Ziko\Desktop\hr-management-system\target\classes started by Ziko in C:\Users\Ziko\Desktop\hr-management-system)
+2025-03-31T01:53:04.731+02:00  INFO 18868 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-03-31T01:53:05.845+02:00  INFO 18868 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31T01:53:05.947+02:00  INFO 18868 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 87 ms. Found 1 JPA repository interface.
+2025-03-31T01:53:06.903+02:00  INFO 18868 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-31T01:53:06.934+02:00  INFO 18868 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-31T01:53:06.935+02:00  INFO 18868 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-03-31T01:53:07.099+02:00  INFO 18868 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-31T01:53:07.101+02:00  INFO 18868 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2284 ms
+2025-03-31T01:53:07.418+02:00  INFO 18868 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31T01:53:07.562+02:00  INFO 18868 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-03-31T01:53:07.644+02:00  INFO 18868 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-31T01:53:08.241+02:00  INFO 18868 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31T01:53:08.305+02:00  INFO 18868 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-31T01:53:08.691+02:00  INFO 18868 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-03-31T01:53:08.694+02:00  INFO 18868 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-31T01:53:08.755+02:00  WARN 18868 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31T01:53:08.806+02:00  INFO 18868 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-31T01:53:10.410+02:00  INFO 18868 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31T01:53:10.533+02:00  INFO 18868 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T01:53:10.608+02:00  WARN 18868 --- [HrSystem] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31T01:53:10.773+02:00 DEBUG 18868 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2025-03-31T01:53:10.930+02:00 DEBUG 18868 --- [HrSystem] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-31T01:53:10.983+02:00 DEBUG 18868 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31T01:53:11.054+02:00 DEBUG 18868 --- [HrSystem] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31T01:53:11.411+02:00  INFO 18868 --- [HrSystem] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-03-31T01:53:11.573+02:00  INFO 18868 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-03-31T01:53:11.588+02:00  INFO 18868 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Started HrSystemApplication in 7.837 seconds (process running for 8.508)
+2025-03-31T01:53:40.006+02:00  INFO 18868 --- [HrSystem] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-31T01:53:40.006+02:00  INFO 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-03-31T01:53:40.007+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2025-03-31T01:53:40.007+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2025-03-31T01:53:40.007+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2025-03-31T01:53:40.009+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@6cd6698b
+2025-03-31T01:53:40.009+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@2dbcee03
+2025-03-31T01:53:40.010+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-03-31T01:53:40.010+02:00  INFO 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2025-03-31T01:53:40.027+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/employees/random", parameters={}
+2025-03-31T01:53:40.051+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getRandomEmployee()
+2025-03-31T01:53:40.172+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T01:53:40.175+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [com.example.hrsystem.model.Employee@46bdee9a]
+2025-03-31T01:53:40.207+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-03-31T01:53:40.210+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/employees/random", parameters={}
+2025-03-31T01:53:40.211+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getRandomEmployee()
+2025-03-31T01:53:40.213+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T01:53:40.214+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [com.example.hrsystem.model.Employee@46bdee9a]
+2025-03-31T01:53:40.216+02:00 DEBUG 18868 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-03-31T12:37:20.141+02:00  INFO 17156 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 20.0.1 with PID 17156 (C:\Users\Ziko\Desktop\hr-management-system\target\classes started by Ziko in C:\Users\Ziko\Desktop\hr-management-system)
+2025-03-31T12:37:20.147+02:00  INFO 17156 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-03-31T12:37:21.279+02:00  INFO 17156 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31T12:37:21.386+02:00  INFO 17156 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 91 ms. Found 1 JPA repository interface.
+2025-03-31T12:37:22.392+02:00  INFO 17156 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-31T12:37:22.425+02:00  INFO 17156 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-31T12:37:22.425+02:00  INFO 17156 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-03-31T12:37:22.623+02:00  INFO 17156 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-31T12:37:22.625+02:00  INFO 17156 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2390 ms
+2025-03-31T12:37:22.966+02:00  INFO 17156 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31T12:37:23.104+02:00  INFO 17156 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-03-31T12:37:23.182+02:00  INFO 17156 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-31T12:37:23.818+02:00  INFO 17156 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31T12:37:23.888+02:00  INFO 17156 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-31T12:37:24.285+02:00  INFO 17156 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-03-31T12:37:24.288+02:00  INFO 17156 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-31T12:37:24.348+02:00  WARN 17156 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31T12:37:24.395+02:00  INFO 17156 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-31T12:37:26.072+02:00  INFO 17156 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31T12:37:26.210+02:00  INFO 17156 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T12:37:26.301+02:00  WARN 17156 --- [HrSystem] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31T12:37:26.479+02:00 DEBUG 17156 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2025-03-31T12:37:26.681+02:00 DEBUG 17156 --- [HrSystem] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-31T12:37:26.756+02:00 DEBUG 17156 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31T12:37:26.852+02:00 DEBUG 17156 --- [HrSystem] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31T12:37:27.322+02:00  INFO 17156 --- [HrSystem] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-03-31T12:37:27.503+02:00  INFO 17156 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-03-31T12:37:27.521+02:00  INFO 17156 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Started HrSystemApplication in 8.353 seconds (process running for 8.989)
+2025-03-31T12:41:39.089+02:00  INFO 17156 --- [HrSystem] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-31T12:41:39.741+02:00  INFO 17156 --- [HrSystem] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-31T12:41:39.749+02:00  INFO 17156 --- [HrSystem] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T12:41:39.753+02:00  INFO 17156 --- [HrSystem] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-03-31T12:41:39.758+02:00  INFO 17156 --- [HrSystem] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-03-31T12:42:28.478+02:00  INFO 9808 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 20.0.1 with PID 9808 (C:\Users\Ziko\Desktop\hr-management-system\target\classes started by Ziko in C:\Users\Ziko\Desktop\hr-management-system)
+2025-03-31T12:42:28.482+02:00  INFO 9808 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-03-31T12:42:29.610+02:00  INFO 9808 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31T12:42:29.721+02:00  INFO 9808 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 1 JPA repository interface.
+2025-03-31T12:42:30.656+02:00  INFO 9808 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-31T12:42:30.683+02:00  INFO 9808 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-31T12:42:30.686+02:00  INFO 9808 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-03-31T12:42:30.804+02:00  INFO 9808 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-31T12:42:30.804+02:00  INFO 9808 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2237 ms
+2025-03-31T12:42:31.123+02:00  INFO 9808 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31T12:42:31.227+02:00  INFO 9808 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-03-31T12:42:31.298+02:00  INFO 9808 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-31T12:42:31.847+02:00  INFO 9808 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31T12:42:31.903+02:00  INFO 9808 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-31T12:42:32.247+02:00  INFO 9808 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-03-31T12:42:32.252+02:00  INFO 9808 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-31T12:42:32.291+02:00  WARN 9808 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31T12:42:32.335+02:00  INFO 9808 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-31T12:42:33.867+02:00  INFO 9808 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31T12:42:33.985+02:00  INFO 9808 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T12:42:34.075+02:00  WARN 9808 --- [HrSystem] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31T12:42:34.260+02:00 DEBUG 9808 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2025-03-31T12:42:34.405+02:00 DEBUG 9808 --- [HrSystem] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-31T12:42:34.475+02:00 DEBUG 9808 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31T12:42:34.566+02:00 DEBUG 9808 --- [HrSystem] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31T12:42:34.973+02:00  INFO 9808 --- [HrSystem] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-03-31T12:42:35.118+02:00  INFO 9808 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-03-31T12:42:35.135+02:00  INFO 9808 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Started HrSystemApplication in 7.676 seconds (process running for 8.399)
+2025-03-31T12:55:25.926+02:00  INFO 2612 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 20.0.1 with PID 2612 (C:\Users\Ziko\Desktop\hr-management-system\target\classes started by Ziko in C:\Users\Ziko\Desktop\hr-management-system)
+2025-03-31T12:55:25.932+02:00  INFO 2612 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-03-31T12:55:27.113+02:00  INFO 2612 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31T12:55:27.246+02:00  INFO 2612 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 118 ms. Found 1 JPA repository interface.
+2025-03-31T12:55:28.174+02:00  INFO 2612 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-31T12:55:28.205+02:00  INFO 2612 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-31T12:55:28.206+02:00  INFO 2612 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-03-31T12:55:28.319+02:00  INFO 2612 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-31T12:55:28.320+02:00  INFO 2612 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2304 ms
+2025-03-31T12:55:28.653+02:00  INFO 2612 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31T12:55:28.763+02:00  INFO 2612 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-03-31T12:55:28.823+02:00  INFO 2612 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-31T12:55:29.367+02:00  INFO 2612 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31T12:55:29.437+02:00  INFO 2612 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-31T12:55:29.768+02:00  INFO 2612 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-03-31T12:55:29.772+02:00  INFO 2612 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-31T12:55:29.817+02:00  WARN 2612 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31T12:55:29.864+02:00  INFO 2612 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-31T12:55:31.582+02:00  INFO 2612 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31T12:55:31.725+02:00  INFO 2612 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T12:55:31.822+02:00  WARN 2612 --- [HrSystem] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31T12:55:32.005+02:00 DEBUG 2612 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2025-03-31T12:55:32.179+02:00 DEBUG 2612 --- [HrSystem] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-31T12:55:32.251+02:00 DEBUG 2612 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31T12:55:32.350+02:00 DEBUG 2612 --- [HrSystem] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31T12:55:32.822+02:00  INFO 2612 --- [HrSystem] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-03-31T12:55:33.005+02:00  INFO 2612 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-03-31T12:55:33.024+02:00  INFO 2612 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Started HrSystemApplication in 8.184 seconds (process running for 8.922)
+2025-03-31T13:01:11.147+02:00  INFO 2612 --- [HrSystem] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-03-31T13:01:11.796+02:00  INFO 2612 --- [HrSystem] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-03-31T13:01:11.803+02:00  INFO 2612 --- [HrSystem] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T13:01:11.807+02:00  INFO 2612 --- [HrSystem] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-03-31T13:01:11.812+02:00  INFO 2612 --- [HrSystem] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-03-31T13:01:57.871+02:00  INFO 21080 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 20.0.1 with PID 21080 (C:\Users\Ziko\Desktop\hr-management-system\target\classes started by Ziko in C:\Users\Ziko\Desktop\hr-management-system)
+2025-03-31T13:01:57.876+02:00  INFO 21080 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-03-31T13:01:59.177+02:00  INFO 21080 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31T13:01:59.285+02:00  INFO 21080 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 90 ms. Found 1 JPA repository interface.
+2025-03-31T13:02:00.405+02:00  INFO 21080 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-31T13:02:00.441+02:00  INFO 21080 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-31T13:02:00.442+02:00  INFO 21080 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-03-31T13:02:00.593+02:00  INFO 21080 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-31T13:02:00.593+02:00  INFO 21080 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2627 ms
+2025-03-31T13:02:00.890+02:00  INFO 21080 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31T13:02:01.000+02:00  INFO 21080 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-03-31T13:02:01.080+02:00  INFO 21080 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-31T13:02:01.610+02:00  INFO 21080 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31T13:02:01.661+02:00  INFO 21080 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-31T13:02:01.979+02:00  INFO 21080 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-03-31T13:02:01.983+02:00  INFO 21080 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-31T13:02:02.030+02:00  WARN 21080 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31T13:02:02.070+02:00  INFO 21080 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-31T13:02:03.602+02:00  INFO 21080 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31T13:02:03.709+02:00  INFO 21080 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T13:02:03.788+02:00  WARN 21080 --- [HrSystem] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-03-31T13:02:03.938+02:00 DEBUG 21080 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2025-03-31T13:02:04.077+02:00 DEBUG 21080 --- [HrSystem] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-03-31T13:02:04.125+02:00 DEBUG 21080 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-03-31T13:02:04.205+02:00 DEBUG 21080 --- [HrSystem] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-03-31T13:02:04.599+02:00  INFO 21080 --- [HrSystem] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-03-31T13:02:04.743+02:00  INFO 21080 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-03-31T13:02:04.758+02:00  INFO 21080 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Started HrSystemApplication in 7.881 seconds (process running for 8.539)
+2025-03-31T13:02:07.623+02:00  INFO 21080 --- [HrSystem] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-03-31T13:02:07.623+02:00  INFO 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-03-31T13:02:07.624+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2025-03-31T13:02:07.624+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2025-03-31T13:02:07.624+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2025-03-31T13:02:07.626+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@21d15932
+2025-03-31T13:02:07.627+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@21579b35
+2025-03-31T13:02:07.627+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-03-31T13:02:07.628+02:00  INFO 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2025-03-31T13:02:07.647+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/main.f7309829a08348e90ca5.hot-update.json", parameters={}
+2025-03-31T13:02:07.665+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:02:07.689+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:02:07.702+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource main.f7309829a08348e90ca5.hot-update.json.]
+2025-03-31T13:02:07.704+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:02:07.719+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2025-03-31T13:02:07.726+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:02:07.795+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:02:07.798+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:02:07 CEST 2025, status=404, error=Not Found, path=/main.f7309829a08348e90c (truncated)...]
+2025-03-31T13:02:07.888+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T13:02:09.481+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/main.f7309829a08348e90ca5.hot-update.json", parameters={}
+2025-03-31T13:02:09.482+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:02:09.484+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:02:09.487+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource main.f7309829a08348e90ca5.hot-update.json.]
+2025-03-31T13:02:09.488+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:02:09.489+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2025-03-31T13:02:09.491+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:02:09.492+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:02:09.493+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:02:09 CEST 2025, status=404, error=Not Found, path=/main.f7309829a08348e90c (truncated)...]
+2025-03-31T13:02:09.496+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T13:09:27.170+02:00  WARN 21080 --- [HrSystem] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=54s968ms800µs300ns).
+2025-03-31T13:10:18.499+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2025-03-31T13:10:18.501+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:10:18.516+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:10:18.517+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource .]
+2025-03-31T13:10:18.517+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:10:18.518+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2025-03-31T13:10:18.519+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:10:18.521+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:10:18.522+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:10:18 CEST 2025, status=404, error=Not Found, path=/}]
+2025-03-31T13:10:18.524+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T13:10:26.629+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/HNAP1/", parameters={}
+2025-03-31T13:10:26.630+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:10:26.634+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:10:26.635+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource HNAP1.]
+2025-03-31T13:10:26.636+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:10:26.639+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2025-03-31T13:10:26.640+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:10:26.642+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:10:26.642+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:10:26 CEST 2025, status=404, error=Not Found, path=/HNAP1/}]
+2025-03-31T13:10:26.646+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T13:10:29.048+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2025-03-31T13:10:29.049+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:10:29.051+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:10:29.052+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource .]
+2025-03-31T13:10:29.053+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:10:29.053+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2025-03-31T13:10:29.054+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:10:29.055+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:10:29.056+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:10:29 CEST 2025, status=404, error=Not Found, path=/}]
+2025-03-31T13:10:29.058+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T13:10:29.080+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/loginMsg.js", parameters={}
+2025-03-31T13:10:29.081+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:10:29.083+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:10:29.084+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource loginMsg.js.]
+2025-03-31T13:10:29.084+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:10:29.085+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2025-03-31T13:10:29.085+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:10:29.086+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:10:29.087+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:10:29 CEST 2025, status=404, error=Not Found, path=/loginMsg.js}]
+2025-03-31T13:10:29.089+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T13:10:29.111+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/cgi/get.cgi?cmd=home_login", parameters={masked}
+2025-03-31T13:10:29.112+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2025-03-31T13:10:29.117+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2025-03-31T13:10:29.117+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource cgi/get.cgi.]
+2025-03-31T13:10:29.118+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2025-03-31T13:10:29.119+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error?cmd=home_login", parameters={masked}
+2025-03-31T13:10:29.119+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
+2025-03-31T13:10:29.121+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-03-31T13:10:29.121+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Mon Mar 31 13:10:29 CEST 2025, status=404, error=Not Found, path=/cgi/get.cgi}]
+2025-03-31T13:10:29.151+02:00 DEBUG 21080 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2025-03-31T18:39:18.454+02:00  INFO 6884 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 20.0.1 with PID 6884 (C:\Users\Ziko\Desktop\hr-management-system\target\classes started by Ziko in C:\Users\Ziko\Desktop\hr-management-system)
+2025-03-31T18:39:18.458+02:00  INFO 6884 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-03-31T18:39:19.697+02:00  INFO 6884 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-03-31T18:39:19.818+02:00  INFO 6884 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 100 ms. Found 1 JPA repository interface.
+2025-03-31T18:39:21.090+02:00  INFO 6884 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-03-31T18:39:21.131+02:00  INFO 6884 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-03-31T18:39:21.132+02:00  INFO 6884 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-03-31T18:39:21.359+02:00  INFO 6884 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-03-31T18:39:21.360+02:00  INFO 6884 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2811 ms
+2025-03-31T18:39:21.724+02:00  INFO 6884 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-03-31T18:39:21.878+02:00  INFO 6884 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-03-31T18:39:21.976+02:00  INFO 6884 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-03-31T18:39:22.672+02:00  INFO 6884 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-03-31T18:39:22.748+02:00  INFO 6884 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-03-31T18:39:23.189+02:00  INFO 6884 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-03-31T18:39:23.192+02:00  INFO 6884 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-03-31T18:39:23.254+02:00  WARN 6884 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-03-31T18:39:23.298+02:00  INFO 6884 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-03-31T18:39:25.053+02:00  INFO 6884 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-03-31T18:39:25.190+02:00  INFO 6884 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T18:39:25.204+02:00  WARN 6884 --- [HrSystem] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'firebaseConfig' defined in file [C:\Users\Ziko\Desktop\hr-management-system\target\classes\com\example\hrsystem\config\FirebaseConfig.class]: Failed to instantiate [com.example.hrsystem.config.FirebaseConfig$$SpringCGLIB$$0]: Constructor threw exception
+2025-03-31T18:39:25.205+02:00  INFO 6884 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-03-31T18:39:25.211+02:00  INFO 6884 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-03-31T18:39:25.218+02:00  INFO 6884 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-03-31T18:39:25.226+02:00  INFO 6884 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-03-31T18:39:25.269+02:00  INFO 6884 --- [HrSystem] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-03-31T18:39:25.308+02:00 ERROR 6884 --- [HrSystem] [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'firebaseConfig' defined in file [C:\Users\Ziko\Desktop\hr-management-system\target\classes\com\example\hrsystem\config\FirebaseConfig.class]: Failed to instantiate [com.example.hrsystem.config.FirebaseConfig$$SpringCGLIB$$0]: Constructor threw exception
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1343) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1228) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:563) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:347) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1155) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1121) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1056) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.5.jar:6.2.5]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.5.jar:6.2.5]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.4.jar:3.4.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.4.jar:3.4.4]
+	at com.example.hrsystem.HrSystemApplication.main(HrSystemApplication.java:37) ~[classes/:na]
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.example.hrsystem.config.FirebaseConfig$$SpringCGLIB$$0]: Constructor threw exception
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:222) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:122) ~[spring-beans-6.2.5.jar:6.2.5]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1337) ~[spring-beans-6.2.5.jar:6.2.5]
+	... 19 common frames omitted
+Caused by: java.io.FileNotFoundException: src\main\resources\serviceAccountKey.json (The system cannot find the file specified)
+	at java.base/java.io.FileInputStream.open0(Native Method) ~[na:na]
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:219) ~[na:na]
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:158) ~[na:na]
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:112) ~[na:na]
+	at com.example.hrsystem.config.FirebaseConfig.<init>(FirebaseConfig.java:15) ~[classes/:na]
+	at com.example.hrsystem.config.FirebaseConfig$$SpringCGLIB$$0.<init>(<generated>) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484) ~[na:na]
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:196) ~[spring-beans-6.2.5.jar:6.2.5]
+	... 21 common frames omitted
+
