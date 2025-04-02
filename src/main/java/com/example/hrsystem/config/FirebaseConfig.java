@@ -13,7 +13,7 @@ public class FirebaseConfig {
 
     public FirebaseConfig() throws IOException {
         FileInputStream serviceAccount =
-                new FileInputStream("FIREBASE_CONFIG_PATH");  // Ensure correct path
+                new FileInputStream("hrcloudx-3c6ee-firebase-adminsdk-fbsvc-1b184bb085.json");  // Ensure correct path
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -23,5 +23,6 @@ public class FirebaseConfig {
             FirebaseApp.initializeApp(options);
             System.out.println("🔥 Firebase Initialized Successfully!");
         }
+
     }
 }
