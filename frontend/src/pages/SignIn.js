@@ -73,7 +73,7 @@ export default function SignIn() {
                                 <div className="sigin-row-view3">
                                     <input
                                         type={showPassword ? "text" : "password"}
-                                        placeholder="Min. 8 characters"
+                                        placeholder="Min. 8 character"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
