@@ -1,34 +1,63 @@
 package com.example.hrsystem.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.google.cloud.firestore.annotation.DocumentId;
+import com.google.cloud.firestore.annotation.PropertyName;
 
-@Entity
 public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    @DocumentId
+    private String id;
+
+    @PropertyName("employee_ID")
+    private String employeeID;
+
+    @PropertyName("Name")
     private String name;
-    private String photoUrl;
 
-    // Constructors
-    public Employee() {}
+    @PropertyName("Surname")
+    private String surname;
 
-    public Employee(Long id, String name, String photoUrl) {
-        this.id = id;
-        this.name = name;
-        this.photoUrl = photoUrl;
+    @PropertyName("Email")
+    private String email;
+
+    @PropertyName("Phone Number")
+    private String phoneNumber;
+
+    @PropertyName("Address")
+    private String address;
+
+    @PropertyName("Gender")
+    private String gender;
+
+    @PropertyName("Birth Date")
+    private String birthDate;
+
+    @PropertyName("Joined Date")
+    private String joinedDate;
+
+    @PropertyName("Position")
+    private String position;
+
+    public Employee() {
+        // Required public no-args constructor
     }
 
-    // Getters and Setters
-    public Long getId() {
+    // Getters and setters
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmployeeID() {
+        return employeeID;
+    }
+
+    public void setEmployeeID(String employeeID) {
+        this.employeeID = employeeID;
     }
 
     public String getName() {
@@ -39,11 +68,67 @@ public class Employee {
         this.name = name;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getJoinedDate() {
+        return joinedDate;
+    }
+
+    public void setJoinedDate(String joinedDate) {
+        this.joinedDate = joinedDate;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

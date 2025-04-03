@@ -1,341 +1,364 @@
 import React from "react";
-import "../styles/Employee.css"
-export default (props) => {
-    return (
-        <div className="contain">
-            <div className="scroll-view">
-                <div className="column">
-                    <div className="column2">
-						<span className="text" >
-							{"HRCLOUDX"}
-						</span>
-                        <div className="column3">
-                            <div className="box">
-                            </div>
-                            <div className="box2">
-                            </div>
-                        </div>
-                        <div className="column4">
-                            <div className="row-view">
-                                <img
-                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9b6d12ad-df6a-4aef-a71b-970e2db2eda9"}
-                                    className="image"
-                                />
-                                <span className="text2" >
-									{"Dashboard"}
-								</span>
-                                <div className="box3">
-                                </div>
-                            </div>
-                            <div className="row-view2">
-                                <img
-                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e71d6f7f-492e-410d-ba4a-6e4e57c163f8"}
-                                    className="image2"
-                                />
-                                <span className="text3" >
-									{"Profile"}
-								</span>
-                            </div>
-                        </div>
-                        <div className="column5">
-                            <img
-                                src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/ea9fed58-f50e-4c26-913a-992fcd0906f1"}
-                                className="image3"
-                            />
-                            <div className="column6">
-                                <div className="column7">
-                                    <img
-                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/afc33f36-a919-4557-8430-4f037f660cd0"}
-                                        className="image4"
-                                    />
-                                    <span className="absolute-text" >
-										{"Upgrade to PRO"}
-									</span>
-                                </div>
-                                <span className="text4" >
-									{"to get access to all features!"}
-								</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="column8">
-                        <div className="row-view3">
-                            <div className="column9">
-								<span className="text5" >
-									{"Pages / Dashboard"}
-								</span>
-                                <span className="text6" >
-									{"Main Dashboard"}
-								</span>
-                            </div>
-                            <div className="row-view4">
-                                <img
-                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2bb4edd4-293b-43c8-b39f-493a2edb1d91"}
-                                    className="image5"
-                                />
-                                <span className="text7" >
-									{"Doe, Jane"}
-								</span>
-                                <img
-                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/082c3bf8-01b8-4766-8555-99763cf21464"}
-                                    className="image6"
-                                />
-                            </div>
-                        </div>
-                        <div className="column10">
-                            <div className="row-view5">
-                                <div className="row-view6">
-                                    <img
-                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c5f9b8e4-c1e3-474a-ac59-1a6e1940a968"}
-                                        className="image7"
-                                    />
-                                    <div className="column11">
-										<span className="text8" >
-											{"Earnings"}
-										</span>
-                                        <span className="text9" >
-											{"$350.4"}
-										</span>
-                                    </div>
-                                </div>
-                                <div className="row-view6">
-                                    <img
-                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f6db50ab-057a-4a4a-aad5-6df21ea35315"}
-                                        className="image7"
-                                    />
-                                    <div className="column11">
-										<span className="text8" >
-											{"Spend this month"}
-										</span>
-                                        <span className="text9" >
-											{"$642.39"}
-										</span>
-                                    </div>
-                                </div>
-                                <div className="column12">
-                                    <div className="column13">
-										<span className="text10" >
-											{"Sales"}
-										</span>
-                                        <span className="text9" >
-											{"$574.34"}
-										</span>
-                                    </div>
-                                    <div className="row-view7">
-										<span className="text11" >
-											{"+23%"}
-										</span>
-                                        <span className="text12" >
-											{"since last month"}
-										</span>
-                                    </div>
-                                </div>
-                                <div className="row-view8">
-                                    <div className="column14">
-										<span className="text13" >
-											{"Your balance"}
-										</span>
-                                        <span className="text9" >
-											{"$1,000"}
-										</span>
-                                    </div>
-                                    <img
-                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/80eb2203-0719-4576-826d-aefc62a1c5e9"}
-                                        className="image8"
-                                    />
-                                </div>
-                                <div className="row-view6">
-                                    <img
-                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/8f2b0bc2-4f2c-4833-9078-2506010dc420"}
-                                        className="image7"
-                                    />
-                                    <div className="column15">
-										<span className="text14" >
-											{"New Tasks"}
-										</span>
-                                        <span className="text15" >
-											{"154"}
-										</span>
-                                    </div>
-                                </div>
-                                <div className="row-view9">
-                                    <img
-                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/eaf446da-7386-4573-beeb-cbe0d6b11922"}
-                                        className="image7"
-                                    />
-                                    <div className="column11">
-										<span className="text8" >
-											{"Total Projects"}
-										</span>
-                                        <span className="text9" >
-											{"2935"}
-										</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row-view10">
-                                <div className="row-view11">
-                                    <div className="row-view12">
-                                        <div className="column16">
-											<span className="text16" >
-												{"Due Date"}
-											</span>
-                                            <span className="text17" >
-												{"APR 05"}
-											</span>
-                                        </div>
-                                        <div className="column17">
-                                            <div className="column18"
-                                                 style={{
-                                                     backgroundImage: 'url(https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/08c6809f-7340-4c36-9287-3831b26a6f83)',
-                                                 }}
-                                            >
-												<span className="text18" >
-													{"$6000"}
-												</span>
-                                                <div className="row-view13">
-													<span className="text19" >
-														{"View details"}
-													</span>
-                                                    <img
-                                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/045b0150-e6e8-4ce4-be1c-17a811aa024c"}
-                                                        className="image9"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <span className="absolute-text2" >
-												{"Payrolls"}
-											</span>
-                                        </div>
-                                    </div>
-                                    <div className="column19">
-										<span className="text20" >
-											{"27 March"}
-										</span>
-                                        <div className="row-view14">
-                                            <div className="box4">
-                                            </div>
-                                            <div className="column20">
-												<span className="text21" >
-													{"Meet w/ Simmmple"}
-												</span>
-                                                <span className="text22" >
-													{"01:00 PM - 02:00 PM"}
-												</span>
-                                            </div>
-                                        </div>
-                                        <div className="row-view15">
-                                            <div className="box4">
-                                            </div>
-                                            <div className="column21">
-												<span className="text23" >
-													{"Fitness Training"}
-												</span>
-                                                <span className="text24" >
-													{"02:00 PM - 03:00 PM"}
-												</span>
-                                            </div>
-                                        </div>
-                                        <div className="view">
-                                            <div className="row-view16">
-												<span className="text25" >
-													{"View all Tasks"}
-												</span>
-                                                <img
-                                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/0d7a58c0-b80b-489c-a7c1-9ec463b48373"}
-                                                    className="image9"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="column22">
-                                    <div className="row-view17">
-                                        <div className="column23">
-											<span className="text26" >
-												{"On boarding status"}
-											</span>
-                                            <span className="text27" >
-												{"From 1-6 Dec, 2020"}
-											</span>
-                                        </div>
-                                        <button className="button"
-                                                onClick={()=>alert("Pressed!")}>
-											<span className="text28" >
-												{"View Report"}
-											</span>
-                                        </button>
-                                    </div>
-                                    <div className="row-view18">
-                                        <img
-                                            src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6e8588cc-b66f-4d2d-9e35-ae478035892e"}
-                                            className="image10"
-                                        />
-                                        <div className="column24">
-                                            <div className="row-view19">
-                                                <img
-                                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1d4174b7-69f6-4dd8-97a7-147d6ac544ed"}
-                                                    className="image11"
-                                                />
-                                                <span className="text29" >
-													{"Initial Reviews"}
-												</span>
-                                            </div>
-                                            <span className="text30" >
-												{"40%"}
-											</span>
-                                            <div className="column20">
-                                                <div className="row-view19">
-                                                    <img
-                                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b9a4f849-9a8d-45fe-ac75-8b828664d44e"}
-                                                        className="image11"
-                                                    />
-                                                    <span className="text29" >
-														{"Launched"}
-													</span>
-                                                </div>
-                                                <span className="text31" >
-													{"32%"}
-												</span>
-                                            </div>
-                                        </div>
-                                        <div className="column20">
-                                            <div className="row-view19">
-                                                <img
-                                                    src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6c2ce329-427a-4afa-8aba-5eee59dad547"}
-                                                    className="image11"
-                                                />
-                                                <span className="text29" >
-													{"Final Review"}
-												</span>
-                                            </div>
-                                            <span className="text32" >
-												{"28%"}
-											</span>
-                                            <div className="column20">
-                                                <div className="row-view19">
-                                                    <img
-                                                        src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9096d332-78c9-4bd4-b779-fb620e77d1ec"}
-                                                        className="image12"
-                                                    />
-                                                    <span className="text29" >
-														{"Pending Updates"}
-													</span>
-                                                </div>
-                                                <span className="text31" >
-													{"28%"}
-												</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="box5">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+import "../styles/Employee.css";
+
+const EmployeeDashboard = () => {
+  return (
+    <div className="container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <div className="logo">HRCLOUDX</div>
+        <nav>
+          <div className="nav-item active">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/76c6c27c-f302-4eb0-a082-7591f8751d74" alt="Dashboard" />
+            Dashboard
+          </div>
+          <div className="nav-item">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/85efb97f-aed4-473f-a904-cc49090afefa" alt="Profile" />
+            Profile
+          </div>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="main-content">
+        <header className="header">
+          <div className="breadcrumb">
+            <span>Pages / Dashboard</span>
+            <h1>Main Dashboard</h1>
+          </div>
+          <div className="user-info">
+            <span>Doe, Jane</span>
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a90cbc2d-5cad-46bb-905e-42cd99e48e33" alt="User" className="user-avatar" />
+          </div>
+        </header>
+
+        {/* Dashboard Metrics */}
+        <section className="dashboard-metrics">
+          <div className="metric">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/de4aa923-97df-4b07-bc38-65c63102ab7d" alt="Earnings" />
+            <div>
+              <span>Earnings</span>
+              <strong>$350.4</strong>
             </div>
-        </div>
-    )
-}
+          </div>
+          <div className="metric">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2c2adbd4-e1d2-472f-8ad3-185e435a9eaf" alt="Spend" />
+            <div>
+              <span>Spend this month</span>
+              <strong>$642.39</strong>
+            </div>
+          </div>
+          <div className="metric">
+            <div>
+              <span>Sales</span>
+              <strong>$574.34</strong>
+            </div>
+            <div className="growth">
+              <span className="positive">+23%</span>
+              <span>since last month</span>
+            </div>
+          </div>
+          <div className="metric">
+            <div>
+              <span>Your balance</span>
+              <strong>$1,000</strong>
+            </div>
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9200c0f3-ccf2-4980-879f-3f9cdbae1a46" alt="Balance" />
+          </div>
+          <div className="metric">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/3ae77ae8-6b5e-4083-9289-173d12681ff0" alt="Tasks" />
+            <div>
+              <span>New Tasks</span>
+              <strong>154</strong>
+            </div>
+          </div>
+          <div className="metric">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/4de52217-ae03-4860-b3e6-0705c49d9946" alt="Projects" />
+            <div>
+              <span>Total Projects</span>
+              <strong>2935</strong>
+            </div>
+          </div>
+        </section>
+
+        {/* Projects Section */}
+        <section className="tasks-section">
+          <div className="projects-card">
+            <h3>Projects</h3>
+            <div className="projects-stats">
+              <div className="stat-item">
+                <div className="stat-value">36</div>
+                <div className="stat-label">Done</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">12</div>
+                <div className="stat-label">Ongoing</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">3</div>
+                <div className="stat-label">Canceled</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">4</div>
+                <div className="stat-label">Upcoming</div>
+              </div>
+            </div>
+            <div className="view-details">See Details</div>
+          </div>
+
+          {/* Payroll Card */}
+          <div className="payroll-card">
+            <h3>Payrolls</h3>
+            <div className="payroll-amount">$2400</div>
+            <div className="payroll-date">Due Date APR 05</div>
+            <div className="view-details">View details</div>
+          </div>
+
+          {/* Tasks Card */}
+          <div className="tasks-card">
+            <h3>Tasks</h3>
+            <div className="task-item">
+              <input type="checkbox" className="task-checkbox" defaultChecked />
+              <span>Dashboard Builder</span>
+            </div>
+            <div className="task-item">
+              <input type="checkbox" className="task-checkbox" defaultChecked />
+              <span>Mobile App Design</span>
+            </div>
+            <div className="task-item">
+              <input type="checkbox" className="task-checkbox" />
+              <span>Promotional LP</span>
+            </div>
+            <div className="view-details">View all Tasks →</div>
+          </div>
+        </section>
+
+{/* Calendar and Check-in Cards */}
+<div style={{
+  display: 'flex',
+  gap: '20px',
+  padding: '0 0px 20px',
+  flexWrap: 'nowrap',
+  maxWidth: '100%',
+}}>
+  
+  {/* Calendar Card */}
+  <div className="calendar-card" style={{ 
+    background: 'white', 
+    borderRadius: '12px', 
+    padding: '20px', 
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    flex: '1',
+    minWidth: '400px',
+    border: '1px solid #f0f0f0'
+  }}>
+    <div className="card-title" style={{
+      fontSize: '18px',
+      fontWeight: '600',
+      marginBottom: '16px',
+      color: '#333'
+    }}>March 2025</div>
+    
+    <table className="calendar" style={{
+      width: '100%',
+      borderCollapse: 'collapse',
+      textAlign: 'center'
+    }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px', color: '#666' }}>Mo</th>
+          <th style={{ padding: '8px', color: '#666' }}>Tu</th>
+          <th style={{ padding: '8px', color: '#666' }}>We</th>
+          <th style={{ padding: '8px', color: '#666' }}>Th</th>
+          <th style={{ padding: '8px', color: '#666' }}>Fr</th>
+          <th style={{ padding: '8px', color: '#666' }}>Sa</th>
+          <th style={{ padding: '8px', color: '#666' }}>Su</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style={{ padding: '10px' }}></td>
+          <td style={{ padding: '10px' }}></td>
+          <td style={{ padding: '10px' }}></td>
+          <td style={{ padding: '10px' }}></td>
+          <td style={{ padding: '10px' }}>1</td>
+          <td style={{ padding: '10px' }}>2</td>
+          <td style={{ padding: '10px' }}>3</td>
+        </tr>
+        <tr>
+          <td style={{ padding: '10px' }}>4</td>
+          <td style={{ padding: '10px' }}>5</td>
+          <td style={{ padding: '10px' }}>6</td>
+          <td style={{ padding: '10px' }}>7</td>
+          <td style={{ padding: '10px' }}>8</td>
+          <td style={{ padding: '10px' }}>9</td>
+          <td style={{ padding: '10px' }}>10</td>
+        </tr>
+        <tr>
+          <td style={{ padding: '10px' }}>11</td>
+          <td style={{ padding: '10px' }}>12</td>
+          <td style={{ padding: '10px' }}>13</td>
+          <td style={{ padding: '10px' }}>14</td>
+          <td style={{ padding: '10px' }}>15</td>
+          <td style={{ padding: '10px' }}>16</td>
+          <td style={{ padding: '10px' }}>17</td>
+        </tr>
+        <tr>
+          <td style={{ padding: '10px' }}>18</td>
+          <td style={{ padding: '10px' }}>19</td>
+          <td style={{ padding: '10px' }}>20</td>
+          <td style={{ padding: '10px' }}>21</td>
+          <td style={{ padding: '10px' }}>22</td>
+          <td style={{ padding: '10px' }}>23</td>
+          <td style={{ padding: '10px' }}>24</td>
+        </tr>
+        <tr>
+          <td style={{ padding: '10px' }}>25</td>
+          <td style={{ padding: '10px' }}>26</td>
+          <td style={{ 
+            padding: '10px',
+            background: '#4285f4',
+            color: 'white',
+            borderRadius: '50%',
+            width: '24px',
+            height: '24px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>27</td>
+          <td style={{ padding: '10px' }}>28</td>
+          <td style={{ padding: '10px' }}>29</td>
+          <td style={{ padding: '10px' }}>30</td>
+          <td style={{ padding: '10px' }}>31</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div className="events-section" style={{ marginTop: '20px' }}>
+      <div style={{
+        fontSize: '14px',
+        fontWeight: '600',
+        marginBottom: '8px',
+        color: '#555'
+      }}>Today's Events</div>
+      <div className="event-item" style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '10px 12px',
+        background: '#f8f9fa',
+        borderRadius: '8px',
+        marginTop: '8px'
+      }}>
+        <div className="event-time" style={{
+          fontWeight: '500',
+          color: '#666',
+          minWidth: '70px'
+        }}>8:00 AM</div>
+        <div className="event-title" style={{
+          fontWeight: '500'
+        }}>Team Meeting</div>
+      </div>
+    </div>
+  </div>
+
+  {/* Check-in Card */}
+  <div className="checkin-card" style={{ 
+    background: 'white', 
+    borderRadius: '12px', 
+    padding: '20px', 
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    width: '280px',
+    flexShrink: 0,
+    border: '1px solid #f0f0f0'
+  }}>
+    <h3 style={{
+      fontSize: '18px',
+      fontWeight: '600',
+      margin: '0 0 16px 0',
+      color: '#333'
+    }}>Check-In</h3>
+    
+    <div style={{ marginBottom: '20px' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '8px',
+        fontSize: '14px',
+        color: '#666'
+      }}>
+        <span>Today's Hours:</span>
+        <span style={{ fontWeight: '500' }}>7h 52m</span>
+      </div>
+      <div style={{
+        height: '6px',
+        background: '#e0e0e0',
+        borderRadius: '3px',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          width: '82%',
+          height: '100%',
+          background: '#4285f4',
+          borderRadius: '3px'
+        }}></div>
+      </div>
+    </div>
+    
+    <div className="checkin-row" style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      background: '#f8f9fa',
+      padding: '12px',
+      borderRadius: '8px',
+      marginBottom: '12px'
+    }}>
+      <button className="checkin-btn" style={{
+        background: '#34a853',
+        color: 'white',
+        border: 'none',
+        padding: '8px 16px',
+        borderRadius: '6px',
+        fontWeight: '500',
+        cursor: 'pointer',
+        fontSize: '14px'
+      }}>Check-in</button>
+      <span style={{
+        fontWeight: '500',
+        color: '#666',
+        fontSize: '14px'
+      }}>08:30:44</span>
+    </div>
+    
+    <div className="checkin-row" style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      background: '#f8f9fa',
+      padding: '12px',
+      borderRadius: '8px'
+    }}>
+      <button className="checkout-btn" style={{
+        background: '#ea4335',
+        color: 'white',
+        border: 'none',
+        padding: '8px 16px',
+        borderRadius: '6px',
+        fontWeight: '500',
+        cursor: 'pointer',
+        fontSize: '14px'
+      }}>Check-out</button>
+      <span style={{
+        fontWeight: '500',
+        color: '#666',
+        fontSize: '14px'
+      }}>16:23:19</span>
+    </div>
+  </div>
+</div>
+      </main>
+    </div>
+  );
+};
+
+export default EmployeeDashboard;
