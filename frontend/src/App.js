@@ -4,10 +4,9 @@ import SignInPage from "../src/pages/SignIn";
 import EmployeeDashboard from "../src/pages/EmployeeDashboard";
 import AdminDashboard from "../src/pages/AdminDashboard";
 import ProfilePageEmployee from "../src/pages/ProfilePageEmployee";
+import FirebaseTest from "../src/pages/FirebaseTest";
 
-const FirebaseTest = () => {
-    return <div>Test Firebase</div>;
-};
+
 
 function App() {
   return (
