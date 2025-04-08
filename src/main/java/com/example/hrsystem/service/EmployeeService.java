@@ -1,10 +1,6 @@
 package com.example.hrsystem.service;
 
 import com.example.hrsystem.model.Employee;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,28 +9,22 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class EmployeeService {
 
-    private final Firestore db;
+    private final RetrieveProfile retrieveProfile;
 
-    public EmployeeService() {
-        this.db = FirestoreClient.getFirestore();
+    public EmployeeService(RetrieveProfile retrieveProfile) {
+        this.retrieveProfile = retrieveProfile;
     }
 
-    // Fetch a single employee by ID
-    public Employee getEmployeeById(String employeeId) throws ExecutionException, InterruptedException {
-        DocumentReference docRef = db.collection("employees").document(employeeId);
-        DocumentSnapshot documentSnapshot = docRef.get().get();
-
-        if (documentSnapshot.exists()) {
-            return documentSnapshot.toObject(Employee.class);
-        } else {
-            return null;
-        }
+    public Employee getEmployeeByEmail(String email) throws ExecutionException, InterruptedException {
+        return retrieveProfile.getEmployeeByEmail(email);
     }
 
-    // Fetch all employees from the 'employees' collection
+    //po e ruaj per me vone sepse dhe dokument id do na duhet
+    public Employee getEmployeeById(String employee_Id) throws ExecutionException, InterruptedException {
+        return retrieveProfile.getEmployeeByDocumentId(employee_Id);
+    }
+
     public List<Employee> getAllEmployees() throws ExecutionException, InterruptedException {
-        return db.collection("employees").get().get().toObjects(Employee.class);
+        return retrieveProfile.getAllEmployees();
     }
-
-
 }
