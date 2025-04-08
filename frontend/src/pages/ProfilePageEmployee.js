@@ -1,67 +1,62 @@
 import React, { useState } from "react";
-import "../styles/ProfilePageEmployee.css"
+import "../styles/ProfilePageEmployee.css";
 
 export default (props) => {
     const [input1, onChangeInput1] = useState('');
     
     return (
         <div className="profile-container">
-            <div className="sidebar">
-                <div className="sidebar-header">
-                    <span className="logo">HRCLOUDX</span>
-                </div>
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <span className="logo">HRCLOUDX</span>
+        </div>
+        
+        <div className="sidebar-menu">
+          <div className="menu-item">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a" className="menu-icon" alt="Dashboard" />
+            <span>Dashboard</span>
+          </div>
+          <div className="menu-item">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e71d6f7f-492e-410d-ba4a-6e4e57c163f8" className="menu-icon" alt="Profile" />
+            <span>Profile</span>
+          </div>
+          <div className="menu-item active">
+            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png" className="menu-icon" alt="Projects" />
+            <span>Projects</span>
+          </div>
+          <div className="menu-item">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a" className="menu-icon" alt="Leave Requests" />
+            <span>Leave Requests</span>
+          </div>
+        </div>
                 
-                <div className="sidebar-menu">
-                    <div className="menu-item">
-                        <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a"} className="menu-icon" />
-                        <span>Dashboard</span>
-                    </div>
-                    <div className="menu-item active">
-                        <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f83d5003-9309-4c08-b4fb-effc29fd197d"} className="menu-icon" />
-                        <span>Profile</span>
-                    </div>
-                    <div className="menu-item">
-                        <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a"} className="menu-icon" />
-                        <span>Leave Requests</span>
-                    </div>
-                </div>
-                
-                <div className="upgrade-card">
-                    <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/351f8885-31c6-4919-8816-1e9afdfbaee3"} className="upgrade-icon" />
-                    <div className="upgrade-content">
-                        <div className="pro-badge">
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2132e7a3-85e8-43b4-a441-49f76f6dc5d1"} />
-                            <span>Upgrade to PRO</span>
-                        </div>
-                        <span className="upgrade-text">to get access to all features!</span>
-                    </div>
-                </div>
+        <div className="upgrade-card">
+          <img 
+            src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png" 
+            className="upgrade-icon"
+            alt="Upgrade" 
+          />
+          <div className="upgrade-text">
+            <div>Upgrade to PRO</div>
+            <small>to get access to all features!</small>
+          </div>
+        </div>
             </div>
             
             <div className="main-content">
-                <div className="header">
+            <header className="header">
                     <div className="breadcrumbs">
-                        <span className="path">Pages / Profile</span>
-                        <span className="current-page">Profile</span>
+                        <span>Pages / Profile</span>
+                        <h1>Profile</h1>
                     </div>
                     
-                    <div className="header-actions">
-                        <div className="search-bar">
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fb74aa3d-1201-4827-aba3-e8456f9e7557"} />
-                            <input 
-                                placeholder="Search" 
-                                value={input1} 
-                                onChange={(e) => onChangeInput1(e.target.value)} 
-                            />
-                        </div>
-                        <div className="action-icons">
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/5d37501d-2f6f-43eb-8027-f0dcb7225cec"} />
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fc94b941-d6a8-49dd-9e4a-a8d7bce035cd"} />
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/5f95be88-67e2-436a-bad1-d0a2554ba6e0"} />
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/4dfb0d26-a823-4773-9ff9-02c8455e9f5b"} />
-                        </div>
+                    <div className="user-profile">
+                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2bb4edd4-293b-43c8-b39f-493a2edb1d91" alt="User" />
+                        <span>Doe, Jane</span>
+                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/082c3bf8-01b8-4766-8555-99763cf21464" alt="Dropdown" />
                     </div>
-                </div>
+                </header>
                 
                 <div className="profile-section">
                     <div className="profile-card">
@@ -278,13 +273,14 @@ export default (props) => {
                     </div>
                 </div>
                 
+                {/* Footer */}
                 <div className="footer">
-                    <span>© 2022 Horizon UI. All Rights Reserved. Made with love by Simmmple!</span>
+                    <span>© 2024 HRCloudX. All Rights Reserved.</span>
                     <div className="footer-links">
-                        <a href="#">Marketplace</a>
-                        <a href="#">License</a>
-                        <a href="#">Terms of Use</a>
-                        <a href="#">Blog</a>
+                        <span>Marketplace</span>
+                        <span>License</span>
+                        <span>Terms of Use</span>
+                        <span>Blog</span>
                     </div>
                 </div>
             </div>
