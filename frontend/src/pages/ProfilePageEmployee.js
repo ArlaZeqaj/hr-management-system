@@ -101,6 +101,19 @@ const ProfilePageEmployee = () => {
  <span>Leave Requests</span>
  </div>
  </div>
+ <div
+            className={`menu-item ${
+              activeMenuItem === "Projects" ? "active" : ""
+            }`}
+            onClick={() => handleMenuItemClick("Projects")}
+          >
+            <img
+              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png"
+              className="menu-icon"
+              alt="Projects"
+            />
+            <span>Projects</span>
+          </div>
 
  {/* Upgrade Card */}
  <div className="upgrade-card">
@@ -458,7 +471,7 @@ const ProfilePageEmployee = () => {
  </div>
  </div>
  </div>
- );
+);
 };
 
 export default ProfilePageEmployee;
