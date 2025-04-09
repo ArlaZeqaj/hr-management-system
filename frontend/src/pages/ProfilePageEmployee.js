@@ -1,289 +1,464 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/ProfilePageEmployee.css";
 
-export default (props) => {
-    const [input1, onChangeInput1] = useState('');
-    
-    return (
-        <div className="profile-container">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <span className="logo">HRCLOUDX</span>
-        </div>
-        
-        <div className="sidebar-menu">
-          <div className="menu-item">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a" className="menu-icon" alt="Dashboard" />
-            <span>Dashboard</span>
-          </div>
-          <div className="menu-item">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e71d6f7f-492e-410d-ba4a-6e4e57c163f8" className="menu-icon" alt="Profile" />
-            <span>Profile</span>
-          </div>
-          <div className="menu-item active">
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png" className="menu-icon" alt="Projects" />
-            <span>Projects</span>
-          </div>
-          <div className="menu-item">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a" className="menu-icon" alt="Leave Requests" />
-            <span>Leave Requests</span>
-          </div>
-        </div>
-                
-        <div className="upgrade-card">
-          <img 
-            src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png" 
-            className="upgrade-icon"
-            alt="Upgrade" 
-          />
-          <div className="upgrade-text">
-            <div>Upgrade to PRO</div>
-            <small>to get access to all features!</small>
-          </div>
-        </div>
-            </div>
-            
-            <div className="main-content">
-            <header className="header">
-                    <div className="breadcrumbs">
-                        <span>Pages / Profile</span>
-                        <h1>Profile</h1>
-                    </div>
-                    
-                    <div className="user-profile">
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2bb4edd4-293b-43c8-b39f-493a2edb1d91" alt="User" />
-                        <span>Doe, Jane</span>
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/082c3bf8-01b8-4766-8555-99763cf21464" alt="Dropdown" />
-                    </div>
-                </header>
-                
-                <div className="profile-section">
-                    <div className="profile-card">
-                        <div className="profile-header">
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/57709ee9-ee37-41a1-8342-a56a90377035"} className="cover-photo" />
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/27b5ab18-748c-4fa7-b21c-07e1da88edcf"} className="profile-photo" />
-                        </div>
-                        
-                        <div className="profile-info">
-                            <div className="user-info">
-                                <h2>Jane Doe</h2>
-                                <p>Product Designer</p>
-                            </div>
-                            
-                            <div className="stats">
-                                <div className="stat-item">
-                                    <span className="stat-number">17</span>
-                                    <span className="stat-label">Posts</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-number">9.7k</span>
-                                    <span className="stat-label">Followers</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-number">274</span>
-                                    <span className="stat-label">Following</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="storage-card">
-                        <div className="storage-header">
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35bb522e-7190-4669-9e39-f9992ef28f4d"} className="storage-icon" />
-                            <button className="settings-btn" onClick={() => alert("Pressed!")}>
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6ddec5e0-c842-41ce-9839-ef84315aca47"} />
-                            </button>
-                        </div>
-                        
-                        <div className="storage-info">
-                            <h3>Your storage</h3>
-                            <p>Supervise your drive space in the easiest way</p>
-                        </div>
-                        
-                        <div className="storage-progress">
-                            <div className="progress-labels">
-                                <span>25.6 Gb</span>
-                                <span>50 Gb</span>
-                            </div>
-                            <div className="progress-bar">
-                                <div className="progress-fill"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="upload-card">
-                        <div className="upload-area">
-                            <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f81c15c3-242e-4ba1-91ed-f191592c92b7"} />
-                            <h3>Upload Files</h3>
-                            <p>PNG, JPG and GIF files are allowed</p>
-                        </div>
-                        
-                        <div className="complete-profile">
-                            <h3>Complete your profile</h3>
-                            <p>Stay on the pulse of distributed projects with an online whiteboard to plan, coordinate and discuss</p>
-                            <button className="publish-btn">Publish now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="content-section">
-                    <div className="projects-card">
-                        <h2>All Projects</h2>
-                        <p className="subtext">Here you can find more details about your projects. Keep your user engaged by providing meaningful information.</p>
-                        
-                        <div className="project-list">
-                            <div className="project-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9c80177c-314a-4f0a-8b59-2f7172cc43f6"} />
-                                <div className="project-info">
-                                    <h4>Technology behind the Blockchain</h4>
-                                    <div className="project-meta">
-                                        <span>Project #1</span>
-                                        <span>•</span>
-                                        <a href="#">See project details</a>
-                                    </div>
-                                </div>
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b35fea9b-a952-4264-af4d-0402a2c28137"} className="more-icon" />
-                            </div>
-                            
-                            <div className="project-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e72c4cfd-fba8-4609-b6b2-3bb212d5b895"} />
-                                <div className="project-info">
-                                    <h4>Greatest way to a good Economy</h4>
-                                    <div className="project-meta">
-                                        <span>Project #2</span>
-                                        <span>•</span>
-                                        <a href="#">See project details</a>
-                                    </div>
-                                </div>
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/7691a40f-5bb1-4649-ac52-b4c3fd40e625"} className="more-icon" />
-                            </div>
-                            
-                            <div className="project-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cc91f55f-a364-4d2b-b9ab-a674cd9f7238"} />
-                                <div className="project-info">
-                                    <h4>Most essential tips for Burnout</h4>
-                                    <div className="project-meta">
-                                        <span>Project #3</span>
-                                        <span>•</span>
-                                        <a href="#">See project details</a>
-                                    </div>
-                                </div>
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b95b63a7-a150-43a1-b94a-67095e2d7146"} className="more-icon" />
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="info-card">
-                        <h2>General Information</h2>
-                        <p className="info-text">As we live, our hearts turn colder. Cause pain is what we go through as we become older. We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand. We get our heart broken by people we love, even that we give them all...</p>
-                        
-                        <div className="info-grid">
-                            <button className="info-item" onClick={() => alert("Pressed!")}>
-                                <span className="info-label">Education</span>
-                                <span className="info-value">Stanford University</span>
-                            </button>
-                            
-                            <button className="info-item" onClick={() => alert("Pressed!")}>
-                                <span className="info-label">Languages</span>
-                                <span className="info-value">English, Spanish, Italian</span>
-                            </button>
-                            
-                            <button className="info-item" onClick={() => alert("Pressed!")}>
-                                <span className="info-label">Department</span>
-                                <span className="info-value">Product Design</span>
-                            </button>
-                            
-                            <button className="info-item" onClick={() => alert("Pressed!")}>
-                                <span className="info-label">Work History</span>
-                                <span className="info-value">Google, Facebook</span>
-                            </button>
-                            
-                            <button className="info-item" onClick={() => alert("Pressed!")}>
-                                <span className="info-label">Organization</span>
-                                <span className="info-value">Simmmple Web LLC</span>
-                            </button>
-                            
-                            <button className="info-item" onClick={() => alert("Pressed!")}>
-                                <span className="info-label">Birthday</span>
-                                <span className="info-value">20 July 1986</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div className="notifications-card">
-                        <div className="notifications-header">
-                            <h2>Notifications</h2>
-                            <button className="settings-btn" onClick={() => alert("Pressed!")}>
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/03310866-1a7e-4c11-baa8-8a37f4f6c582"} />
-                            </button>
-                        </div>
-                        
-                        <div className="notification-list">
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/0c106869-82ae-4fc4-a28d-6ed7aee438db"} />
-                                <span>Item update notifications</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/d6414e25-9c98-4796-838f-e02a9dd576fc"} />
-                                <span>Item comment notifications</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f8dfaf95-99de-48aa-a1c8-b07b1ab2f17c"} />
-                                <span>Buyer review notifications</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cba84a8a-3acb-4e37-98a0-b8fd62457a43"} />
-                                <span>Rating reminders notifications</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9b818ce1-17fa-449c-80db-ec89c1bfe9e4"} />
-                                <span>Meetups near you notifications</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b3c87455-caf8-40e3-a343-6dce1438390e"} />
-                                <span>Company news notifications</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/91c7293f-a5fb-4af5-8363-6b5a549e1dcb"} />
-                                <span>New launches and projects</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/99b6fbf2-fa7a-48a8-a60f-941852c6c315"} />
-                                <span>Monthly product changes</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/27a78237-bd1f-44f6-8037-13ac7b2a11d5"} />
-                                <span>Subscribe to newsletter</span>
-                            </div>
-                            
-                            <div className="notification-item">
-                                <img src={"https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/5193a8df-145d-4ba9-9e6e-c3add42e3c12"} />
-                                <span>Email me when someone follows me</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                {/* Footer */}
-                <div className="footer">
-                    <span>© 2024 HRCloudX. All Rights Reserved.</span>
-                    <div className="footer-links">
-                        <span>Marketplace</span>
-                        <span>License</span>
-                        <span>Terms of Use</span>
-                        <span>Blog</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
+const ProfilePageEmployee = () => {
+ const [input1, setInput1] = useState("");
+ const [activeMenuItem, setActiveMenuItem] = useState("Dashboard");
+ const [darkMode, setDarkMode] = useState(false);
+ const [notifications, setNotifications] = useState({
+ "Item update notifications": false,
+ "Item comment notifications": false,
+ "Buyer review notifications": false,
+ "Rating reminders notifications": true,
+ "Meetups near you notifications": false,
+ "Company news notifications": false,
+ "New launches and projects": false,
+ "Monthly product changes": false,
+ "Subscribe to newsletter": false,
+ "Email me when someone follows me": false,
+ });
+
+ // Initialize dark mode
+ useEffect(() => {
+ const savedMode = localStorage.getItem("darkMode");
+ if (savedMode !== null) {
+ setDarkMode(savedMode === "true");
+ }
+ }, []);
+
+ // Apply dark mode
+ useEffect(() => {
+ if (darkMode) {
+ document.body.classList.add("dark-theme");
+ } else {
+ document.body.classList.remove("dark-theme");
+ }
+ localStorage.setItem("darkMode", darkMode);
+ }, [darkMode]);
+
+ const handleMenuItemClick = (menuItem) => {
+ setActiveMenuItem(menuItem);
+ };
+
+ const toggleDarkMode = () => {
+ setDarkMode(!darkMode);
+ };
+
+ const toggleNotification = (notification) => {
+ setNotifications((prev) => ({
+ ...prev,
+ [notification]: !prev[notification],
+ }));
+ };
+
+ return (
+ <div className="profile-container">
+ {/* Sidebar */}
+ <div className="sidebar">
+ <div className="sidebar-header">
+ <span className="logo">HRCLOUDX</span>
+ </div>
+
+ {/* Menu Items */}
+ <div className="sidebar-menu">
+ <div
+ className={`menu-item ${
+ activeMenuItem === "Dashboard" ? "active" : ""
+ }`}
+ onClick={() => handleMenuItemClick("Dashboard")}
+ >
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a"
+ className="menu-icon"
+ alt="Dashboard"
+ />
+ <span>Dashboard</span>
+ </div>
+ <div
+ className={`menu-item ${
+ activeMenuItem === "Profile" ? "active" : ""
+ }`}
+ onClick={() => handleMenuItemClick("Profile")}
+ >
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f83d5003-9309-4c08-b4fb-effc29fd197d"
+ className="menu-icon"
+ alt="Profile"
+ />
+ <span>Profile</span>
+ </div>
+ <div
+ className={`menu-item ${
+ activeMenuItem === "Leave Requests" ? "active" : ""
+ }`}
+ onClick={() => handleMenuItemClick("Leave Requests")}
+ >
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a"
+ className="menu-icon"
+ alt="Leave Requests"
+ />
+ <span>Leave Requests</span>
+ </div>
+ </div>
+
+ {/* Upgrade Card */}
+ <div className="upgrade-card">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/351f8885-31c6-4919-8816-1e9afdfbaee3"
+ className="upgrade-icon"
+ alt="Upgrade"
+ />
+ <div className="upgrade-content">
+ <div className="pro-badge">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2132e7a3-85e8-43b4-a441-49f76f6dc5d1"
+ alt="Pro Badge"
+ />
+ <span>Upgrade to PRO</span>
+ </div>
+ <span className="upgrade-text">to get access to all features!</span>
+ </div>
+ </div>
+ </div>
+
+ {/* Main Content */}
+ <div className="main-content">
+ {/* Header */}
+ <div className="header">
+ <div className="breadcrumbs">
+ <span className="path">Pages / {activeMenuItem}</span>
+ <span className="current-page">{activeMenuItem}</span>
+ </div>
+
+ <div className="header-actions">
+ <div className="search-bar">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fb74aa3d-1201-4827-aba3-e8456f9e7557"
+ alt="Search"
+ />
+ <input
+ placeholder="Search"
+ value={input1}
+ onChange={(e) => setInput1(e.target.value)}
+ />
+ </div>
+ <div className="action-icons">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/5d37501d-2f6f-43eb-8027-f0dcb7225cec"
+ alt="Icon 1"
+ />
+ <button
+ onClick={toggleDarkMode}
+ style={{
+ background: "none",
+ border: "none",
+ padding: 0,
+ cursor: "pointer",
+ }}
+ >
+ <img
+ src={
+ darkMode
+ ? "https://cdn-icons-png.flaticon.com/512/581/581601.png"
+ : "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fc94b941-d6a8-49dd-9e4a-a8d7bce035cd"
+ }
+ alt={darkMode ? "Light Mode" : "Dark Mode"}
+ style={{ width: "24px", height: "24px" }}
+ />
+ </button>
+ <div className="profile-dropdown">
+ <button className="profile-button">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/4dfb0d26-a823-4773-9ff9-02c8455e9f5b"
+ alt="Profile"
+ />
+ </button>
+ <div className="dropdown-menu">
+ <h3>Notification Settings</h3>
+ {Object.keys(notifications).map((item) => (
+ <div key={item} className="toggle-item">
+ <span>{item}</span>
+ <label className="toggle-switch">
+ <input
+ type="checkbox"
+ checked={notifications[item]}
+ onChange={() => toggleNotification(item)}
+ />
+ <span className="toggle-slider"></span>
+ </label>
+ </div>
+ ))}
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ {/* Profile Section */}
+ <div className="profile-section">
+ {/* Profile Card */}
+ <div className="profile-card">
+ <div className="profile-header">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/57709ee9-ee37-41a1-8342-a56a90377035"
+ className="cover-photo"
+ alt="Cover"
+ />
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/27b5ab18-748c-4fa7-b21c-07e1da88edcf"
+ className="profile-photo"
+ alt="Profile"
+ />
+ </div>
+
+ <div className="profile-info">
+ <div className="user-info">
+ <h2>Jane Doe</h2>
+ <p>Product Designer</p>
+ </div>
+
+ <div className="stats">
+ <div className="stat-item">
+ <span className="stat-number">17</span>
+ <span className="stat-label">Posts</span>
+ </div>
+ <div className="stat-item">
+ <span className="stat-number">9.7k</span>
+ <span className="stat-label">Followers</span>
+ </div>
+ <div className="stat-item">
+ <span className="stat-number">274</span>
+ <span className="stat-label">Following</span>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ {/* Storage Card */}
+ <div className="storage-card">
+ <div className="storage-header">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/35bb522e-7190-4669-9e39-f9992ef28f4d"
+ className="storage-icon"
+ alt="Storage"
+ />
+ <button
+ className="settings-btn"
+ onClick={() => alert("Storage settings clicked")}
+ >
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6ddec5e0-c842-41ce-9839-ef84315aca47"
+ alt="Settings"
+ />
+ </button>
+ </div>
+
+ <div className="storage-info">
+ <h3>Your storage</h3>
+ <p>Supervise your drive space in the easiest way</p>
+ </div>
+
+ <div className="storage-progress">
+ <div className="progress-labels">
+ <span>25.6 Gb</span>
+ <span>50 Gb</span>
+ </div>
+ <div className="progress-bar">
+ <div className="progress-fill"></div>
+ </div>
+ </div>
+ </div>
+
+ {/* Upload Card */}
+ <div className="upload-card">
+ <div className="upload-area">
+ <input
+ type="file"
+ id="file-upload"
+ className="file-input"
+ accept=".png,.jpg,.jpeg,.gif"
+ multiple
+ onChange={(e) => {
+ if (e.target.files.length > 0) {
+ alert(`${e.target.files.length} file(s) selected`);
+ // Handle file upload logic here
+ }
+ }}
+ />
+ <label htmlFor="file-upload" className="upload-button">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f81c15c3-242e-4ba1-91ed-f191592c92b7"
+ alt="Upload"
+ />
+ <h3>Upload Files</h3>
+ <p>PNG, JPG and GIF files are allowed</p>
+ </label>
+ </div>
+
+ <div className="complete-profile">
+ <h3>Complete your profile</h3>
+ <p>
+ Stay on the pulse of distributed projects with an online
+ whiteboard to plan, coordinate and discuss
+ </p>
+ <button className="publish-btn">Publish now</button>
+ </div>
+ </div>
+ </div>
+
+ {/* Content Section */}
+ <div className="content-section">
+ {/* Projects Card */}
+ <div className="projects-card">
+ <h2>All Projects</h2>
+ <p className="subtext">
+ Here you can find more details about your projects. Keep your user
+ engaged by providing meaningful information.
+ </p>
+
+ <div className="project-list">
+ {/* Project Items */}
+ <div className="project-item">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9c80177c-314a-4f0a-8b59-2f7172cc43f6"
+ alt="Project 1"
+ />
+ <div className="project-info">
+ <h4>Technology behind the Blockchain</h4>
+ <div className="project-meta">
+ <span>Project #1</span>
+ <span>•</span>
+ <a href="#">See project details</a>
+ </div>
+ </div>
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b35fea9b-a952-4264-af4d-0402a2c28137"
+ className="more-icon"
+ alt="More"
+ />
+ </div>
+
+ <div className="project-item">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e72c4cfd-fba8-4609-b6b2-3bb212d5b895"
+ alt="Project 2"
+ />
+ <div className="project-info">
+ <h4>Greatest way to a good Economy</h4>
+ <div className="project-meta">
+ <span>Project #2</span>
+ <span>•</span>
+ <a href="#">See project details</a>
+ </div>
+ </div>
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/7691a40f-5bb1-4649-ac52-b4c3fd40e625"
+ className="more-icon"
+ alt="More"
+ />
+ </div>
+
+ <div className="project-item">
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cc91f55f-a364-4d2b-b9ab-a674cd9f7238"
+ alt="Project 3"
+ />
+ <div className="project-info">
+ <h4>Most essential tips for Burnout</h4>
+ <div className="project-meta">
+ <span>Project #3</span>
+ <span>•</span>
+ <a href="#">See project details</a>
+ </div>
+ </div>
+ <img
+ src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b95b63a7-a150-43a1-b94a-67095e2d7146"
+ className="more-icon"
+ alt="More"
+ />
+ </div>
+ </div>
+ </div>
+
+ {/* Info Card (expanded) */}
+ <div className="info-card expanded-info">
+ <h2>General Information</h2>
+ <p className="info-text">
+ As we live, our hearts turn colder. Cause pain is what we go
+ through as we become older. We get insulted by others, lose trust
+ for those others. We get back stabbed by friends. It becomes
+ harder for us to give others a hand. We get our heart broken by
+ people we love, even that we give them all...
+ </p>
+
+ <div className="info-grid">
+ <button
+ className="info-item"
+ onClick={() => alert("Education clicked")}
+ >
+ <span className="info-label">Education</span>
+ <span className="info-value">Stanford University</span>
+ </button>
+
+ <button
+ className="info-item"
+ onClick={() => alert("Languages clicked")}
+ >
+ <span className="info-label">Languages</span>
+ <span className="info-value">English, Spanish, Italian</span>
+ </button>
+
+ <button
+ className="info-item"
+ onClick={() => alert("Department clicked")}
+ >
+ <span className="info-label">Department</span>
+ <span className="info-value">Product Design</span>
+ </button>
+
+ <button
+ className="info-item"
+ onClick={() => alert("Work History clicked")}
+ >
+ <span className="info-label">Work History</span>
+ <span className="info-value">Google, Facebook</span>
+ </button>
+
+ <button
+ className="info-item"
+ onClick={() => alert("Organization clicked")}
+ >
+ <span className="info-label">Organization</span>
+ <span className="info-value">Simmmple Web LLC</span>
+ </button>
+
+ <button
+ className="info-item"
+ onClick={() => alert("Birthday clicked")}
+ >
+ <span className="info-label">Birthday</span>
+ <span className="info-value">20 July 1986</span>
+ </button>
+ </div>
+ </div>
+ </div>
+
+ {/* Footer */}
+ <div className="footer">
+ <span>
+ © 2022 Horizon UI. All Rights Reserved. Made with love by Simmmple!
+ </span>
+ <div className="footer-links">
+ <a href="#">Marketplace</a>
+ <a href="#">License</a>
+ <a href="#">Terms of Use</a>
+ <a href="#">Blog</a>
+ </div>
+ </div>
+ </div>
+ </div>
+ );
+};
+
+export default ProfilePageEmployee;
