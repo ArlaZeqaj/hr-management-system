@@ -734,7 +734,9 @@ body.dark-theme .upload-card,
 body.dark-theme .projects-card,
 body.dark-theme .info-card,
 body.dark-theme .project-item,
-body.dark-theme .info-item {
+body.dark-theme .info-item,
+body.dark-theme .header
+{
     background: #2d2d2d;
     color: #e0e0e0;
 }
