@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "../styles/ProfilePageEmployee.css";
 
 const ProfilePageEmployee = () => {
-  // User data state
+
   const [userData, setUserData] = useState({
     name: '',
     surname: '',
@@ -14,7 +14,7 @@ const ProfilePageEmployee = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // UI states from first code
+
   const [input1, setInput1] = useState("");
   const [activeMenuItem, setActiveMenuItem] = useState("Dashboard");
   const [darkMode, setDarkMode] = useState(false);
@@ -49,7 +49,7 @@ const ProfilePageEmployee = () => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
-  // Fetch user data
+  // marrim te dhenat e userit
   useEffect(() => {
     const auth = getAuth();
 
