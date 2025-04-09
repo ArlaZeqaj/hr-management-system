@@ -8,7 +8,7 @@
 
 /* Sidebar Styles */
 .sidebar {
-    width: 280px;
+    width: 250px;
     background: white;
     padding: 2rem 1rem;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
@@ -298,77 +298,94 @@ input:checked + .toggle-slider:before {
 
 .profile-card {
     background: white;
-    border-radius: 20px;
-    padding: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
     flex: 1;
 }
 
 .profile-header {
     position: relative;
-    margin-bottom: 4rem;
+    height: 140px;
 }
 
 .cover-photo {
     width: 100%;
-    height: 120px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 16px;
+}
+
+.cover-photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(67,24,255,0.15));
+}
+
+.profile-photo-container {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-photo {
-    position: absolute;
-    bottom: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90px;
-    height: 90px;
+    width: 92px;
+    height: 92px;
     border-radius: 50%;
-    border: 4px solid white;
     object-fit: cover;
 }
 
-.profile-info {
+.profile-content {
+    padding: 60px 30px 30px;
     text-align: center;
-    margin-top: 2rem;
 }
 
-.user-info h2 {
+.profile-name {
     margin: 0;
     color: #2B3674;
-    font-size: 1.3rem;
-}
-
-.user-info p {
-    margin: 0.3rem 0 1rem;
-    color: #A3AED0;
-    font-size: 0.9rem;
-}
-
-.stats {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 1rem;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    display: block;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: #2B3674;
+    line-height: 1.2;
 }
 
-.stat-label {
-    font-size: 0.8rem;
-    color: #A3AED0;
+.profile-title {
+    margin: 8px 0 0;
+    color: #4318FF;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
-.storage-card, .upload-card {
+.profile-divider {
+    width: 60px;
+    height: 2px;
+    background: #E0E5F2;
+    margin: 20px auto;
+}
+
+.profile-bio {
+    color: #707EAE;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+/* Birthday Card Styles */
+.birthday-card {
     background: white;
     border-radius: 20px;
     padding: 1.5rem;
@@ -376,68 +393,79 @@ input:checked + .toggle-slider:before {
     width: 280px;
 }
 
-.storage-header {
+.birthday-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.storage-icon {
-    width: 80px;
-    height: 80px;
+.birthday-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1;
 }
 
-.settings-btn {
-    background: #F4F7FE;
-    border: none;
-    border-radius: 10px;
-    padding: 0.5rem;
-    cursor: pointer;
-}
-
-.storage-info h3 {
-    margin: 0 0 0.5rem;
+.birthday-header h3 {
+    margin: 0;
     color: #2B3674;
     font-size: 1.2rem;
     text-align: center;
 }
 
-.storage-info p {
-    margin: 0;
-    color: #A3AED0;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.storage-progress {
-    margin-top: 1.5rem;
-}
-
-.progress-labels {
+.birthday-list {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.birthday-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background: #FAFCFE;
+    gap: 0.8rem;
+}
+
+.birthday-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.8rem;
+}
+
+.birthday-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.birthday-name {
+    font-size: 0.9rem;
+    color: #2B3674;
+    font-weight: 600;
+}
+
+.birthday-department {
+    font-size: 0.7rem;
     color: #A3AED0;
 }
 
-.progress-bar {
-    background: #E9EDF7;
-    border-radius: 42px;
-    height: 10px;
-    overflow: hidden;
+.no-birthdays {
+    color: #A3AED0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 1rem 0;
 }
 
-.progress-fill {
-    background: #4318FF;
-    height: 100%;
-    width: 50%;
-    border-radius: 42px;
-}
-
-/* Upload Card Styles */
 .upload-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    width: 280px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -474,7 +502,7 @@ input:checked + .toggle-slider:before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    pointer-events: none; /* Allow clicks to pass through to file input */
+    pointer-events: none;
 }
 
 .upload-button h3 {
@@ -525,10 +553,18 @@ input:checked + .toggle-slider:before {
 
 .projects-card {
     flex: 2;
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .info-card {
     flex: 3;
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .expanded-info {
@@ -673,7 +709,7 @@ input:checked + .toggle-slider:before {
         flex-direction: column;
     }
     
-    .storage-card, .upload-card {
+    .birthday-card, .upload-card {
         width: 100%;
     }
     
@@ -729,7 +765,7 @@ body.dark-theme .profile-container,
 body.dark-theme .sidebar,
 body.dark-theme .main-content,
 body.dark-theme .profile-card,
-body.dark-theme .storage-card,
+body.dark-theme .birthday-card,
 body.dark-theme .upload-card,
 body.dark-theme .projects-card,
 body.dark-theme .info-card,
@@ -742,10 +778,11 @@ body.dark-theme .header
 }
 
 body.dark-theme .current-page,
-body.dark-theme .user-info h2,
+body.dark-theme .user-info h1,
 body.dark-theme .stat-number,
 body.dark-theme .project-info h4,
-body.dark-theme .info-value {
+body.dark-theme .info-value,
+body.dark-theme .birthday-name {
     color: #ffffff;
 }
 
@@ -756,23 +793,21 @@ body.dark-theme .user-info p,
 body.dark-theme .project-meta,
 body.dark-theme .info-label,
 body.dark-theme .footer,
-body.dark-theme .footer-links a {
+body.dark-theme .footer-links a,
+body.dark-theme .birthday-department {
     color: #aaa !important;
 }
 
 body.dark-theme .search-bar,
 body.dark-theme .menu-item:hover,
-body.dark-theme .settings-btn {
+body.dark-theme .settings-btn,
+body.dark-theme .birthday-item {
     background: #3a3a3a;
 }
 
 body.dark-theme .menu-item.active {
     background: #3a3a3a;
     color: #858CFF;
-}
-
-body.dark-theme .progress-bar {
-    background: #3a3a3a;
 }
 
 body.dark-theme .dropdown-menu {
@@ -807,5 +842,13 @@ body.dark-theme .upload-area:hover {
 }
 
 body.dark-theme .upload-button p {
+    color: #aaa;
+}
+
+body.dark-theme .birthday-header h3 {
+    color: #ffffff;
+}
+
+body.dark-theme .no-birthdays {
     color: #aaa;
 }
