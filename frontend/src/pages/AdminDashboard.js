@@ -1,26 +1,39 @@
 import React from "react";
 import "../styles/Admin.css";
+import { useNavigate } from 'react-router-dom';
+
 
 export default (props) => {
+    const navigate = useNavigate();
+
     return (
         <div className="admin-container">
             {/* Sidebar */}
+
             <div className="sidebar">
                 <div className="logo">HRCLOUDX</div>
-                
+
                 <div className="divider"></div>
-                
+
                 <nav className="menu">
-                    <div className="menu-item active">
+                    <div
+                        className="menu-item active"
+                        onClick={() => navigate("/admin-dashboard")}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9b6d12ad-df6a-4aef-a71b-970e2db2eda9" alt="Dashboard" />
                         <span>Dashboard</span>
                     </div>
-                    <div className="menu-item">
+                    <div
+                        className="menu-item"
+                        onClick={() => navigate("/#SkaakmProfile")}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e71d6f7f-492e-410d-ba4a-6e4e57c163f8" alt="Profile" />
                         <span>Profile</span>
                     </div>
                 </nav>
-                
+
                 <div className="upgrade-card">
                     <div className="upgrade-badge">
                         <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/afc33f36-a919-4557-8430-4f037f660cd0" alt="Upgrade" />
@@ -29,6 +42,7 @@ export default (props) => {
                     <p>to get access to all features!</p>
                 </div>
             </div>
+
 
             {/* Main Content */}
             <div className="main-content">

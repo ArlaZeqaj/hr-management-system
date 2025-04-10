@@ -1,30 +1,38 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignInPage from "../src/pages/SignIn";
-import EmployeeDashboard from "../src/pages/EmployeeDashboard";
-import AdminDashboard from "../src/pages/AdminDashboard";
-import ProfilePageEmployee from "../src/pages/ProfilePageEmployee";
-import Billing from "../src/pages/Billing";
-import Projects from "../src/pages/Projects";
-import NewHires from "./pages/NewHires";
-import FirebaseTest from "../src/pages/FirebaseTest";
 
+import SignInPage from "./pages/SignIn";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProfilePageEmployee from "./pages/ProfilePageEmployee";
+import Billing from "./pages/Billing";
+import Projects from "./pages/Projects";
+import NewHires from "./pages/NewHires";
+import FirebaseTest from "./pages/FirebaseTest";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<SignInPage />} />
-        <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/profile" element={<ProfilePageEmployee />} />
-        <Route path="/billing" element={<Billing />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="new-hires" element={<NewHires />} />
+      <Router>
+        <Routes>
+          {/* Public Route */}
+          <Route path="/" element={<SignInPage />} />
+
+          {/* Dashboards */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+
+          {/* Employee Pages */}
+          <Route path="/profile" element={<ProfilePageEmployee />} />
+          <Route path="/billing" element={<Billing />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/new-hires" element={<NewHires />} />
+
+          {/* Testing */}
           <Route path="/firebase/test" element={<FirebaseTest />} />
-        {/* Add protected routes if needed */}
-      </Routes>
-    </Router>
+
+          {/* TODO: Add <PrivateRoute> wrappers later for protection */}
+        </Routes>
+      </Router>
   );
 }
 

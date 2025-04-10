@@ -13,7 +13,7 @@ public class FirebaseConfig {
 
     public FirebaseConfig() throws IOException {
         FileInputStream serviceAccount =
-                new FileInputStream("hrcloudx-3c6ee-firebase-adminsdk-fbsvc-a2dc737803.json");  // Ensure correct path
+                new FileInputStream("C:\\Users\\Ziko\\Desktop\\hr-management-system11\\src\\main\\java\\com\\example\\hrsystem\\config\\hrcloudx-3c6ee-firebase-adminsdk-fbsvc-a2dc737803.json");  // Ensure correct path
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

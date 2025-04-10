@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../styles/Projects.css";
 
 export default () => {
+
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/projects")
+        .then((response) => {
+          setProjects(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching projects:", error);
+        });
+  }, []);
+
   return (
     <div className="projects-page-container">
       {/* Sidebar */}

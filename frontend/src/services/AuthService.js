@@ -1,29 +1,25 @@
-import { auth } from "../config/firebaseConfig"; // Import Firebase auth
-import axios from "axios"; // Install axios if not installed: npm install axios
+import { auth } from "../config/firebaseConfig";
+import axios from "axios";
 
 export const sendTokenToBackend = async () => {
     try {
         const user = auth.currentUser;
-        if (user) {
-            const token = await user.getIdToken(); // Get Firebase token
-            console.log("Firebase Token:", token);
+        if (!user) throw new Error("No user is signed in");
 
-            // Send token to Spring Boot API
-            const response = await axios.post(
-                "http://localhost:8080/api/auth/verify", // Change to your backend URL
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Send token in Authorization header
-                    },
-                }
-            );
+        const token = await user.getIdToken();
+        console.log("🔥 Sending token to backend:", token); // Log it for debugging
 
-            console.log("Backend Response:", response.data);
-        } else {
-            console.log("No user signed in.");
-        }
+        const response = await axios.post(
+            "http://localhost:8080/api/auth/login",
+            { idToken: token },
+            {
+                headers: { "Content-Type": "application/json" }
+            }
+        );
+
+        return response.data;
     } catch (error) {
-        console.error("Error getting token or sending request:", error);
+        console.error("❌ AuthService error:", error.message);
+        throw error;
     }
 };

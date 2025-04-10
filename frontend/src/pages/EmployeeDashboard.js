@@ -1,23 +1,41 @@
 import React from "react";
 import "../styles/Employee.css";
-
+import { useNavigate } from "react-router-dom";
 const EmployeeDashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="container">
-      {/* Sidebar */}
+
+
       <aside className="sidebar">
         <div className="logo">HRCLOUDX</div>
         <nav>
-          <div className="nav-item active">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/76c6c27c-f302-4eb0-a082-7591f8751d74" alt="Dashboard" />
+          <div
+              className="nav-item active"
+              onClick={() => navigate("/employee-dashboard")}
+              style={{ cursor: "pointer" }}
+          >
+            <img
+                src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/76c6c27c-f302-4eb0-a082-7591f8751d74"
+                alt="Dashboard"
+            />
             Dashboard
           </div>
-          <div className="nav-item">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/85efb97f-aed4-473f-a904-cc49090afefa" alt="Profile" />
+          <div
+              className="nav-item"
+              onClick={() => navigate("/profile")}
+              style={{ cursor: "pointer" }}
+          >
+            <img
+                src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/85efb97f-aed4-473f-a904-cc49090afefa"
+                alt="Profile"
+            />
             Profile
           </div>
         </nav>
       </aside>
+
 
       {/* Main Content */}
       <main className="main-content">
