@@ -11,17 +11,17 @@ import CalendarCard from "../cards/CalendarCard";
 import ScheduleOverviewCard from "../cards/ScheduleOverviewCard";
 import PerformanceChartCard from "../cards/PerformanceChartCard";
 import TasksCard from "../cards/TasksCard";
-import '../../styles/Employee.css'; // <-- ✅ import the matching CSS file
+import '../../styles/Employee.css';
 
 const LayoutWrapper = () => {
     return (
-        <div className="layout-wrapper">
+        <div className="layout-wrapper-z">
             <Sidebar />
-            <main className="main-content">
+            <main className="main-content-z">
                 <Header />
 
                 {/* Top Summary Cards */}
-                <div className="grid-six">
+                <div className="grid-six-z">
                     <StatCard title="Earnings" value="$350.4" />
                     <StatCard title="Upcoming Event" value="conference" />
                     <StatCard title="Training Progress" value="3/5" />
@@ -31,28 +31,28 @@ const LayoutWrapper = () => {
                 </div>
 
                 {/* Main Grid */}
-                <div className="grid-twelve">
-                    <div className="col-three stack">
+                <div className="grid-twelve-z">
+                    <div className="col-three-z stack">
                         <ProjectsCard />
                         <PayrollCard />
                     </div>
 
-                    <div className="col-three stack">
+                    <div className="col-three-z stack">
                         <ScheduleCard />
                         <CheckInOutCard />
                     </div>
 
-                    <div className="col-three">
+                    <div className="col-three-z">
                         <CalendarCard />
                     </div>
 
-                    <div className="col-three">
+                    <div className="col-three-z">
                         <ScheduleOverviewCard />
                     </div>
                 </div>
 
                 {/* Bottom Section */}
-                <div className="grid-two">
+                <div className="grid-two-z">
                     <PerformanceChartCard />
                     <TasksCard />
                 </div>

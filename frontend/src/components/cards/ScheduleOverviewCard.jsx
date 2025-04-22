@@ -15,16 +15,16 @@ const hours = [
 
 const ScheduleOverviewCard = () => {
     return (
-        <div className="overview-card">
-            <h4 className="overview-title">Schedule Overview</h4>
-            <div className="overview-timeline">
+        <div className="overview-card-z">
+            <h4 className="overview-title-z">Schedule Overview</h4>
+            <div className="overview-timeline-z">
                 {hours.map(({ time, label }, idx) => (
-                    <div key={idx} className="overview-slot">
-                        <span className="overview-time">{time}</span>
+                    <div key={idx} className="overview-slot-z">
+                        <span className="overview-time-z">{time}</span>
                         {label ? (
-                            <span className="overview-label">{label}</span>
+                            <span className="overview-label-z">{label}</span>
                         ) : (
-                            <span className="overview-dash">—</span>
+                            <span className="overview-dash-z">—</span>
                         )}
                     </div>
                 ))}

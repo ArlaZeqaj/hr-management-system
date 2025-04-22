@@ -12,30 +12,30 @@ const dates = [
 
 const CalendarCard = () => {
     return (
-        <div className="calendar-card">
-            <div className="calendar-header">
-                <span className="calendar-month">March 2025</span>
-                <div className="calendar-arrows">
-                    <button className="calendar-arrow">
+        <div className="calendar-card-z">
+            <div className="calendar-header-z">
+                <span className="calendar-month-z">March 2025</span>
+                <div className="calendar-arrows-z">
+                    <button className="calendar-arrow-z">
                         <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth="2" stroke="currentColor" fill="none" /></svg>
                     </button>
-                    <button className="calendar-arrow">
+                    <button className="calendar-arrow-z">
                         <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeWidth="2" stroke="currentColor" fill="none" /></svg>
                     </button>
                 </div>
             </div>
 
-            <div className="calendar-days">
+            <div className="calendar-days-z">
                 {daysOfWeek.map((day) => (
-                    <div key={day} className="calendar-day">{day}</div>
+                    <div key={day} className="calendar-day-z">{day}</div>
                 ))}
             </div>
 
-            <div className="calendar-dates">
+            <div className="calendar-dates-z">
                 {dates.map((date, i) => (
                     <div
                         key={i}
-                        className={`calendar-date ${
+                        className={`calendar-date-z ${
                             date === "27" && i === 32 ? "calendar-active" : date === "26" || date === "1" ? "calendar-muted" : ""
                         }`}
                     >

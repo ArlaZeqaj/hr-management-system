@@ -3,12 +3,12 @@ import React from "react";
 
 const Header = () => {
     return (
-        <div className="header">
-            <h2 className="header-title">Main Dashboard</h2>
-            <div className="header-user">
-                <div className="header-user-info">
-                    <div className="header-user-name">Doe,</div>
-                    <div className="header-user-role">Jane</div>
+        <div className="header-z">
+            <h2 className="header-title-z">Main Dashboard</h2>
+            <div className="header-user-z">
+                <div className="header-user-info-z">
+                    <div className="header-user-name-z">Doe,</div>
+                    <div className="header-user-role-z">Jane</div>
                 </div>
                 <img
                     src="https://source.unsplash.com/40x40/?face"

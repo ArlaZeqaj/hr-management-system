@@ -58,10 +58,10 @@ const PerformanceChartCard = () => {
     }, []);
 
     return (
-        <div className="chart-card" style={{ height: "320px", padding: "1rem", borderRadius: "0.75rem", backgroundColor: "#ffffff", boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}>
-            <div className="chart-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                <h3 className="chart-title" style={{ fontWeight: "600", fontSize: "0.875rem" }}>Performance</h3>
-                <span className="chart-badge" style={{ fontSize: "0.75rem", backgroundColor: "#f3f4f6", color: "#6b7280", padding: "0.125rem 0.5rem", borderRadius: "0.25rem" }}>This month</span>
+        <div className="chart-card-z" style={{ height: "320px", padding: "1rem", borderRadius: "0.75rem", backgroundColor: "#ffffff", boxShadow: "0 1px 2px rgba(0,0,0,0.05)" }}>
+            <div className="chart-header-z" style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                <h3 className="chart-title-z" style={{ fontWeight: "600", fontSize: "0.875rem" }}>Performance</h3>
+                <span className="chart-badge-z" style={{ fontSize: "0.75rem", backgroundColor: "#f3f4f6", color: "#6b7280", padding: "0.125rem 0.5rem", borderRadius: "0.25rem" }}>This month</span>
             </div>
             <div style={{ height: "calc(100% - 2rem)" }}>
                 <canvas ref={chartRef}></canvas>
