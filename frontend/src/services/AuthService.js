@@ -1,25 +1,17 @@
 import { auth } from "../config/firebaseConfig";
 import axios from "axios";
 
-export const sendTokenToBackend = async () => {
-    try {
-        const user = auth.currentUser;
-        if (!user) throw new Error("No user is signed in");
-
-        const token = await user.getIdToken();
-        console.log("🔥 Sending token to backend:", token); // Log it for debugging
-
-        const response = await axios.post(
-            "http://localhost:8080/api/auth/login",
-            { idToken: token },
-            {
-                headers: { "Content-Type": "application/json" }
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        console.error("❌ AuthService error:", error.message);
-        throw error;
-    }
-};
+export async function sendTokenToBackend(idToken) {
+    return fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}` // ✅ send the Firebase token here
+        }
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error(`Backend login failed with status ${res.status}`);
+        }
+        return res.json();
+    });
+}

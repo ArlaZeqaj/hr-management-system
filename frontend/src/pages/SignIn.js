@@ -21,10 +21,12 @@ export default function SignIn() {
 
         try {
             // 1. Firebase login
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          //  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const { user } = await signInWithEmailAndPassword(auth, email, password);
+            const token = await user.getIdToken(); // ✅ get token
 
             // 2. Send token to backend, get role info
-            const backendResponse = await sendTokenToBackend(); // { uid, email, role }
+            const backendResponse = await sendTokenToBackend(token); // ✅ send it
 
             console.log("Backend response:", backendResponse);
 

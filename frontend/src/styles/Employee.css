@@ -1,14 +1,15 @@
 /* =======================
    Global Styles & Typography
 ========================== */
-body {
+
+/*body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: #1c1c1c;
   background-color: #f5f8ff;
   margin: 0;
   padding: 0;
 }
-
+*/
 /* =======================
    StatCard
 ========================== */
@@ -295,15 +296,53 @@ body {
 }
 .calendar-header-z {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-size: 0.875rem;
   margin-bottom: 0.5rem;
+
 }
 .calendar-month-z {
-  color: #4f46e5;
+  background: transparent;
+  border: none;
   font-weight: 600;
+  font-size: 1rem;
+  appearance: none;
+  padding: 0.25rem 2.5rem;
+  cursor: pointer;
+  color: #4f46e5;
+  /*
+  font-weight: 600;*/
 }
+.highlight-pink {
+  border-bottom: 2px solid #ec4899; /* 🎂 birthday */
+}
+
+.highlight-purple {
+  border-bottom: 2px solid #8b5cf6; /* ✅ task */
+}
+
+.highlight-blue {
+  border-bottom: 2px solid #3b82f6; /* 📅 event */
+}
+
+.calendar-header-z select {
+  margin-right: 0rem;
+}
+#calendar-select-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+#calendar-select-group select {
+  margin: 0;
+}
+#calendar-select-group select:first-child {
+  width: auto;
+  min-width: unset;
+  padding-right: 0rem;
+}
+
 .calendar-arrows-z {
   display: flex;
   gap: 0.5rem;
@@ -340,6 +379,7 @@ body {
   justify-content: center;
   border-radius: 9999px;
   margin: 0 auto;
+
 }
 
 /* =======================

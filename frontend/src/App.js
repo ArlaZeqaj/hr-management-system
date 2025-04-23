@@ -9,6 +9,7 @@ import Billing from "./pages/Billing";
 import Projects from "./pages/Projects";
 import NewHires from "./pages/NewHires";
 import FirebaseTest from "./pages/FirebaseTest";
+import TestPanel from './pages/TestPanel'; // Adjust path if it's in a different folder
 
 function App() {
     return (
@@ -29,6 +30,8 @@ function App() {
 
                 {/* Testing */}
                 <Route path="/firebase/test" element={<FirebaseTest />} />
+                {/* shikojm db automatikisht*/}
+                <Route path="/databasa" element={<TestPanel />} />
 
                 {/* TODO: Add <PrivateRoute> wrappers later for protection */}
             </Routes>
