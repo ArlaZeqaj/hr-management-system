@@ -11,29 +11,29 @@ import NewHires from "./pages/NewHires";
 import FirebaseTest from "./pages/FirebaseTest";
 
 function App() {
-  return (
-      <Router>
-        <Routes>
-          {/* Public Route */}
-          <Route path="/" element={<SignInPage />} />
+    return (
+        <Router>
+            <Routes>
+                {/* Public Route */}
+                <Route path="/" element={<SignInPage />} />
 
-          {/* Dashboards */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+                {/* Dashboards */}
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
 
-          {/* Employee Pages */}
-          <Route path="/profile" element={<ProfilePageEmployee />} />
-          <Route path="/billing" element={<Billing />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/new-hires" element={<NewHires />} />
+                {/* Employee Pages */}
+                <Route path="/profile" element={<ProfilePageEmployee />} />
+                <Route path="/billing" element={<Billing />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/new-hires" element={<NewHires />} />
 
-          {/* Testing */}
-          <Route path="/firebase/test" element={<FirebaseTest />} />
+                {/* Testing */}
+                <Route path="/firebase/test" element={<FirebaseTest />} />
 
-          {/* TODO: Add <PrivateRoute> wrappers later for protection */}
-        </Routes>
-      </Router>
-  );
+                {/* TODO: Add <PrivateRoute> wrappers later for protection */}
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
