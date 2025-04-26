@@ -2,6 +2,11 @@ package com.example.hrsystem.controller;
 
 import com.example.hrsystem.service.FirebaseAuthService;
 import com.example.hrsystem.service.LoginAttemptService;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -9,6 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -48,4 +57,6 @@ public class AuthController {
             return ResponseEntity.status(500).body("Error getting user role: " + e.getMessage());
         }
     }
+
+
 }

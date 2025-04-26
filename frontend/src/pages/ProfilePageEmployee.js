@@ -73,63 +73,63 @@ const ProfilePageEmployee = () => {
   ];
 
   return (
-    <div className="profile-container">
+    <div className="profile-container-a">
       {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <span className="logo">HRCLOUDX</span>
+      <div className="sidebar-a">
+        <div className="sidebar-header-a">
+          <span className="logo-a">HRCLOUDX</span>
         </div>
 
         {/* Menu Items */}
-        <div className="sidebar-menu">
+        <div className="sidebar-menu-a">
           <div
-            className={`menu-item ${
+            className={`menu-item-a ${
               activeMenuItem === "Dashboard" ? "active" : ""
             }`}
             onClick={() => handleMenuItemClick("Dashboard")}
           >
             <img
               src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a"
-              className="menu-icon"
+              className="menu-icon-a"
               alt="Dashboard"
             />
             <span>Dashboard</span>
           </div>
           <div
-            className={`menu-item ${
+            className={`menu-item-a ${
               activeMenuItem === "Profile" ? "active" : ""
             }`}
             onClick={() => handleMenuItemClick("Profile")}
           >
             <img
               src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f83d5003-9309-4c08-b4fb-effc29fd197d"
-              className="menu-icon"
+              className="menu-icon-a"
               alt="Profile"
             />
             <span>Profile</span>
           </div>
           <div
-            className={`menu-item ${
+            className={`menu-item-a ${
               activeMenuItem === "Leave Requests" ? "active" : ""
             }`}
             onClick={() => handleMenuItemClick("Leave Requests")}
           >
             <img
               src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a"
-              className="menu-icon"
+              className="menu-icon-a"
               alt="Leave Requests"
             />
             <span>Leave Requests</span>
           </div>
           <div
-            className={`menu-item ${
+            className={`menu-item-a ${
               activeMenuItem === "Projects" ? "active" : ""
             }`}
             onClick={() => handleMenuItemClick("Projects")}
           >
             <img
               src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png"
-              className="menu-icon"
+              className="menu-icon-a"
               alt="Projects"
             />
             <span>Projects</span>
@@ -137,14 +137,14 @@ const ProfilePageEmployee = () => {
         </div>
 
         {/* Upgrade Card */}
-        <div className="sidebar-bottom">
-          <div className="upgrade-card">
+        <div className="sidebar-bottom-a">
+          <div className="upgrade-card-a">
             <img
               src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png"
-              className="upgrade-icon"
+              className="upgrade-icon-a"
               alt="Upgrade"
             />
-            <div className="upgrade-text">
+            <div className="upgrade-text-a">
               <div>Upgrade to PRO</div>
               <small>to get access to all features!</small>
             </div>
@@ -153,16 +153,16 @@ const ProfilePageEmployee = () => {
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
+      <div className="main-content-a">
         {/* Header */}
-        <div className="header">
-          <div className="breadcrumbs">
-            <span className="path">Pages / {activeMenuItem}</span>
-            <span className="current-page">{activeMenuItem}</span>
+        <div className="header-a">
+          <div className="breadcrumbs-a">
+            <span className="path-a">Pages / {activeMenuItem}</span>
+            <span className="current-page-a">{activeMenuItem}</span>
           </div>
 
-          <div className="header-actions">
-            <div className="search-bar">
+          <div className="header-actions-a">
+            <div className="search-bar-a">
               <img
                 src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fb74aa3d-1201-4827-aba3-e8456f9e7557"
                 alt="Search"
@@ -173,7 +173,7 @@ const ProfilePageEmployee = () => {
                 onChange={(e) => setInput1(e.target.value)}
               />
             </div>
-            <div className="action-icons">
+            <div className="action-icons-a">
               <img
                 src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/5d37501d-2f6f-43eb-8027-f0dcb7225cec"
                 alt="Icon 1"
@@ -197,25 +197,25 @@ const ProfilePageEmployee = () => {
                   style={{ width: "24px", height: "24px" }}
                 />
               </button>
-              <div className="profile-dropdown">
-                <button className="profile-button">
+              <div className="profile-dropdown-a">
+                <button className="profile-button-a">
                   <img
                     src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/4dfb0d26-a823-4773-9ff9-02c8455e9f5b"
                     alt="Profile"
                   />
                 </button>
-                <div className="dropdown-menu">
+                <div className="dropdown-menu-a">
                   <h3>Notification Settings</h3>
                   {Object.keys(notifications).map((item) => (
-                    <div key={item} className="toggle-item">
+                    <div key={item} className="toggle-item-a">
                       <span>{item}</span>
-                      <label className="toggle-switch">
+                      <label className="toggle-switch-a">
                         <input
                           type="checkbox"
                           checked={notifications[item]}
                           onChange={() => toggleNotification(item)}
                         />
-                        <span className="toggle-slider"></span>
+                        <span className="toggle-slider-a"></span>
                       </label>
                     </div>
                   ))}
@@ -226,80 +226,80 @@ const ProfilePageEmployee = () => {
         </div>
 
         {/* Profile Section */}
-        <div className="profile-section">
+        <div className="profile-section-a">
           {/* Profile Card */}
-          <div className="profile-card">
-            <div className="profile-header">
-              <div className="cover-photo-overlay"></div>
+          <div className="profile-card-a">
+            <div className="profile-header-a">
+              <div className="cover-photo-overlay-a"></div>
               <img
                 src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/57709ee9-ee37-41a1-8342-a56a90377035"
-                className="cover-photo"
+                className="cover-photo-a"
                 alt="Cover"
               />
-              <div className="profile-photo-container">
+              <div className="profile-photo-container-a">
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/27b5ab18-748c-4fa7-b21c-07e1da88edcf"
-                  className="profile-photo"
+                  className="profile-photo-a"
                   alt="Profile"
                 />
               </div>
             </div>
 
-            <div className="profile-content">
-              <h1 className="profile-name">Jane Doe</h1>
-              <p className="profile-title">Senior Product Designer</p>
-              <div className="profile-divider"></div>
-              <p className="profile-bio">
+            <div className="profile-content-a">
+              <h1 className="profile-name-a">Jane Doe</h1>
+              <p className="profile-title-a">Senior Product Designer</p>
+              <div className="profile-divider-a"></div>
+              <p className="profile-bio-a">
                 Creating intuitive user experiences with a focus on
                 accessibility and clean design principles.
               </p>
             </div>
 
-            <div className="profile-info"></div>
+            <div className="profile-info-a"></div>
           </div>
 
           {/* Birthday Card */}
-          <div className="birthday-card">
-            <div className="birthday-header">
-              <span className="birthday-icon">🎂</span>
+          <div className="birthday-card-a">
+            <div className="birthday-header-a">
+              <span className="birthday-icon-a">🎂</span>
               <h3>Today's Birthdays</h3>
             </div>
 
-            <div className="birthday-list">
+            <div className="birthday-list-a">
               {todaysBirthdays.length > 0 ? (
                 todaysBirthdays.map((employee, index) => (
-                  <div key={index} className="birthday-item">
+                  <div key={index} className="birthday-item-a">
                     <img
                       src={employee.avatar}
                       alt={employee.name}
-                      className="birthday-avatar"
+                      className="birthday-avatar-a"
                     />
-                    <div className="birthday-info">
-                      <span className="birthday-name">{employee.name}</span>
-                      <span className="birthday-department">
+                    <div className="birthday-info-a">
+                      <span className="birthday-name-a">{employee.name}</span>
+                      <span className="birthday-department-a">
                         {employee.department}
                       </span>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="no-birthdays">No birthdays today</p>
+                <p className="no-birthdays-a">No birthdays today</p>
               )}
             </div>
           </div>
 
           {/* Upload Card */}
-          <div className="upload-card">
-            <div className="upload-area">
+          <div className="upload-card-a">
+            <div className="upload-area-a">
               <input
                 type="file"
                 id="file-upload"
-                className="file-input"
+                className="file-input-a"
                 accept=".png,.jpg,.jpeg,.gif"
                 multiple
                 onChange={handleFileUpload}
               />
-              <label htmlFor="file-upload" className="upload-button">
+              <label htmlFor="file-upload" className="upload-button-a">
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f81c15c3-242e-4ba1-91ed-f191592c92b7"
                   alt="Upload"
@@ -309,37 +309,37 @@ const ProfilePageEmployee = () => {
               </label>
             </div>
 
-            <div className="complete-profile">
+            <div className="complete-profile-a">
               <h3>Complete your profile</h3>
               <p>
                 Stay on the pulse of distributed projects with an online
                 whiteboard to plan, coordinate and discuss
               </p>
-              <button className="publish-btn">Publish now</button>
+              <button className="publish-btn-a">Publish now</button>
             </div>
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="content-section">
+        <div className="content-section-a">
           {/* Projects Card */}
-          <div className="projects-card">
+          <div className="projects-card-a">
             <h2>All Projects</h2>
-            <p className="subtext">
+            <p className="subtext-a">
               Here you can find more details about your projects. Keep your user
               engaged by providing meaningful information.
             </p>
 
-            <div className="project-list">
+            <div className="project-list-a">
               {/* Project Items */}
-              <div className="project-item">
+              <div className="project-item-a">
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9c80177c-314a-4f0a-8b59-2f7172cc43f6"
                   alt="Project 1"
                 />
-                <div className="project-info">
+                <div className="project-info-a">
                   <h4>Technology behind the Blockchain</h4>
-                  <div className="project-meta">
+                  <div className="project-meta-a">
                     <span>Project #1</span>
                     <span>•</span>
                     <a href="#">See project details</a>
@@ -347,19 +347,19 @@ const ProfilePageEmployee = () => {
                 </div>
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b35fea9b-a952-4264-af4d-0402a2c28137"
-                  className="more-icon"
+                  className="more-icon-a"
                   alt="More"
                 />
               </div>
 
-              <div className="project-item">
+              <div className="project-item-a">
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e72c4cfd-fba8-4609-b6b2-3bb212d5b895"
                   alt="Project 2"
                 />
-                <div className="project-info">
+                <div className="project-info-a">
                   <h4>Greatest way to a good Economy</h4>
-                  <div className="project-meta">
+                  <div className="project-meta-a">
                     <span>Project #2</span>
                     <span>•</span>
                     <a href="#">See project details</a>
@@ -367,19 +367,19 @@ const ProfilePageEmployee = () => {
                 </div>
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/7691a40f-5bb1-4649-ac52-b4c3fd40e625"
-                  className="more-icon"
+                  className="more-icon-a"
                   alt="More"
                 />
               </div>
 
-              <div className="project-item">
+              <div className="project-item-a">
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cc91f55f-a364-4d2b-b9ab-a674cd9f7238"
                   alt="Project 3"
                 />
-                <div className="project-info">
+                <div className="project-info-a">
                   <h4>Most essential tips for Burnout</h4>
-                  <div className="project-meta">
+                  <div className="project-meta-a">
                     <span>Project #3</span>
                     <span>•</span>
                     <a href="#">See project details</a>
@@ -387,7 +387,7 @@ const ProfilePageEmployee = () => {
                 </div>
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b95b63a7-a150-43a1-b94a-67095e2d7146"
-                  className="more-icon"
+                  className="more-icon-a"
                   alt="More"
                 />
               </div>
@@ -395,73 +395,73 @@ const ProfilePageEmployee = () => {
           </div>
 
           {/* Info Card (expanded) */}
-          <div className="info-card expanded-info">
+          <div className="info-card-a expanded-info">
             <h2>General Information</h2>
-            <p className="info-text">
+            <p className="info-text-a">
               As we live, our hearts turn colder. Cause pain is what we go
               through as we become older. We get insulted by others, lose trust
               for those others. We get back stabbed by friends. It has been
               helpful for us to take others a hand. We get our heart broken.
             </p>
 
-            <div className="info-grid">
+            <div className="info-grid-a">
               <button
-                className="info-item"
+                className="info-item-a"
                 onClick={() => alert("Education clicked")}
               >
-                <span className="info-label">Education</span>
-                <span className="info-value">Stanford University</span>
+                <span className="info-label-a">Education</span>
+                <span className="info-value-a">Stanford University</span>
               </button>
 
               <button
-                className="info-item"
+                className="info-item-a"
                 onClick={() => alert("Languages clicked")}
               >
-                <span className="info-label">Languages</span>
-                <span className="info-value">English, Spanish, Italian</span>
+                <span className="info-label-a">Languages</span>
+                <span className="info-value-a">English, Spanish, Italian</span>
               </button>
 
               <button
-                className="info-item"
+                className="info-item-a"
                 onClick={() => alert("Department clicked")}
               >
-                <span className="info-label">Department</span>
-                <span className="info-value">Product Design</span>
+                <span className="info-label-a">Department</span>
+                <span className="info-value-a">Product Design</span>
               </button>
 
               <button
-                className="info-item"
+                className="info-item-a"
                 onClick={() => alert("Work History clicked")}
               >
-                <span className="info-label">Work History</span>
-                <span className="info-value">Google, Facebook</span>
+                <span className="info-label-a">Work History</span>
+                <span className="info-value-a">Google, Facebook</span>
               </button>
 
               <button
-                className="info-item"
+                className="info-item-a"
                 onClick={() => alert("Organization clicked")}
               >
-                <span className="info-label">Organization</span>
-                <span className="info-value">Simmmple Web LLC</span>
+                <span className="info-label-a">Organization</span>
+                <span className="info-value-a">Simmmple Web LLC</span>
               </button>
 
               <button
-                className="info-item"
+                className="info-item-a"
                 onClick={() => alert("Birthday clicked")}
               >
-                <span className="info-label">Birthday</span>
-                <span className="info-value">20 July 1986</span>
+                <span className="info-label-a">Birthday</span>
+                <span className="info-value-a">20 July 1986</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="footer">
+        <div className="footer-a">
           <span>
             © 2022 Horizon UI. All Rights Reserved. Made with love by Simmmple!
           </span>
-          <div className="footer-links">
+          <div className="footer-links-a">
             <a href="#">Marketplace</a>
             <a href="#">License</a>
             <a href="#">Terms of Use</a>

@@ -1,44 +1,46 @@
 import React from "react";
 import "../styles/Billing.css"
+import { useNavigate } from "react-router-dom";
 
 export default () => {
+  const navigate = useNavigate();
+
   return (
     <div className="app-container">
       {/* Sidebar */}
       <div className="sidebar">
         <div className="logo">HRCLOUDX</div>
-        
+
         <div className="divider"></div>
-        
+
         <nav className="nav-menu">
-          <MenuItem 
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/hmqpmay4_expires_30_days.png" 
-            text="Dashboard" 
-          />
-          <MenuItem 
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/z06o8o00_expires_30_days.png" 
-            text="Profile" 
-          />
-          <MenuItem 
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/rz3od6et_expires_30_days.png" 
-            text="New Hires" 
-          />
-          <MenuItem 
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/557voprd_expires_30_days.png" 
-            text="Employees" 
-          />
-          <MenuItem 
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png" 
-            text="Billing" 
-            active 
-          />
+          <div className="menu-item" onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
+            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/hmqpmay4_expires_30_days.png" alt="Dashboard" className="menu-icon" />
+            <span>Dashboard</span>
+          </div>
+          <div className="menu-item" onClick={() => navigate("/profile")} style={{ cursor: "pointer" }}>
+            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/z06o8o00_expires_30_days.png" alt="Profile" className="menu-icon" />
+            <span>Profile</span>
+          </div>
+          <div className="menu-item" onClick={() => navigate("/new-hires")} style={{ cursor: "pointer" }}>
+            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/rz3od6et_expires_30_days.png" alt="New Hires" className="menu-icon" />
+            <span>New Hires</span>
+          </div>
+          <div className="menu-item" onClick={() => navigate("/employees")} style={{ cursor: "pointer" }}>
+            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/557voprd_expires_30_days.png" alt="Employees" className="menu-icon" />
+            <span>Employees</span>
+          </div>
+          <div className="menu-item active" onClick={() => navigate("/billing")} style={{ cursor: "pointer" }}>
+            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png" alt="Billing" className="menu-icon" />
+            <span>Billing</span>
+          </div>
         </nav>
-        
+
         <div className="upgrade-card">
-          <img 
-            src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png" 
-            className="upgrade-icon"
-            alt="Upgrade" 
+          <img
+              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png"
+              className="upgrade-icon"
+              alt="Upgrade"
           />
           <div className="upgrade-text">
             <div>Upgrade to PRO</div>
@@ -46,7 +48,8 @@ export default () => {
           </div>
         </div>
       </div>
-      
+
+
       {/* Main Content */}
       <div className="main-content">
         {/* Header */}
