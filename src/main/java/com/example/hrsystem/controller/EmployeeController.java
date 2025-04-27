@@ -55,4 +55,15 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping
+    public ResponseEntity<String> addEmployee(@RequestBody Employee employee) {
+        try {
+            service.saveEmployee(employee);
+            return ResponseEntity.ok("Employee added successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
 }
