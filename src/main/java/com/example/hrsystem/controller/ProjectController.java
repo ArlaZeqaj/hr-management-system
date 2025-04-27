@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,20 +19,38 @@ import java.util.Map;
 
 public class ProjectController {
 
-    private final ProjectService projectSummaryService;
+    private final ProjectService projectService;
 
     public ProjectController(ProjectService projectSummaryService) {
-        this.projectSummaryService = projectSummaryService;
+        this.projectService = projectSummaryService;
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Map<String, Object>>> getAllProjects(@RequestHeader("Authorization") String token) {
+        try {
+            // Extract the UID from Firebase authentication token
+            String idToken = token.replace("Bearer ", "");
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+            String uid = decodedToken.getUid();
+
+            // Get all projects for the user
+            List<Map<String, Object>> allProjects = projectService.getAllProjectsForUser(uid);
+            return ResponseEntity.ok(allProjects);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
     @GetMapping("/summary")
+
     public ResponseEntity<Map<String, Integer>> getProjectSummary(@RequestHeader("Authorization") String token) {
         try {
             String idToken = token.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String uid = decodedToken.getUid();
 
-            Map<String, Integer> summary = projectSummaryService.getProjectStatusSummaryForUser(uid);
+            Map<String, Integer> summary = projectService.getProjectStatusSummaryForUser(uid);
             return ResponseEntity.ok(summary);
 
         } catch (Exception e) {
@@ -38,6 +58,8 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+
 
 }
 

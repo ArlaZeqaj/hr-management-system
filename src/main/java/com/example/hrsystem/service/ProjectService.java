@@ -5,11 +5,49 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 @Service
 public class ProjectService {
+    // Method to get all projects assigned to a user
+    public List<Map<String, Object>> getAllProjectsForUser(String uid) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference projectsRef = db.collection("Project");
+
+        // Query to get all projects assigned to the user
+        Query query = projectsRef.whereArrayContains("assigned_id", uid);
+
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        List<Map<String, Object>> allProjects = new ArrayList<>();
+
+        // Process the documents and extract project data
+        for (DocumentSnapshot doc : documents) {
+            System.out.println("Firestore document data: " + doc.getData());  // Log the raw document data
+            Map<String, Object> projectData = new HashMap<>();
+            projectData.put("project_Name", doc.getString("project_Name"));
+            projectData.put("description", doc.getString("description"));
+            projectData.put("role", doc.getString("role"));
+            projectData.put("status", doc.getString("status"));
+            projectData.put("start_Date", doc.getString("start_Date"));
+            projectData.put("end_Date", doc.getString("end_Date"));
+            projectData.put("budget", doc.getString("budget"));
+            projectData.put("image", doc.getString("image"));
+            projectData.put("company_img", doc.getString("company_img"));
+
+            allProjects.add(projectData);
+        }
+
+
+
+        return allProjects;
+    }
+
     public Map<String, Integer> getProjectStatusSummaryForUser(String uid) throws Exception {
         System.out.println("🔔 getProjectStatusSummaryForUser called with uid: " + uid);
 
@@ -70,4 +108,5 @@ public class ProjectService {
 
         System.out.println("🚀 Returning summary: " + result);
         return result;
-    }}
+    }
+}

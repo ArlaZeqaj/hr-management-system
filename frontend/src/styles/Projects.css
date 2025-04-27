@@ -479,3 +479,77 @@ body {
     gap: 1rem;
   }
 }
+/* Status Colors */
+.status-done {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-canceled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-upcoming {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.status-default {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+/* You can add more specific styling here for headers, project cards, etc. */
+.header-section {
+  margin-bottom: 20px;
+}
+
+.project-cards-section, .project-history-section {
+  margin-top: 20px;
+}
+
+.project-history-table {
+  width: 100%;
+  overflow-x: auto;
+    background-color: var(--white); /* Set background to white */
+    border-radius: 1rem; /* Optional: Add rounded corners */
+    padding: 2rem; /* Optional: Add padding around the table */
+    box-shadow: var(--shadow); /* Optional: Add shadow to match the project cards section */
+}
+
+.project-history-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.project-history-table th {
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold; /* Makes the text bold */
+  font-size: 1.1rem; /* Adjust the font size here */
+}
+
+
+.project-history-table th, .project-history-table td {
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold; /* Makes the text bold */
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+.project-card .status-badge.ongoing {
+  background-color: #4FD1C5; /* Green */
+    color: black;  /* Set text color to black */
+    font-weight: bold;  /* Make the text bold */
+}
+
+
