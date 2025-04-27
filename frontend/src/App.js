@@ -9,33 +9,35 @@ import Billing from "./pages/Billing";
 import Projects from "./pages/Projects";
 import NewHires from "./pages/NewHires";
 import FirebaseTest from "./pages/FirebaseTest";
-import TestPanel from './pages/TestPanel'; // Adjust path if it's in a different folder
+import { BirthdayProvider } from './services/BirthdayContext';
+import TestPanel from './pages/TestPanel';
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                {/* Public Route */}
-                <Route path="/" element={<SignInPage />} />
+        <BirthdayProvider>
+            <Router>
+                <Routes>
+                    {/* Public Route */}
+                    <Route path="/" element={<SignInPage />} />
 
-                {/* Dashboards */}
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+                    {/* Dashboards */}
+                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                    <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
 
-                {/* Employee Pages */}
-                <Route path="/profile" element={<ProfilePageEmployee />} />
-                <Route path="/billing" element={<Billing />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/new-hires" element={<NewHires />} />
+                    {/* Employee Pages */}
+                    <Route path="/profile" element={<ProfilePageEmployee />} />
+                    <Route path="/billing" element={<Billing />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/new-hires" element={<NewHires />} />
 
-                {/* Testing */}
-                <Route path="/firebase/test" element={<FirebaseTest />} />
-                {/* shikojm db automatikisht*/}
-                <Route path="/databasa" element={<TestPanel />} />
+                    {/* Testing */}
+                    <Route path="/firebase/test" element={<FirebaseTest />} />
+                    <Route path="/databasa" element={<TestPanel />} />
 
-                {/* TODO: Add <PrivateRoute> wrappers later for protection */}
-            </Routes>
-        </Router>
+                    {/* TODO: Add <PrivateRoute> wrappers later for protection */}
+                </Routes>
+            </Router>
+        </BirthdayProvider>
     );
 }
 

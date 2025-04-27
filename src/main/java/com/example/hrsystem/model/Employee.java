@@ -3,6 +3,8 @@ package com.example.hrsystem.model;
 import com.google.cloud.firestore.annotation.DocumentId;
 import com.google.cloud.firestore.annotation.PropertyName;
 
+import java.util.List;
+
 public class Employee {
 
     @DocumentId
@@ -26,20 +28,54 @@ public class Employee {
     @PropertyName("Address")
     private String address;
 
+    @PropertyName("Education")
+    private String education;
+
+    @PropertyName("Departament")
+    private String departament;
+
+    @PropertyName("Work History")
+    private List<String> workHistory;
+
     @PropertyName("Gender")
     private String gender;
+
+
+    @PropertyName("Lanuages")
+    private List<String> languages;
+
+
 
     @PropertyName("Birth Date")
     private String birthDate;
 
+    @PropertyName("Organization")
+    private String organization;
+
+
     @PropertyName("Joined Date")
     private String joinedDate;
+
+    @PropertyName("Bio")
+    private String bio;
 
     @PropertyName("Position")
     private String position;
 
+
+    @PropertyName("Avatar Url")
+    private String avatarURL;
+
+    public String getAvatarURL() {
+        return avatarURL;
+    }
+
+    public void setAvatarURL(String avatarURL) {
+        this.avatarURL = avatarURL;
+    }
+
     public Employee() {
-        // Required public no-args constructor
+
     }
 
     // Getters and setters
@@ -72,6 +108,46 @@ public class Employee {
         return surname;
     }
 
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getDepartament() {
+        return departament;
+    }
+
+    public void setDepartament(String departament) {
+        this.departament = departament;
+    }
+
+    public List<String> getWorkHistory() {
+        return workHistory;
+    }
+
+    public void setWorkHistory(List<String> workHistory) {
+        this.workHistory = workHistory;
+    }
+
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
+
     public void setSurname(String surname) {
         this.surname = surname;
     }
@@ -99,6 +175,10 @@ public class Employee {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public void setBio(String bio) {this.bio = bio;}
+
+    public String getBio() {return bio;}
 
     public String getGender() {
         return gender;
@@ -131,4 +211,11 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
+
+
+
+
+
 }
+
+

@@ -1,0 +1,214 @@
+
+.birthday-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.birthday-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.birthday-icon {
+  font-size: 24px;
+}
+
+.birthday-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.refresh-btn:hover {
+  background: #f0f0f0;
+}
+
+.birthday-list {
+  min-height: 100px;
+}
+
+.birthday-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.birthday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.birthday-item:last-child {
+  border-bottom: none;
+}
+
+.employee-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name-email {
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-name {
+  font-weight: 600;
+  color: #222;
+  font-size: 1rem;
+}
+
+.employee-email {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.employee-department {
+  background: #f0f7ff;
+  color: #0066cc;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  align-self: flex-start;
+}
+
+.wish-btn {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.wish-btn:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.birthday-loading,
+.birthday-error,
+.no-birthdays {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.loading-spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid #0066cc;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.birthday-error button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+body.dark-theme .birthday-card {
+  background: #2d2d2d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .birthday-header h3 {
+  color: #ffffff;
+}
+
+body.dark-theme .refresh-btn {
+  color: #e0e0e0;
+}
+
+body.dark-theme .refresh-btn:hover {
+  background: #3a3a3a;
+}
+
+body.dark-theme .birthday-item {
+  border-bottom-color: #444;
+}
+
+body.dark-theme .employee-name {
+  color: #ffffff;
+}
+
+body.dark-theme .employee-email {
+  color: #aaa;
+}
+
+body.dark-theme .employee-department {
+  background: #3a3a3a;
+  color: #858CFF;
+}
+
+body.dark-theme .wish-btn {
+  background: #3a3a3a;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+body.dark-theme .wish-btn:hover {
+  background: #4a4a4a;
+}
+
+body.dark-theme .birthday-error button {
+  background: #3a3a3a;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+body.dark-theme .birthday-error button:hover {
+  background: #4a4a4a;
+}
+
+body.dark-theme .loading-spinner {
+  border-top-color: #858CFF;
+}
+
+body.dark-theme .no-birthdays {
+  color: #aaa;
+}
