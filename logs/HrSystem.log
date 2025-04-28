@@ -1800,3 +1800,440 @@ This generated password is for development use only. Your security configuration
 2025-04-26T11:29:06.246+02:00 DEBUG 16692 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
 2025-04-26T11:29:06.246+02:00 DEBUG 16692 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@57e2b0fa, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
 2025-04-26T11:29:06.249+02:00 DEBUG 16692 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:23.852+02:00  INFO 54590 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Starting HrSystemApplication using Java 23.0.1 with PID 54590 (/Users/estelamele/Documents/GitHub/hr-management-system/target/classes started by estelamele in /Users/estelamele/Documents/GitHub/hr-management-system)
+2025-04-28T13:16:23.854+02:00  INFO 54590 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : No active profile set, falling back to 1 default profile: "default"
+2025-04-28T13:16:24.545+02:00  INFO 54590 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-04-28T13:16:24.581+02:00  INFO 54590 --- [HrSystem] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 24 ms. Found 0 JPA repository interfaces.
+2025-04-28T13:16:25.258+02:00  INFO 54590 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-04-28T13:16:25.277+02:00  INFO 54590 --- [HrSystem] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-04-28T13:16:25.278+02:00  INFO 54590 --- [HrSystem] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+2025-04-28T13:16:25.344+02:00  INFO 54590 --- [HrSystem] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-04-28T13:16:25.344+02:00  INFO 54590 --- [HrSystem] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1443 ms
+2025-04-28T13:16:25.530+02:00  INFO 54590 --- [HrSystem] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-04-28T13:16:25.590+02:00  INFO 54590 --- [HrSystem] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+2025-04-28T13:16:25.622+02:00  INFO 54590 --- [HrSystem] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-04-28T13:16:25.902+02:00  INFO 54590 --- [HrSystem] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-04-28T13:16:25.935+02:00  INFO 54590 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-04-28T13:16:26.110+02:00  INFO 54590 --- [HrSystem] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-04-28T13:16:26.112+02:00  INFO 54590 --- [HrSystem] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-04-28T13:16:26.137+02:00  WARN 54590 --- [HrSystem] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-04-28T13:16:26.157+02:00  INFO 54590 --- [HrSystem] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-04-28T13:16:26.938+02:00  INFO 54590 --- [HrSystem] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-28T13:16:26.995+02:00  INFO 54590 --- [HrSystem] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-28T13:16:28.157+02:00  WARN 54590 --- [HrSystem] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-28T13:16:28.175+02:00  WARN 54590 --- [HrSystem] [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 3a777f80-1884-4c2a-8876-cf16f67758d5
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-04-28T13:16:28.187+02:00  INFO 54590 --- [HrSystem] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-04-28T13:16:28.323+02:00 DEBUG 54590 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 15 mappings in 'requestMappingHandlerMapping'
+2025-04-28T13:16:28.408+02:00 DEBUG 54590 --- [HrSystem] [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2025-04-28T13:16:28.444+02:00 DEBUG 54590 --- [HrSystem] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, FirebaseTokenFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-04-28T13:16:28.502+02:00 DEBUG 54590 --- [HrSystem] [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-04-28T13:16:28.541+02:00 DEBUG 54590 --- [HrSystem] [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-04-28T13:16:28.614+02:00  INFO 54590 --- [HrSystem] [main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-04-28T13:16:28.685+02:00  INFO 54590 --- [HrSystem] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-04-28T13:16:28.695+02:00  INFO 54590 --- [HrSystem] [main] c.example.hrsystem.HrSystemApplication   : Started HrSystemApplication in 5.401 seconds (process running for 5.779)
+2025-04-28T13:16:40.887+02:00  INFO 54590 --- [HrSystem] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-28T13:16:40.889+02:00  INFO 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-04-28T13:16:40.890+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2025-04-28T13:16:40.891+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2025-04-28T13:16:40.891+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2025-04-28T13:16:40.894+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@454f6cc5
+2025-04-28T13:16:40.894+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@365c8a47
+2025-04-28T13:16:40.895+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-04-28T13:16:40.895+02:00  INFO 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2025-04-28T13:16:40.913+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2025-04-28T13:16:42.455+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2025-04-28T13:16:42.458+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/login", parameters={}
+2025-04-28T13:16:42.459+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AuthController#login(Authentication)
+2025-04-28T13:16:42.777+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-04-28T13:16:42.779+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{role=employee, uid=Zk21SluHKTTEg5owtA4FuW8nSI93}]
+2025-04-28T13:16:42.794+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:42.854+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /api/payroll
+2025-04-28T13:16:42.855+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /api/projects/summary
+2025-04-28T13:16:42.855+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /api/attendance/checkin-time
+2025-04-28T13:16:42.855+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/performance/monthly
+2025-04-28T13:16:42.855+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/schedule/2025-04
+2025-04-28T13:16:42.865+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:16:42.958+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /api/payroll
+2025-04-28T13:16:42.959+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/payroll", parameters={}
+2025-04-28T13:16:42.959+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PayrollController#getPayroll(Authentication)
+2025-04-28T13:16:43.036+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /api/schedule/2025-04
+2025-04-28T13:16:43.037+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/2025-04", parameters={}
+2025-04-28T13:16:43.038+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.TaskController#getScheduleForMonth(String, Authentication)
+2025-04-28T13:16:43.046+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /api/attendance/checkin-time
+2025-04-28T13:16:43.047+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/attendance/checkin-time", parameters={}
+2025-04-28T13:16:43.048+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AttendanceController#getCheckInTime(String)
+2025-04-28T13:16:43.050+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /api/performance/monthly
+2025-04-28T13:16:43.050+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/performance/monthly", parameters={}
+2025-04-28T13:16:43.051+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PerformanceController#getMonthly(String)
+2025-04-28T13:16:43.054+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /api/projects/summary
+2025-04-28T13:16:43.055+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/projects/summary", parameters={}
+2025-04-28T13:16:43.055+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.ProjectController#getProjectSummary(String)
+2025-04-28T13:16:43.062+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:16:43.063+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:16:43.063+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:16:43.072+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.072+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.dto.PayrollDTO@11e378bc]
+2025-04-28T13:16:43.075+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:43.185+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.186+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{month=2025-04, tasks=[Ljava.lang.Object;@55d4ea36}]
+2025-04-28T13:16:43.194+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:43.253+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.253+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] m.m.a.RequestResponseBodyMethodProcessor : Writing [{checkInTime=13:04:39}]
+2025-04-28T13:16:43.256+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:43.266+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.266+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{canceled=0, total=0, ongoing=0, done=0, upcoming=0}]
+2025-04-28T13:16:43.267+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.268+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.WeeklyPerformanceDTO@808b8a6, com.example.hrsystem.dto.WeeklyPerformanceDT (truncated)...]
+2025-04-28T13:16:43.268+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:43.271+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:43.452+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.453+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@698a2fca, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:16:43.455+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:43.465+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:16:43.567+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:16:43.569+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:16:43.570+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:16:43.858+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:43.859+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@2eb5ab6c, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:16:43.871+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:16:48.265+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /projects-icon.png
+2025-04-28T13:16:48.265+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /home-icon.png
+2025-04-28T13:16:48.298+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /error
+2025-04-28T13:16:48.298+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /error
+2025-04-28T13:16:48.701+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/projects/all
+2025-04-28T13:16:48.813+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /api/projects/all
+2025-04-28T13:16:48.814+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/projects/all", parameters={}
+2025-04-28T13:16:48.815+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.ProjectController#getAllProjects(String)
+2025-04-28T13:16:48.936+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:16:48.937+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[]]
+2025-04-28T13:16:48.941+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:00.646+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:17:00.745+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:17:00.746+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/employees/by-email?email=bashkim@hrcloudx.com", parameters={masked}
+2025-04-28T13:17:00.747+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getEmployeeByEmail(String)
+2025-04-28T13:17:00.882+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:00.882+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.model.Employee@59771718]
+2025-04-28T13:17:00.889+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:04.211+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /api/employees
+2025-04-28T13:17:04.314+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured GET /api/employees
+2025-04-28T13:17:04.315+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/employees", parameters={}
+2025-04-28T13:17:04.315+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getAllEmployees()
+2025-04-28T13:17:04.437+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for fullName found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.438+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageTotal found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.439+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for posts found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.439+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageUsed found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.441+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for department found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.441+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for notifications found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.442+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.442+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.443+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.443+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.443+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.445+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.445+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.445+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.446+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.446+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Work History found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.447+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.447+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birthday found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.447+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-10] c.g.cloud.firestore.CustomClassMapper    : No setter/field for title found on class com.example.hrsystem.model.Employee
+2025-04-28T13:17:04.449+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:04.450+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] m.m.a.RequestResponseBodyMethodProcessor : Writing [[com.example.hrsystem.model.Employee@41440fcb, com.example.hrsystem.model.Employee@759582f8, com.exa (truncated)...]
+2025-04-28T13:17:04.453+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:39.565+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2025-04-28T13:17:39.669+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2025-04-28T13:17:39.670+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/login", parameters={}
+2025-04-28T13:17:39.670+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AuthController#login(Authentication)
+2025-04-28T13:17:39.886+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-04-28T13:17:39.887+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{role=employee, uid=1oR4VXgAAfhTmfBana0vA8vhJvb2}]
+2025-04-28T13:17:39.892+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:39.949+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/payroll
+2025-04-28T13:17:39.949+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /api/performance/monthly
+2025-04-28T13:17:39.950+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /api/attendance/checkin-time
+2025-04-28T13:17:39.951+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /api/schedule/2025-04
+2025-04-28T13:17:39.954+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /api/projects/summary
+2025-04-28T13:17:39.973+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:17:40.073+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /api/performance/monthly
+2025-04-28T13:17:40.073+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/performance/monthly", parameters={}
+2025-04-28T13:17:40.074+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PerformanceController#getMonthly(String)
+2025-04-28T13:17:40.149+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:17:40.150+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:17:40.151+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /api/projects/summary
+2025-04-28T13:17:40.151+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/projects/summary", parameters={}
+2025-04-28T13:17:40.151+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:17:40.151+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.ProjectController#getProjectSummary(String)
+2025-04-28T13:17:40.157+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /api/payroll
+2025-04-28T13:17:40.158+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/payroll", parameters={}
+2025-04-28T13:17:40.158+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /api/schedule/2025-04
+2025-04-28T13:17:40.158+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/2025-04", parameters={}
+2025-04-28T13:17:40.158+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PayrollController#getPayroll(Authentication)
+2025-04-28T13:17:40.158+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.TaskController#getScheduleForMonth(String, Authentication)
+2025-04-28T13:17:40.157+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /api/attendance/checkin-time
+2025-04-28T13:17:40.160+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/attendance/checkin-time", parameters={}
+2025-04-28T13:17:40.160+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AttendanceController#getCheckInTime(String)
+2025-04-28T13:17:40.203+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:40.204+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.WeeklyPerformanceDTO@9f21ccb, com.example.hrsystem.dto.WeeklyPerformanceDT (truncated)...]
+2025-04-28T13:17:40.206+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:40.341+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:40.342+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{month=2025-04, tasks=[Ljava.lang.Object;@7408c042}]
+2025-04-28T13:17:40.345+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:40.347+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:40.348+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [{checkInTime=12:59:17}]
+2025-04-28T13:17:40.348+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:40.349+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:40.349+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.dto.PayrollDTO@30e81ac8]
+2025-04-28T13:17:40.355+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:40.355+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{canceled=1, total=4, ongoing=2, done=1, upcoming=0}]
+2025-04-28T13:17:40.356+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:40.356+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:40.493+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:40.494+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@36a37c59, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:17:40.495+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:40.505+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:17:40.601+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:17:40.602+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:17:40.602+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:17:41.251+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:41.252+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@4727d2b7, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:17:41.253+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:17:44.347+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /projects-icon.png
+2025-04-28T13:17:44.347+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /home-icon.png
+2025-04-28T13:17:44.350+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /error
+2025-04-28T13:17:44.350+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /error
+2025-04-28T13:17:44.774+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/projects/all
+2025-04-28T13:17:44.873+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /api/projects/all
+2025-04-28T13:17:44.874+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/projects/all", parameters={}
+2025-04-28T13:17:44.874+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.ProjectController#getAllProjects(String)
+2025-04-28T13:17:44.976+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:17:44.977+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[{end_Date=5/5/2025, image=https://static-00.iconduck.com/assets.00/slack-icon-2048x2048-sgl67hsi.pn (truncated)...]
+2025-04-28T13:17:44.981+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:38.581+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/payroll
+2025-04-28T13:24:38.581+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /api/performance/monthly
+2025-04-28T13:24:38.581+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /api/projects/summary
+2025-04-28T13:24:38.581+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:38.581+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /api/schedule/2025-04
+2025-04-28T13:24:38.581+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /api/attendance/checkin-time
+2025-04-28T13:24:38.995+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /api/attendance/checkin-time
+2025-04-28T13:24:38.994+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /api/payroll
+2025-04-28T13:24:38.995+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/api/attendance/checkin-time", parameters={}
+2025-04-28T13:24:38.995+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/payroll", parameters={}
+2025-04-28T13:24:38.995+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AttendanceController#getCheckInTime(String)
+2025-04-28T13:24:38.996+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PayrollController#getPayroll(Authentication)
+2025-04-28T13:24:38.994+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:38.997+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:24:38.998+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:24:39.001+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /api/projects/summary
+2025-04-28T13:24:39.002+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/projects/summary", parameters={}
+2025-04-28T13:24:39.002+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.ProjectController#getProjectSummary(String)
+2025-04-28T13:24:39.003+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /api/performance/monthly
+2025-04-28T13:24:39.006+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/performance/monthly", parameters={}
+2025-04-28T13:24:39.006+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PerformanceController#getMonthly(String)
+2025-04-28T13:24:39.013+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured GET /api/schedule/2025-04
+2025-04-28T13:24:39.019+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/2025-04", parameters={}
+2025-04-28T13:24:39.020+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.TaskController#getScheduleForMonth(String, Authentication)
+2025-04-28T13:24:39.127+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.130+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.dto.PayrollDTO@1f60781b]
+2025-04-28T13:24:39.145+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:39.201+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.205+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.207+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{month=2025-04, tasks=[Ljava.lang.Object;@123e951b}]
+2025-04-28T13:24:39.207+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] m.m.a.RequestResponseBodyMethodProcessor : Writing [{checkInTime=12:59:17}]
+2025-04-28T13:24:39.211+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:39.210+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:39.222+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.222+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.222+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{canceled=1, total=4, ongoing=2, done=1, upcoming=0}]
+2025-04-28T13:24:39.222+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.WeeklyPerformanceDTO@4bb82d6b, com.example.hrsystem.dto.WeeklyPerformanceD (truncated)...]
+2025-04-28T13:24:39.224+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:39.224+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:39.403+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.404+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@1f388b7, com.example.hrsystem.dto.CalendarHighlightDT (truncated)...]
+2025-04-28T13:24:39.405+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:39.415+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:39.510+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:39.511+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:24:39.511+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:24:39.816+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:39.817+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@3d96d3f0, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:24:39.817+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:42.538+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing POST /api/auth/login
+2025-04-28T13:24:42.538+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:42.635+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured POST /api/auth/login
+2025-04-28T13:24:42.635+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : POST "/api/auth/login", parameters={}
+2025-04-28T13:24:42.636+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AuthController#login(Authentication)
+2025-04-28T13:24:42.723+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:42.724+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:24:42.724+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:24:42.900+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-04-28T13:24:42.901+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{role=employee, uid=Zk21SluHKTTEg5owtA4FuW8nSI93}]
+2025-04-28T13:24:42.902+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:42.926+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /api/payroll
+2025-04-28T13:24:42.926+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /api/schedule/2025-04
+2025-04-28T13:24:42.926+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /api/projects/summary
+2025-04-28T13:24:42.931+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/performance/monthly
+2025-04-28T13:24:42.933+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /api/attendance/checkin-time
+2025-04-28T13:24:43.027+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /api/schedule/2025-04
+2025-04-28T13:24:43.027+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/api/schedule/2025-04", parameters={}
+2025-04-28T13:24:43.028+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.TaskController#getScheduleForMonth(String, Authentication)
+2025-04-28T13:24:43.101+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /api/projects/summary
+2025-04-28T13:24:43.102+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/projects/summary", parameters={}
+2025-04-28T13:24:43.102+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.ProjectController#getProjectSummary(String)
+2025-04-28T13:24:43.107+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /api/performance/monthly
+2025-04-28T13:24:43.111+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/performance/monthly", parameters={}
+2025-04-28T13:24:43.111+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PerformanceController#getMonthly(String)
+2025-04-28T13:24:43.112+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /api/attendance/checkin-time
+2025-04-28T13:24:43.113+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/api/attendance/checkin-time", parameters={}
+2025-04-28T13:24:43.114+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /api/payroll
+2025-04-28T13:24:43.115+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/api/payroll", parameters={}
+2025-04-28T13:24:43.115+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.PayrollController#getPayroll(Authentication)
+2025-04-28T13:24:43.116+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.AttendanceController#getCheckInTime(String)
+2025-04-28T13:24:43.121+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.121+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@207d7757, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:24:43.123+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.124+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.124+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{month=2025-04, tasks=[Ljava.lang.Object;@6930a25d}]
+2025-04-28T13:24:43.125+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.133+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:43.206+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.206+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.dto.PayrollDTO@457d193]
+2025-04-28T13:24:43.207+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.283+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.283+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] m.m.a.RequestResponseBodyMethodProcessor : Writing [{checkInTime=13:04:39}]
+2025-04-28T13:24:43.283+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.284+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{canceled=0, total=0, ongoing=0, done=0, upcoming=0}]
+2025-04-28T13:24:43.284+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.284+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.288+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:43.288+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:24:43.289+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.289+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:24:43.289+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.WeeklyPerformanceDTO@46a2b7b4, com.example.hrsystem.dto.WeeklyPerformanceD (truncated)...]
+2025-04-28T13:24:43.289+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.579+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.579+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@74423900, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:24:43.580+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.588+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:43.685+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:43.685+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:24:43.686+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:24:43.970+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:43.970+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@49c2f9c9, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:24:43.971+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:43.978+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:44.067+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /api/calendar-highlights?year=2025&month=4
+2025-04-28T13:24:44.068+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/calendar-highlights?year=2025&month=4", parameters={masked}
+2025-04-28T13:24:44.068+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.CalendarHighlightController#getHighlights(Authentication, int, int)
+2025-04-28T13:24:44.361+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:44.361+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[com.example.hrsystem.dto.CalendarHighlightDTO@5e28544c, com.example.hrsystem.dto.CalendarHighlightD (truncated)...]
+2025-04-28T13:24:44.362+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:47.743+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:24:47.816+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:24:47.817+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/api/employees/by-email?email=bashkim@hrcloudx.com", parameters={masked}
+2025-04-28T13:24:47.817+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getEmployeeByEmail(String)
+2025-04-28T13:24:47.904+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:47.905+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.model.Employee@2367edd3]
+2025-04-28T13:24:47.906+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:48.910+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/employees
+2025-04-28T13:24:48.999+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Secured GET /api/employees
+2025-04-28T13:24:49.000+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/api/employees", parameters={}
+2025-04-28T13:24:49.000+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getAllEmployees()
+2025-04-28T13:24:49.100+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for fullName found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.101+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageTotal found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.101+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for posts found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.101+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageUsed found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.102+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for department found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.102+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for notifications found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.104+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.104+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.105+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.105+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.106+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Work History found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.107+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birthday found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.108+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-6] c.g.cloud.firestore.CustomClassMapper    : No setter/field for title found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:49.108+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:49.109+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] m.m.a.RequestResponseBodyMethodProcessor : Writing [[com.example.hrsystem.model.Employee@71657d83, com.example.hrsystem.model.Employee@4b92f1b5, com.exa (truncated)...]
+2025-04-28T13:24:49.112+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:24:50.716+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /api/employees
+2025-04-28T13:24:50.795+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /api/employees
+2025-04-28T13:24:50.796+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/api/employees", parameters={}
+2025-04-28T13:24:50.797+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getAllEmployees()
+2025-04-28T13:24:50.901+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for fullName found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.902+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageTotal found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.902+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for posts found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.902+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageUsed found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.902+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for department found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.902+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for notifications found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.903+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.903+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.904+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.904+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.904+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.905+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.905+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.906+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.906+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.906+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Work History found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.906+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.906+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birthday found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.906+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-8] c.g.cloud.firestore.CustomClassMapper    : No setter/field for title found on class com.example.hrsystem.model.Employee
+2025-04-28T13:24:50.907+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:24:50.907+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] m.m.a.RequestResponseBodyMethodProcessor : Writing [[com.example.hrsystem.model.Employee@110d919a, com.example.hrsystem.model.Employee@691c83b3, com.exa (truncated)...]
+2025-04-28T13:24:50.910+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:27:02.647+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:27:02.783+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Secured GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:27:02.786+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/employees/by-email?email=bashkim@hrcloudx.com", parameters={masked}
+2025-04-28T13:27:02.787+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getEmployeeByEmail(String)
+2025-04-28T13:27:02.894+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:27:02.895+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.model.Employee@41fdc886]
+2025-04-28T13:27:02.898+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:27:22.924+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:27:23.023+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /api/employees/by-email?email=bashkim@hrcloudx.com
+2025-04-28T13:27:23.024+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/api/employees/by-email?email=bashkim@hrcloudx.com", parameters={masked}
+2025-04-28T13:27:23.024+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getEmployeeByEmail(String)
+2025-04-28T13:27:23.121+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:27:23.122+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [com.example.hrsystem.model.Employee@2f8a0f77]
+2025-04-28T13:27:23.124+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2025-04-28T13:27:24.736+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /api/employees
+2025-04-28T13:27:24.852+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /api/employees
+2025-04-28T13:27:24.853+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/api/employees", parameters={}
+2025-04-28T13:27:24.853+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.hrsystem.controller.EmployeeController#getAllEmployees()
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for fullName found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageTotal found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for posts found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for storageUsed found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for department found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for notifications found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.953+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Joined Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birth Date found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Phone Number found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Work History found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for employee_ID found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.954+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for Birthday found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.955+02:00  WARN 54590 --- [HrSystem] [http-nio-8080-exec-1] c.g.cloud.firestore.CustomClassMapper    : No setter/field for title found on class com.example.hrsystem.model.Employee
+2025-04-28T13:27:24.955+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json]
+2025-04-28T13:27:24.955+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] m.m.a.RequestResponseBodyMethodProcessor : Writing [[com.example.hrsystem.model.Employee@1b7b91ef, com.example.hrsystem.model.Employee@69653b6b, com.exa (truncated)...]
+2025-04-28T13:27:24.957+02:00 DEBUG 54590 --- [HrSystem] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK

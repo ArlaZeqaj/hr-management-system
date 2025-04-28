@@ -1,0 +1,51 @@
+/* Admin Footer Styles */
+.admin-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e5f2;
+    color: #a3aed0;
+    font-size: 0.9rem;
+  }
+  
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .footer-links a {
+    color: #a3aed0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  
+  .footer-links a:hover {
+    color: #4318ff;
+  }
+  
+  .footer-links a i {
+    font-size: 0.8rem;
+  }
+  
+  /* Dark Theme Styles */
+  body.dark-theme .admin-footer {
+    border-top-color: #444;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .admin-footer {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+    
+    .footer-links {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }

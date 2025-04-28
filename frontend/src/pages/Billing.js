@@ -1,70 +1,122 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import AdminSidebar from "./Admin/AdminSidebar";
+import AdminHeader from "./Admin/AdminHeader";
+import AdminFooter from "./Admin/AdminFooter";
 import "../styles/Billing.css"
-import { useNavigate } from "react-router-dom";
+import "./Admin/AdminSidebar.css";
+import "./Admin/AdminHeader.css";
+import "./Admin/AdminFooter.css";
 
 export default () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Set active menu item based on current route
+  const getActiveMenuItem = () => {
+    const path = location.pathname;
+    if (path.includes('/admin/dashboard')) return 'AdminDashboard';
+    if (path.includes('/admin/profile')) return 'Profile';
+    if (path.includes('/new-hires')) return 'New Hires';
+    if (path.includes('/employee')) return 'Employees';
+    if (path.includes('/billing')) return 'Billing';
+    if (path.includes('/admin/projects')) return 'Projects';
+    return 'AdminDashboard'; // default
+  };
+
+  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+  const handleMenuItemClick = (menuItem) => {
+    setActiveMenuItem(menuItem);
+    switch (menuItem) {
+      case 'AdminDashboard':
+        navigate('/admin/dashboard');
+        break;
+      case 'Profile':
+        navigate('/admin/profile');
+        break;
+      case 'New Hires':
+        navigate('/new-hires');
+        break;
+      case 'Employees':
+        navigate('/employee');
+        break;
+      case 'Billing':
+        navigate('/billing');
+        break;
+      case 'Projects':
+        navigate('/admin/projects');
+        break;
+      default:
+        navigate('/admin/dashboard');
+    }
+  };
+
+  const [notifications, setNotifications] = useState({
+    "New employee registrations": true,
+    "Leave request approvals": true,
+    "System alerts": true,
+    "Payroll processing": false,
+    "Performance reviews": false,
+    "Company announcements": true,
+    "Security alerts": true,
+    "Data export completions": false,
+  });
+
+  const [darkMode, setDarkMode] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    // Initialize data and dark mode
+    useEffect(() => {
+        // Dark mode
+        const savedMode = localStorage.getItem("darkMode");
+        if (savedMode !== null) {
+            setDarkMode(savedMode === "true");
+        }
+    }, []);
+
+    // Apply dark mode
+    useEffect(() => {
+        if (darkMode) {
+            document.body.classList.add("dark-theme");
+        } else {
+            document.body.classList.remove("dark-theme");
+        }
+        localStorage.setItem("darkMode", darkMode);
+    }, [darkMode]);
+
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+    };
+
+    const toggleNotification = (notification) => {
+        setNotifications((prev) => ({
+            ...prev,
+            [notification]: !prev[notification],
+        }));
+    };
+
+  
 
   return (
-    <div className="app-container">
+    <div className="app-container-b">
       {/* Sidebar */}
-      <div className="sidebar">
-        <div className="logo">HRCLOUDX</div>
-
-        <div className="divider"></div>
-
-        <nav className="nav-menu">
-          <div className="menu-item" onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/hmqpmay4_expires_30_days.png" alt="Dashboard" className="menu-icon" />
-            <span>Dashboard</span>
-          </div>
-          <div className="menu-item" onClick={() => navigate("/profile")} style={{ cursor: "pointer" }}>
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/z06o8o00_expires_30_days.png" alt="Profile" className="menu-icon" />
-            <span>Profile</span>
-          </div>
-          <div className="menu-item" onClick={() => navigate("/new-hires")} style={{ cursor: "pointer" }}>
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/rz3od6et_expires_30_days.png" alt="New Hires" className="menu-icon" />
-            <span>New Hires</span>
-          </div>
-          <div className="menu-item" onClick={() => navigate("/employees")} style={{ cursor: "pointer" }}>
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/557voprd_expires_30_days.png" alt="Employees" className="menu-icon" />
-            <span>Employees</span>
-          </div>
-          <div className="menu-item active" onClick={() => navigate("/billing")} style={{ cursor: "pointer" }}>
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png" alt="Billing" className="menu-icon" />
-            <span>Billing</span>
-          </div>
-        </nav>
-
-        <div className="upgrade-card">
-          <img
-              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png"
-              className="upgrade-icon"
-              alt="Upgrade"
-          />
-          <div className="upgrade-text">
-            <div>Upgrade to PRO</div>
-            <small>to get access to all features!</small>
-          </div>
-        </div>
-      </div>
+      <AdminSidebar
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
+      />
 
 
       {/* Main Content */}
-      <div className="main-content">
-        {/* Header */}
-        <header className="header">
-          <div className="breadcrumbs">
-            <span>Pages / Billing</span>
-            <h1>Billing</h1>
-          </div>
-          
-          <div className="user-profile">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2bb4edd4-293b-43c8-b39f-493a2edb1d91" alt="User" />
-            <span>Doe, Jane</span>
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/082c3bf8-01b8-4766-8555-99763cf21464" alt="Dropdown" />
-          </div>
-        </header>
+      <div className="main-content-b">
+        {/* Header Section */}
+        <AdminHeader
+                    activeMenuItem={activeMenuItem}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    darkMode={darkMode}
+                    toggleDarkMode={toggleDarkMode}
+                    notifications={notifications}
+                    toggleNotification={toggleNotification}
+                />
         
         {/* Payment Cards */}
         <div className="card-row">
@@ -246,9 +298,8 @@ export default () => {
           </div>
         </div>
         
-        <footer className="footer">
-          © 2024 HRCloudX. All Rights Reserved.
-        </footer>
+        {/* Footer */}
+        <AdminFooter />
       </div>
     </div>
   );

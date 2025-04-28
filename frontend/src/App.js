@@ -11,34 +11,42 @@ import NewHires from "./pages/NewHires";
 import FirebaseTest from "./pages/FirebaseTest";
 import { BirthdayProvider } from './services/BirthdayContext';
 import TestPanel from './pages/TestPanel';
+import LeaveRequest from "./pages/LeaveRequest";
+import AdminProfile from './pages/AdminProfilePage';
+import EmployeeList from './pages/EmployeeList';
 
 function App() {
-    return (
-        <BirthdayProvider>
-            <Router>
-                <Routes>
-                    {/* Public Route */}
-                    <Route path="/" element={<SignInPage />} />
+  return (
+    <BirthdayProvider>
+      <Router>
+        <Routes>
+          {/* Public Route */}
+          <Route path="/" element={<SignInPage />} />
 
-                    {/* Dashboards */}
-                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                    <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
+          {/* Dashboards */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
 
-                    {/* Employee Pages */}
-                    <Route path="/profile" element={<ProfilePageEmployee />} />
-                    <Route path="/billing" element={<Billing />} />
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/new-hires" element={<NewHires />} />
+          {/* Employee Pages */}
+          <Route path="/employee/profile" element={<ProfilePageEmployee />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/leave-request" element={<LeaveRequest />} />
 
-                    {/* Testing */}
-                    <Route path="/firebase/test" element={<FirebaseTest />} />
-                    <Route path="/databasa" element={<TestPanel />} />
+          {/* Admin Pages */}
+          <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route path="/billing" element={<Billing />} />
+          <Route path="/employee" element={<EmployeeList />} />
+          <Route path="/new-hires" element={<NewHires />} />
 
-                    {/* TODO: Add <PrivateRoute> wrappers later for protection */}
-                </Routes>
-            </Router>
-        </BirthdayProvider>
-    );
+          {/* Testing */}
+          <Route path="/firebase/test" element={<FirebaseTest />} />
+          <Route path="/databasa" element={<TestPanel />} />
+
+          {/* TODO: Add <PrivateRoute> wrappers later for protection */}
+        </Routes>
+      </Router>
+    </BirthdayProvider>
+  );
 }
 
 export default App;
