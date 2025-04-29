@@ -12,13 +12,19 @@ import ScheduleOverviewCard from "../cards/ScheduleOverviewCard";
 import PerformanceChartCard from "../cards/PerformanceChartCard";
 import TasksCard from "../cards/TasksCard";
 import '../../styles/Employee.css';
+import AdminFooter from "../../pages/Admin/AdminFooter";
+import EmployeeFooter from "../../pages/Employee/EmployeeFooter";
+import EmployeeSidebar from "../../pages/Employee/EmployeeSidebar";
+import EmployeeHeader from "../../pages/Employee/EmployeeHeader";
 
 const LayoutWrapper = () => {
     return (
         <div className="layout-wrapper-z">
-            <Sidebar />
+            <EmployeeSidebar />
+
             <main className="main-content-z">
-                <Header />
+
+                <EmployeeHeader />
 
                 {/* Top Summary Cards */}
                 <div className="grid-six-z">
@@ -55,8 +61,12 @@ const LayoutWrapper = () => {
                 <div className="grid-two-z">
                     <PerformanceChartCard />
                     <TasksCard />
+
                 </div>
+                <EmployeeFooter/>
+
             </main>
+
         </div>
     );
 };

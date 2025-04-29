@@ -6,18 +6,19 @@
     box-shadow: 8px 0 15px rgba(67, 24, 255, 0.05);
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     position: fixed;
     left: 0;
     top: 0;
-    overflow-y: auto;
+   bottom: 0; /* Ensures sidebar stretches from top to bottom */
+  overflow-y: auto;
     z-index: 100;
     border-right: 1px solid rgba(67, 24, 255, 0.1);
   }
   
   .employee-sidebar-header {
     padding: 0 1.5rem 1rem;
-    margin: 0.5 rem;
+    margin: 0.5rem;
   }
   
   .employee-logo {
