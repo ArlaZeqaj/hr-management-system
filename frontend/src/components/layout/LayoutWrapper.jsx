@@ -1,5 +1,5 @@
 // src/components/layout/LayoutWrapper.jsx
-import React from "react";
+import React, {useState} from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import StatCard from "../cards/Statcard";
@@ -16,11 +16,52 @@ import AdminFooter from "../../pages/Admin/AdminFooter";
 import EmployeeFooter from "../../pages/Employee/EmployeeFooter";
 import EmployeeSidebar from "../../pages/Employee/EmployeeSidebar";
 import EmployeeHeader from "../../pages/Employee/EmployeeHeader";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const LayoutWrapper = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Set active menu item based on current route
+    const getActiveMenuItem = () => {
+        const path = location.pathname;
+        if (path.includes('/employee/dashboard')) return 'Employee Dashboard';
+        if (path.includes('/employee/profile')) return 'Profile';
+        if (path.includes('/projects')) return 'Projects';
+        if (path.includes('/leave-request')) return 'Leave Request';
+        if (path.includes('/documents')) return 'Documents';
+        return 'Employee Dashboard'; // default
+    };
+
+    const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+    const handleMenuItemClick = (menuItem) => {
+        setActiveMenuItem(menuItem);
+        switch (menuItem) {
+            case 'Employee Dashboard':
+                navigate('/employee/dashboard');
+                break;
+            case 'Profile':
+                navigate('/employee/profile');
+                break;
+            case 'Projects':
+                navigate('/projects');
+                break;
+            case 'Leave Request':
+                navigate('/leave-request');
+                break;
+            case 'Documents':
+                navigate('/documents');
+                break;
+            default:
+                navigate('/employee/dashboard');
+        }
+    };
     return (
         <div className="layout-wrapper-z">
-            <EmployeeSidebar />
+            <EmployeeSidebar
+                activeMenuItem={activeMenuItem}
+                handleMenuItemClick={handleMenuItemClick}
+            />
 
             <main className="main-content-z">
 
