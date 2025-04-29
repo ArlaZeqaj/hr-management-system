@@ -1,7 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import EmployeeSidebar from "./Employee/EmployeeSidebar";
+import EmployeeHeader from "./Employee/EmployeeHeader";
+import EmployeeFooter from "./Employee/EmployeeFooter";
 import "../styles/LeaveRequest.css";
+import "./Employee/EmployeeSidebar.css";
+import "./Employee/EmployeeHeader.css";
+import "./Employee/EmployeeFooter.css";
 
 const LeaveRequest = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Set active menu item based on current route
+  const getActiveMenuItem = () => {
+    const path = location.pathname;
+    if (path.includes('/employee/dashboard')) return 'Employee Dashboard';
+    if (path.includes('/employee/profile')) return 'Profile';
+    if (path.includes('/projects')) return 'Projects';
+    if (path.includes('/leave-request')) return 'Leave Request';
+    if (path.includes('/documents')) return 'Documents';
+    return 'Employee Dashboard'; // default
+  };
+
+  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+  const handleMenuItemClick = (menuItem) => {
+    setActiveMenuItem(menuItem);
+    switch (menuItem) {
+      case 'Employee Dashboard':
+        navigate('/employee/dashboard');
+        break;
+      case 'Profile':
+        navigate('/employee/profile');
+        break;
+      case 'Projects':
+        navigate('/projects');
+        break;
+      case 'Leave Request':
+        navigate('/leave-request');
+        break;
+      case 'Documents':
+        navigate('/documents');
+        break;
+
+      default:
+        navigate('/employee/dashboard');
+    }
+  };
+
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [startDate, setStartDate] = useState('');
@@ -10,9 +57,59 @@ const LeaveRequest = () => {
   const [currentStep, setCurrentStep] = useState(0); // 0: Not submitted, 1: Submitted, 2: In Review, 3: Approved/Rejected
   const [submittedRequest, setSubmittedRequest] = useState(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const toggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState({
+    "Item update notifications": false,
+    "Item comment notifications": false,
+    "Buyer review notifications": false,
+    "Rating reminders notifications": true,
+    "Meetups near you notifications": false,
+    "Company news notifications": false,
+    "New launches and projects": false,
+    "Monthly product changes": false,
+    "Subscribe to newsletter": false,
+    "Email me when someone follows me": false,
+  });
+
+  const notificationRef = useRef(null);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target) &&
+        !event.target.closest('.profile-button')) {
+        setShowNotifications(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const toggleNotification = (notification) => {
+    setNotifications(prev => ({
+      ...prev,
+      [notification]: !prev[notification]
+    }));
   };
 
   const goToPreviousMonth = () => {
@@ -59,80 +156,28 @@ const LeaveRequest = () => {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   return (
-    <div className="projects-page-container">
+    <div className="page-container-lr">
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
-        <div className="sidebar-header">
-          <div className="logo-container">
-            <span className="logo">{sidebarCollapsed ? 'HX' : 'HRCLOUDX'}</span>
-          </div>
-        </div>
-
-        <div className="sidebar-menu">
-          <div className="menu-item">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a" className="menu-icon" alt="Dashboard" />
-            <span>Dashboard</span>
-          </div>
-          <div className="menu-item">
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/z06o8o00_expires_30_days.png" className="menu-icon" alt="Profile" />
-            <span>Profile</span>
-          </div>
-          <div className="menu-item">
-            <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/rz3od6et_expires_30_days.png" className="menu-icon" alt="Projects" />
-            <span>Projects</span>
-          </div>
-          <div className="menu-item active">
-            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a" className="menu-icon" alt="Leave Request" />
-            <span>Leave Request</span>
-          </div>
-        </div>
-
-        {/* Toggle button moved to bottom */}
-        <div className="sidebar-footer">
-          <button className="sidebar-toggle" onClick={toggleSidebar}>
-            {sidebarCollapsed ? (
-              <>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </>
-            ) : (
-              <>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span>Collapse</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+      <EmployeeSidebar
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
+      />
 
       {/* Main Content */}
-      <div className={`projects-main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
+      <div className="main-content-lr">
         {/* Header Section */}
-        <div className="header-section">
-          <div className="breadcrumbs">
-            <span>Pages / Leave Request</span>
-            <h1>Leave Request</h1>
-          </div>
-          <div className="user-profile">
-            <img
-              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/o7m0g9od_expires_30_days.png"
-              alt="User"
-            />
-            <span>Doe, Jane</span>
-            <img
-              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6afz9mub_expires_30_days.png"
-              alt="Menu"
-            />
-          </div>
-        </div>
+        <EmployeeHeader
+          activeMenuItem={activeMenuItem}
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          notifications={notifications}
+          toggleNotification={toggleNotification}
+        />
 
         {/* Calendar Container */}
-        <div className="calendar-container">
-          {/* Header */}
-          <div className="calendar-header">
+        <div className="calendar-container-lr">
+          {/* Calendar Header */}
+          <div className="calendar-header-lr">
             <div className="month-selector">
               <button className="nav-button" onClick={goToPreviousMonth}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -344,15 +389,7 @@ const LeaveRequest = () => {
         </div>
 
         {/* Footer */}
-        <div className="footer">
-          <span>© 2024 HRCloudX. All Rights Reserved.</span>
-          <div className="footer-links">
-            <span>Marketplace</span>
-            <span>License</span>
-            <span>Terms of Use</span>
-            <span>Blog</span>
-          </div>
-        </div>
+        <EmployeeFooter />
       </div>
     </div>
   );

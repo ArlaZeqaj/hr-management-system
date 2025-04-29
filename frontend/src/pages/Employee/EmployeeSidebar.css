@@ -1,0 +1,211 @@
+/* Sidebar */
+.employee-sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #ffffff 0%, #f9faff 100%);
+    padding: 1.5rem 0;
+    box-shadow: 8px 0 15px rgba(67, 24, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    z-index: 100;
+    border-right: 1px solid rgba(67, 24, 255, 0.1);
+  }
+  
+  .employee-sidebar-header {
+    padding: 0 1.5rem 1rem;
+    margin: 0.5 rem;
+  }
+  
+  .employee-logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    display: block;
+    text-align: center;
+    letter-spacing: -0.5px;
+    padding: 1rem;
+  }
+  
+  .logo-highlight {
+    color: #4318FF;
+    font-weight: 800;
+  }
+  
+  .sidebar-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(67, 24, 255, 0.2) 50%, transparent 100%);
+    margin: 1rem 0;
+  }
+  
+  .employee-sidebar-menu {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 1rem;
+  }
+  
+  .employee-menu-item {
+    position: relative;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #5a5a5a;
+    overflow: hidden;
+  }
+  
+  .menu-item-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .employee-menu-item:hover {
+    background-color: rgba(67, 24, 255, 0.05);
+    color: #4318FF;
+    transform: translateX(4px);
+  }
+  
+  .employee-menu-item:hover .admin-icons {
+    filter: invert(24%) sepia(98%) saturate(5425%) hue-rotate(251deg) brightness(98%) contrast(101%);
+  }
+  
+  .employee-menu-item.active {
+    background-color: rgba(67, 24, 255, 0.08);
+    color: #4318FF;
+    font-weight: 500;
+  }
+  
+  .employee-menu-item.active .admin-icons {
+    filter: invert(24%) sepia(98%) saturate(5425%) hue-rotate(251deg) brightness(98%) contrast(101%);
+  }
+  
+  .active-indicator {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 24px;
+    background-color: #4318FF;
+    border-radius: 3px 0 0 3px;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .employee-menu-item.active .active-indicator {
+    opacity: 1;
+    right: 0;
+  }
+  
+  .admin-icons {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Sidebar Footer */
+  .employee-sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(67, 24, 255, 0.1);
+    margin-top: auto;
+  }
+  
+  .employee-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .employee-profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4318FF 0%, #8a63ff 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  .employee-profile-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .employee-profile-name {
+    font-weight: 600;
+    color: #2a2a2a;
+    font-size: 0.95rem;
+  }
+  
+  .employee-profile-role {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .employee-sidebar {
+      width: 80px;
+      padding: 1rem 0.5rem;
+    }
+    
+    .employee-menu-item span {
+      display: none;
+    }
+    
+    .employee-sidebar-header, .sidebar-footer {
+      padding: 0.5rem;
+    }
+    
+    .employee-logo {
+      font-size: 1.2rem;
+    }
+    
+    .employee-profile-avatar {
+      width: 32px;
+      height: 32px;
+      font-size: 0.7rem;
+    }
+    
+    .employee-profile-info {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .employee-sidebar {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
+        padding: 0;
+        z-index: 1000;
+    }
+    
+    .employee-sidebar.mobile-visible {
+      transform: translateX(0);
+    }
+    
+    .employee-sidebar-menu {
+      display: flex;
+      flex: 1;
+      padding: 0;
+    }
+    
+    .employee-menu-item {
+      flex: 1;
+      flex-direction: column;
+      padding: 0.5rem;
+      font-size: 0.7rem;
+    }
+  }

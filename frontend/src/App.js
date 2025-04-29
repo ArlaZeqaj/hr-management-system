@@ -14,6 +14,7 @@ import TestPanel from './pages/TestPanel';
 import LeaveRequest from "./pages/LeaveRequest";
 import AdminProfile from './pages/AdminProfilePage';
 import EmployeeList from './pages/EmployeeList';
+import Documents from "./pages/Documents";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/employee/profile" element={<ProfilePageEmployee />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/leave-request" element={<LeaveRequest />} />
+          <Route path="/documents" element={<Documents />} />
 
           {/* Admin Pages */}
           <Route path="/admin/profile" element={<AdminProfile />} />

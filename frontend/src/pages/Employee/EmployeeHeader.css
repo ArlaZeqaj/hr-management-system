@@ -1,0 +1,388 @@
+/* Employee Header Styles */
+.employee-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+  
+  .employee-breadcrumbs {
+    margin-bottom: 1rem;
+  }
+  
+  .employee-path {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  
+  .employee-current-page {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+  
+  .employee-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .employee-action-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .employee-messages-icon {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+  }
+
+  .employee-alerts-icon{
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+  }
+  
+  .employee-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--gray-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    
+  }
+  
+  .employee-icon-btn:hover {
+    background: var(--primary-light);
+    color: white;
+    border-color: var(--primary-light);
+    transform: translateY(-2px);
+  }
+  
+  .employee-icon-btn .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--danger);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+  
+  /* Profile Dropdown Styles */
+  .employee-profile-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .employee-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  
+  .employee-profile-btn:hover {
+    background: var(--gray-light);
+  }
+  
+  .employee-profile-btn img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .employee-profile-btn span {
+    font-weight: 500;
+    color: var(--dark);
+  }
+  
+  .employee-profile-btn i {
+    font-size: 0.8rem;
+    color: var(--gray);
+    transition: transform 0.3s ease;
+  }
+
+  .employee-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    min-width: 280px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    z-index: 1;
+  }
+  
+  .employee-profile-dropdown:hover .employee-dropdown-menu {
+    display: block;
+  }
+
+  .employee-dropdown-menu h3 {
+    margin: 0 0 1rem 0;
+    color: #2B3674;
+    font-size: 1rem;
+  }
+
+  .employee-profile-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%; /* Makes it circular */
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Ensures image stays within circle */
+    transition: transform 0.2s ease;
+  }
+
+  .employee-profile-button:hover {
+    transform: scale(1.05); /* Subtle hover effect */
+  }
+
+  .employee-profile-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image fills circle */
+  }
+  
+  .employee-dropdown-content {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .employee-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1.5rem 1rem;
+    border-bottom: 1px solid var(--gray-light);
+    margin-bottom: 0.5rem;
+  }
+  
+  .employee-dropdown-header img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .employee-dropdown-header h4 {
+    margin: 0;
+    color: var(--dark);
+    font-size: 1.1rem;
+  }
+  
+  .employee-dropdown-header p {
+    margin: 0.25rem 0 0;
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+  
+  .employee-dropdown-content a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: var(--gray-dark);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    gap: 0.75rem;
+  }
+  
+  .employee-dropdown-content a:hover {
+    background: var(--gray-light);
+    color: var(--primary-dark);
+  }
+  
+  .employee-dropdown-content a i {
+    width: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  
+  .employee-dropdown-divider {
+    height: 1px;
+    background: var(--gray-light);
+    margin: 0.75rem 0;
+  }
+  
+  .employee-dropdown-content h5 {
+    padding: 0 1.5rem;
+    margin: 0.5rem 0;
+    color: var(--gray);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  /* Toggle Switch Styles */
+  .employee-toggle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .employee-toggle-item:hover {
+    background: var(--gray-light);
+  }
+  
+  .employee-toggle-item span {
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+  }
+  
+  .employee-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+  }
+  
+  .employee-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .employee-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .employee-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .employee-toggle-slider {
+    background-color: var(--primary);
+  }
+  
+  input:checked + .employee-toggle-slider:before {
+    transform: translateX(18px);
+  }
+  
+  .employee-logout {
+    color: var(--danger) !important;
+  }
+  
+  /* Dark Theme Styles */
+  body.dark-theme .employee-current-page {
+    color: #ffffff;
+  }
+  
+  body.dark-theme .employee-path {
+    color: #a3aed0 !important;
+  }
+  
+  body.dark-theme .employee-icon-btn {
+    background: #3a3a4e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  
+  body.dark-theme .employee-icon-btn:hover {
+    background: #444;
+  }
+  
+  body.dark-theme .employee-dropdown-menu {
+    background: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #444;
+  }
+
+  body.dark-theme .employee-dropdown-menu h3 {
+    color: #ffffff;
+  }
+
+  body.dark-theme .employee-dropdown-content {
+    background: #2d2d42;
+  }
+  
+  body.dark-theme .employee-dropdown-header h4 {
+    color: #ffffff;
+  }
+  
+  body.dark-theme .employee-dropdown-content a {
+    color: #e0e0e0;
+  }
+  
+  body.dark-theme .employee-dropdown-content a:hover {
+    background: #444;
+    color: #858cff;
+  }
+  
+  body.dark-theme .employee-toggle-item span {
+    color: #e0e0e0;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .employee-header-actions {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .employee-search-bar {
+      width: 100%;
+    }
+    
+    .employee-search-bar input {
+      width: 100%;
+    }
+  }

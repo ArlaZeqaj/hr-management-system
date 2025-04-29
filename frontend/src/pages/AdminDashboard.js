@@ -1,260 +1,729 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import AdminSidebar from "./Admin/AdminSidebar";
+import AdminHeader from "./Admin/AdminHeader";
+import { Bar, Pie, Line } from 'react-chartjs-2';
+import { Chart, registerables } from 'chart.js';
 import "../styles/Admin.css";
-import { useNavigate } from 'react-router-dom';
+import "./Admin/AdminSidebar.css";
+import "./Admin/AdminHeader.css";
 
+Chart.register(...registerables);
 
-export default (props) => {
+const AdminDashboard = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+  
+    // Set active menu item based on current route
+    const getActiveMenuItem = () => {
+      const path = location.pathname;
+      if (path.includes('/admin/dashboard')) return 'Dashboard';
+      if (path.includes('/admin/profile')) return 'Profile';
+      if (path.includes('/new-hires')) return 'New Hires';
+      if (path.includes('/employee')) return 'Employees';
+      if (path.includes('/billing')) return 'Billing';
+      if (path.includes('/admin/projects')) return 'Projects';
+      return 'Dashboard'; // default
+    };
+  
+    const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+    const handleMenuItemClick = (menuItem) => {
+      setActiveMenuItem(menuItem);
+      switch (menuItem) {
+        case 'Dashboard':
+          navigate('/admin/dashboard');
+          break;
+        case 'Profile':
+          navigate('/admin/profile');
+          break;
+        case 'New Hires':
+          navigate('/new-hires');
+          break;
+        case 'Employees':
+          navigate('/employee');
+          break;
+        case 'Billing':
+          navigate('/billing');
+          break;
+        case 'Projects':
+          navigate('/admin/projects');
+          break;
+        default:
+          navigate('/admin/dashboard');
+      }
+    };
 
-    return (
-        <div className="admin-container">
-            {/* Sidebar */}
+  const [searchQuery, setSearchQuery] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState({
+    "Item updates": true,
+    "New hires": true,
+    "Payroll alerts": false,
+    "System updates": true
+  });
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [activeTab, setActiveTab] = useState('overview');
+  const [newHireForm, setNewHireForm] = useState({
+    name: '',
+    position: '',
+    department: '',
+    startDate: ''
+  });
 
-            <div className="sidebar">
-                <div className="logo">HRCLOUDX</div>
+  // Update current time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
 
-                <div className="divider"></div>
+  // Sample data - in a real app, this would come from an API
+  const [employees, setEmployees] = useState([
+    { id: 1, name: 'John Doe', position: 'Frontend Developer', department: 'Engineering', status: 'active' },
+    { id: 2, name: 'Jane Smith', position: 'HR Manager', department: 'Human Resources', status: 'active' },
+    { id: 3, name: 'Mike Johnson', position: 'Sales Executive', department: 'Sales', status: 'on leave' },
+    { id: 4, name: 'Sarah Williams', position: 'Marketing Specialist', department: 'Marketing', status: 'active' },
+    { id: 5, name: 'David Brown', position: 'Backend Developer', department: 'Engineering', status: 'active' },
+  ]);
 
-                <nav className="menu">
-                    <div
-                        className="menu-item active"
-                        onClick={() => navigate("/admin-dashboard")}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9b6d12ad-df6a-4aef-a71b-970e2db2eda9" alt="Dashboard" />
-                        <span>Dashboard</span>
-                    </div>
-                    <div
-                        className="menu-item"
-                        onClick={() => navigate("/#SkaakmProfile")}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e71d6f7f-492e-410d-ba4a-6e4e57c163f8" alt="Profile" />
-                        <span>Profile</span>
-                    </div>
-                </nav>
+  const [payrollData, setPayrollData] = useState([
+    { id: 1, department: 'Engineering', amount: 85000, status: 'processed', date: '2023-05-01' },
+    { id: 2, department: 'Marketing', amount: 42500, status: 'pending', date: '2023-05-01' },
+    { id: 3, department: 'Sales', amount: 63200, status: 'processed', date: '2023-05-01' },
+    { id: 4, department: 'HR', amount: 38750, status: 'pending', date: '2023-05-01' },
+  ]);
 
-                <div className="upgrade-card">
-                    <div className="upgrade-badge">
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/afc33f36-a919-4557-8430-4f037f660cd0" alt="Upgrade" />
-                        <span>Upgrade to PRO</span>
-                    </div>
-                    <p>to get access to all features!</p>
-                </div>
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Review Q2 Performance', dueDate: '2023-05-15', priority: 'high', completed: false },
+    { id: 2, title: 'Interview Candidates', dueDate: '2023-05-10', priority: 'medium', completed: false },
+    { id: 3, title: 'Team Meeting', dueDate: '2023-05-05', priority: 'high', completed: true },
+    { id: 4, title: 'Approve Leave Requests', dueDate: '2023-05-08', priority: 'low', completed: false },
+  ]);
+
+  // Charts data
+  const employeeDistributionData = {
+    labels: ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'],
+    datasets: [{
+      data: [45, 15, 20, 10, 10],
+      backgroundColor: [
+        '#4318FF',
+        '#6AD2FF',
+        '#EFF4FB',
+        '#05CD99',
+        '#FFB547'
+      ],
+      borderWidth: 0,
+    }]
+  };
+
+  const payrollTrendData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [{
+      label: 'Payroll Expenses',
+      data: [250000, 280000, 300000, 320000, 310000, 330000],
+      fill: false,
+      backgroundColor: '#4318FF',
+      borderColor: '#4318FF',
+      tension: 0.4
+    }]
+  };
+
+  const hiringTrendData = {
+    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    datasets: [{
+      label: 'New Hires',
+      data: [8, 12, 10, 15],
+      backgroundColor: '#05CD99',
+    }]
+  };
+
+  // Dynamic stats
+  const statsData = [
+    { 
+      title: "Total Employees", 
+      value: employees.length, 
+      change: "+12%", 
+      icon: "https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF",
+      trend: "up"
+    },
+    { 
+      title: "Active Projects", 
+      value: "24", 
+      change: "+5%", 
+      icon: "https://img.icons8.com/?size=100&id=102889&format=png&color=4318FF",
+      trend: "up"
+    },
+    { 
+      title: "Pending Tasks", 
+      value: tasks.filter(t => !t.completed).length, 
+      change: "-3%", 
+      icon: "https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF",
+      trend: "down"
+    },
+    { 
+      title: "Total Payroll", 
+      value: `$${payrollData.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}`, 
+      change: "+8%", 
+      icon: "https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF",
+      trend: "up"
+    }
+  ];
+
+  const toggleNotification = (notification) => {
+    setNotifications(prev => ({
+      ...prev,
+      [notification]: !prev[notification]
+    }));
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const handleTaskComplete = (taskId) => {
+    setTasks(tasks.map(task => 
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const handleNewHireChange = (e) => {
+    const { name, value } = e.target;
+    setNewHireForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAddNewHire = (e) => {
+    e.preventDefault();
+    const newEmployee = {
+      id: employees.length + 1,
+      name: newHireForm.name,
+      position: newHireForm.position,
+      department: newHireForm.department,
+      status: 'active',
+      startDate: newHireForm.startDate
+    };
+    setEmployees([...employees, newEmployee]);
+    setNewHireForm({
+      name: '',
+      position: '',
+      department: '',
+      startDate: ''
+    });
+    alert('New hire added successfully!');
+  };
+
+  const handleProcessPayroll = (id) => {
+    setPayrollData(payrollData.map(item => 
+      item.id === id ? { ...item, status: 'processed' } : item
+    ));
+  };
+
+  // Format time
+  const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedDate = currentTime.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  return (
+    <div className={`admin-dashboard ${darkMode ? "dark-theme" : ""}`}>
+      <AdminSidebar 
+        activeMenuItem={activeMenuItem} 
+        handleMenuItemClick={handleMenuItemClick} 
+      />
+
+      <div className="admin-main-content">
+        <AdminHeader
+          activeMenuItem={activeMenuItem}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          notifications={notifications}
+          toggleNotification={toggleNotification}
+        />
+
+        <div className="dashboard-content">
+          {/* Dashboard Header with Time and Quick Actions */}
+          <div className="dashboard-header">
+            <div className="dashboard-time">
+              <h1>{formattedTime}</h1>
+              <p>{formattedDate}</p>
             </div>
+            <div className="quick-actions">
+              <button className="quick-action" onClick={() => setActiveTab('employees')}>
+                <img src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF" alt="Add Employee" />
+                <span>Add Employee</span>
+              </button>
+              <button className="quick-action" onClick={() => setActiveTab('payroll')}>
+                <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Process Payroll" />
+                <span>Process Payroll</span>
+              </button>
+              <button className="quick-action" onClick={() => setActiveTab('tasks')}>
+                <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Create Task" />
+                <span>Create Task</span>
+              </button>
+            </div>
+          </div>
 
+          {/* Stats Overview */}
+          <div className="stats-overview">
+            {statsData.map((stat, index) => (
+              <div key={index} className="stat-card">
+                <div className="stat-icon">
+                  <img src={stat.icon} alt={stat.title} />
+                </div>
+                <div className="stat-info">
+                  <h3>{stat.value}</h3>
+                  <p>{stat.title}</p>
+                </div>
+                <div className={`stat-trend ${stat.trend}`}>
+                  <span>{stat.change}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {stat.trend === "up" ? (
+                      <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    ) : (
+                      <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    )}
+                  </svg>
+                </div>
+              </div>
+            ))}
+          </div>
 
-            {/* Main Content */}
-            <div className="main-content">
-                {/* Header */}
-                <header className="header">
-                    <div className="breadcrumbs">
-                        <span>Pages / Dashboard</span>
-                        <h1>Main Dashboard</h1>
-                    </div>
-                    
-                    <div className="user-profile">
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2bb4edd4-293b-43c8-b39f-493a2edb1d91" alt="User" />
-                        <span>Doe, Jane</span>
-                        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/082c3bf8-01b8-4766-8555-99763cf21464" alt="Dropdown" />
-                    </div>
-                </header>
+          {/* Tabs Navigation */}
+          <div className="dashboard-tabs">
+            <button 
+              className={`tab-btn-ap ${activeTab === 'overview' ? 'active' : ''}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              Overview
+            </button>
+            <button 
+              className={`tab-btn-ap ${activeTab === 'employees' ? 'active' : ''}`}
+              onClick={() => setActiveTab('employees')}
+            >
+              Employees
+            </button>
+            <button 
+              className={`tab-btn-ap ${activeTab === 'payroll' ? 'active' : ''}`}
+              onClick={() => setActiveTab('payroll')}
+            >
+              Payroll
+            </button>
+            <button 
+              className={`tab-btn-ap ${activeTab === 'tasks' ? 'active' : ''}`}
+              onClick={() => setActiveTab('tasks')}
+            >
+              Tasks
+            </button>
+            <button 
+              className={`tab-btn-ap ${activeTab === 'analytics' ? 'active' : ''}`}
+              onClick={() => setActiveTab('analytics')}
+            >
+              Analytics
+            </button>
+          </div>
 
-                {/* Stats Cards */}
-                <div className="stats-grid">
-                    <div className="stat-card">
-                        <div className="stat-icon">
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/c5f9b8e4-c1e3-474a-ac59-1a6e1940a968" alt="Earnings" />
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-label">Earnings</span>
-                            <span className="stat-value">$350.4</span>
-                        </div>
-                    </div>
-                    
-                    <div className="stat-card">
-                        <div className="stat-icon">
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f6db50ab-057a-4a4a-aad5-6df21ea35315" alt="Spend" />
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-label">Spend this month</span>
-                            <span className="stat-value">$642.39</span>
-                        </div>
-                    </div>
-                    
-                    <div className="stat-card highlight">
-                        <div className="stat-info">
-                            <span className="stat-label">Sales</span>
-                            <span className="stat-value">$574.34</span>
-                        </div>
-                        <div className="stat-trend">
-                            <span className="trend-up">+23%</span>
-                            <span className="trend-label">since last month</span>
-                        </div>
-                    </div>
-                    
-                    <div className="stat-card">
-                        <div className="stat-info">
-                            <span className="stat-label">Your balance</span>
-                            <span className="stat-value">$1,000</span>
-                        </div>
-                        <div className="stat-graphic">
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/80eb2203-0719-4576-826d-aefc62a1c5e9" alt="Balance" />
-                        </div>
-                    </div>
-                    
-                    <div className="stat-card">
-                        <div className="stat-icon">
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/8f2b0bc2-4f2c-4833-9078-2506010dc420" alt="Tasks" />
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-label">New Tasks</span>
-                            <span className="stat-value">154</span>
-                        </div>
-                    </div>
-                    
-                    <div className="stat-card">
-                        <div className="stat-icon">
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/eaf446da-7386-4573-beeb-cbe0d6b11922" alt="Projects" />
-                        </div>
-                        <div className="stat-info">
-                            <span className="stat-label">Total Projects</span>
-                            <span className="stat-value">2935</span>
-                        </div>
-                    </div>
+          {/* Tab Content */}
+          <div className="tab-content">
+            {activeTab === 'overview' && (
+              <div className="overview-grid">
+                {/* Employee Distribution Chart */}
+                <div className="chart-card">
+                  <h3>Employee Distribution</h3>
+                  <div className="chart-container">
+                    <Pie 
+                      data={employeeDistributionData}
+                      options={{
+                        plugins: {
+                          legend: {
+                            position: 'right',
+                          }
+                        },
+                        maintainAspectRatio: false
+                      }}
+                    />
+                  </div>
                 </div>
 
-                {/* Bottom Section */}
-                <div className="content-grid">
-                    {/* Payroll Card - Fixed Section */}
-                    <div className="payroll-card" style={{ position: 'relative' }}>
-                        <div style={{
-                            position: 'absolute',
-                            top: '20px',
-                            right: '20px',
-                            background: 'white',
-                            padding: '8px 16px',
-                            borderRadius: '8px',
-                            fontWeight: 'bold',
-                            fontSize: '20px',
-                            color: '#2B3674',
-                            boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                            zIndex: 2
-                        }}>
-                            Payrolls
-                        </div>
-                        <div className="payroll-header">
-                            <span className="payroll-label">Due Date</span>
-                            <span className="payroll-date">APR 05</span>
-                        </div>
-                        <div className="payroll-amount-container" style={{ marginTop: '20px' }}>
-                            <span className="amount" style={{ fontSize: '32px', display: 'block', marginBottom: '15px' }}>$6000</span>
-                            <button className="view-details" style={{ 
-                                background: 'none',
-                                border: 'none',
-                                color: '#4318FF',
-                                fontWeight: '600',
-                                display: 'flex',
-                                alignItems: 'center',
-                                padding: 0,
-                                cursor: 'pointer'
-                            }}>
-                                <span>View details</span>
-                                <img 
-  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/045b0150-e6e8-4ce4-be1c-17a811aa024c" 
-  alt="Arrow" 
-  style={{ marginLeft: '5px', width: '20px', height: '20px' }}
-/>                            </button>
-                        </div>
+                {/* Payroll Trend Chart */}
+                <div className="chart-card">
+                  <h3>Payroll Trend</h3>
+                  <div className="chart-container">
+                    <Line 
+                      data={payrollTrendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            beginAtZero: false
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="recent-activity">
+                  <h3>Recent Activity</h3>
+                  <div className="activity-list">
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <img src="https://img.icons8.com/?size=100&id=87049&format=png&color=4318FF" alt="New Hire" />
+                      </div>
+                      <div className="activity-details">
+                        <h4>New hire onboarded</h4>
+                        <p>Sarah Johnson - Frontend Developer</p>
+                        <span>2 hours ago</span>
+                      </div>
                     </div>
-                    
-                    {/* Tasks Card */}
-                    <div className="tasks-card">
-                        <h3>27 March</h3>
-                        <div className="task-item">
-                            <div className="task-indicator"></div>
-                            <div className="task-details">
-                                <span className="task-name">Meet w/ Simmmple</span>
-                                <span className="task-time">01:00 PM - 02:00 PM</span>
-                            </div>
-                        </div>
-                        <div className="task-item">
-                            <div className="task-indicator"></div>
-                            <div className="task-details">
-                                <span className="task-name">Fitness Training</span>
-                                <span className="task-time">02:00 PM - 03:00 PM</span>
-                            </div>
-                        </div>
-                        <button className="view-all">
-                            <span>View all Tasks</span>
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/0d7a58c0-b80b-489c-a7c1-9ec463b48373" alt="Arrow" />
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Payroll" />
+                      </div>
+                      <div className="activity-details">
+                        <h4>Payroll processed</h4>
+                        <p>Engineering department - $85,000</p>
+                        <span>1 day ago</span>
+                      </div>
+                    </div>
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Task" />
+                      </div>
+                      <div className="activity-details">
+                        <h4>Task completed</h4>
+                        <p>Review Q2 Performance Reports</p>
+                        <span>2 days ago</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hiring Trend Chart */}
+                <div className="chart-card">
+                  <h3>Hiring Trend</h3>
+                  <div className="chart-container">
+                    <Bar 
+                      data={hiringTrendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            beginAtZero: true
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'employees' && (
+              <div className="employees-tab">
+                <div className="section-header">
+                  <h2>Employee Management</h2>
+                  <button className="view-all" onClick={() => document.getElementById('new-hire-modal').showModal()}>
+                    Add New Employee
+                  </button>
+                </div>
+
+                {/* New Hire Modal */}
+                <dialog id="new-hire-modal" className="modal">
+                  <div className="modal-content">
+                    <h3>Add New Employee</h3>
+                    <form onSubmit={handleAddNewHire}>
+                      <div className="form-group">
+                        <label>Full Name</label>
+                        <input 
+                          type="text" 
+                          name="name" 
+                          value={newHireForm.name}
+                          onChange={handleNewHireChange}
+                          required 
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Position</label>
+                        <input 
+                          type="text" 
+                          name="position" 
+                          value={newHireForm.position}
+                          onChange={handleNewHireChange}
+                          required 
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Department</label>
+                        <select 
+                          name="department" 
+                          value={newHireForm.department}
+                          onChange={handleNewHireChange}
+                          required
+                        >
+                          <option value="">Select Department</option>
+                          <option value="Engineering">Engineering</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Sales">Sales</option>
+                          <option value="HR">Human Resources</option>
+                          <option value="Finance">Finance</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Start Date</label>
+                        <input 
+                          type="date" 
+                          name="startDate" 
+                          value={newHireForm.startDate}
+                          onChange={handleNewHireChange}
+                          required 
+                        />
+                      </div>
+                      <div className="form-actions">
+                        <button type="button" onClick={() => document.getElementById('new-hire-modal').close()}>
+                          Cancel
                         </button>
-                    </div>
-                    
-                    {/* Onboarding Card with Fixed Bullets */}
-                    <div className="onboarding-card">
-                        <div className="onboarding-header">
-                            <div>
-                                <h3>On boarding status</h3>
-                                <p>From 1-6 Dec, 2020</p>
-                            </div>
-                            <button className="view-report" onClick={() => alert("Pressed!")}>
-                                View Report
+                        <button type="submit">
+                          Add Employee
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </dialog>
+
+                {/* Employees Table */}
+                <div className="employees-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {employees.map(employee => (
+                        <tr key={employee.id}>
+                          <td>{employee.name}</td>
+                          <td>{employee.position}</td>
+                          <td>{employee.department}</td>
+                          <td>
+                            <span className={`status-badge ${employee.status}`}>
+                              {employee.status}
+                            </span>
+                          </td>
+                          <td>
+                            <button className="action-btn view">
+                              View
                             </button>
-                        </div>
-                        
-                        <div className="onboarding-content">
-                            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6e8588cc-b66f-4d2d-9e35-ae478035892e" alt="Chart" />
-                            
-                            <div className="status-list">
-                                {[
-                                    { label: 'Initial Reviews', value: '40%' },
-                                    { label: 'Launched', value: '32%' }
-                                ].map((item, index) => (
-                                    <div key={index} style={{ 
-                                        display: 'flex', 
-                                        alignItems: 'center',
-                                        marginBottom: '12px'
-                                    }}>
-                                        <div style={{
-                                            width: '8px',
-                                            height: '8px',
-                                            borderRadius: '50%',
-                                            backgroundColor: '#4318FF',
-                                            marginRight: '10px'
-                                        }}></div>
-                                        <span style={{ flex: 1 }}>{item.label}</span>
-                                        <span style={{ color: '#A3AED0' }}>{item.value}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            
-                            <div className="status-list">
-                                {[
-                                    { label: 'Final Review', value: '28%' },
-                                    { label: 'Pending Updates', value: '28%' }
-                                ].map((item, index) => (
-                                    <div key={index} style={{ 
-                                        display: 'flex', 
-                                        alignItems: 'center',
-                                        marginBottom: '12px'
-                                    }}>
-                                        <div style={{
-                                            width: '8px',
-                                            height: '8px',
-                                            borderRadius: '50%',
-                                            backgroundColor: '#4318FF',
-                                            marginRight: '10px'
-                                        }}></div>
-                                        <span style={{ flex: 1 }}>{item.label}</span>
-                                        <span style={{ color: '#A3AED0' }}>{item.value}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                            <button className="action-btn edit">
+                              Edit
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-            </div>
+              </div>
+            )}
+
+            {activeTab === 'payroll' && (
+              <div className="payroll-tab">
+                <div className="section-header">
+                  <h2>Payroll Management</h2>
+                  <button className="view-all">
+                    Process All
+                  </button>
+                </div>
+
+                <div className="payroll-cards">
+                  {payrollData.map((item, index) => (
+                    <div key={index} className="payroll-card">
+                      <div className="payroll-info">
+                        <h3>{item.department}</h3>
+                        <p>${item.amount.toLocaleString()}</p>
+                        <span>Due: {item.date}</span>
+                      </div>
+                      <div className={`payroll-status ${item.status}`}>
+                        {item.status === "processed" ? (
+                          <>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                            <span>Processed</span>
+                          </>
+                        ) : (
+                          <>
+                            <button 
+                              className="process-btn"
+                              onClick={() => handleProcessPayroll(item.id)}
+                            >
+                              Process
+                            </button>
+                            <span>Pending</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="payroll-history">
+                  <h3>Payroll History</h3>
+                  <div className="history-chart">
+                    <Line 
+                      data={payrollTrendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            display: false
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'tasks' && (
+              <div className="tasks-tab">
+                <div className="section-header">
+                  <h2>Task Management</h2>
+                  <button className="view-all">
+                    Create New Task
+                  </button>
+                </div>
+
+                <div className="tasks-list">
+                  {tasks.map((task, index) => (
+                    <div key={index} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                      <div className="task-checkbox">
+                        <input 
+                          type="checkbox" 
+                          checked={task.completed}
+                          onChange={() => handleTaskComplete(task.id)}
+                        />
+                      </div>
+                      <div className="task-details">
+                        <h3>{task.title}</h3>
+                        <p>Due: {task.dueDate}</p>
+                        <span className={`priority-badge ${task.priority}`}>
+                          {task.priority} priority
+                        </span>
+                      </div>
+                      <div className="task-actions">
+                        <button className="action-btn edit">
+                          Edit
+                        </button>
+                        <button className="action-btn delete">
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'analytics' && (
+              <div className="analytics-tab">
+                <div className="analytics-grid">
+                  <div className="analytics-card">
+                    <h3>Employee Distribution</h3>
+                    <div className="chart-container">
+                      <Pie 
+                        data={employeeDistributionData}
+                        options={{
+                          plugins: {
+                            legend: {
+                              position: 'right',
+                            }
+                          },
+                          maintainAspectRatio: false
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="analytics-card">
+                    <h3>Payroll Trend</h3>
+                    <div className="chart-container">
+                      <Line 
+                        data={payrollTrendData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: false
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="analytics-card">
+                    <h3>Hiring Trend</h3>
+                    <div className="chart-container">
+                      <Bar 
+                        data={hiringTrendData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: true
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="analytics-card">
+                    <h3>Department Budget Allocation</h3>
+                    <div className="chart-container">
+                      <Bar 
+                        data={{
+                          labels: ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'],
+                          datasets: [{
+                            label: 'Budget Allocation',
+                            data: [1200000, 600000, 900000, 400000, 500000],
+                            backgroundColor: '#4318FF',
+                          }]
+                        }}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: true
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
+
+export default AdminDashboard;

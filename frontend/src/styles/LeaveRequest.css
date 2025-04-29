@@ -1,4 +1,3 @@
-LeaveRequest.css
 /* colors */
 .event-pill.teal {
   background: #d1faf5;
@@ -36,8 +35,18 @@ LeaveRequest.css
   text-overflow: ellipsis;
 }
 
+/* Page Style */
+.page-container-lr {
+  padding-left: 20px;
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
+}
+
 /* Base Styles */
-.calendar-container {
+.calendar-container-lr {
   font-family: 'Inter', sans-serif;
   max-width: 1200px;
   margin: 0 auto;
@@ -48,7 +57,7 @@ LeaveRequest.css
 }
 
 /* Header Styles */
-.calendar-header {
+.calendar-header-lr {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -301,102 +310,12 @@ LeaveRequest.css
   object-fit: contain;
 }
 
-/* Sidebar Toggle Styles */
-.sidebar-toggle {
-  background: rgba(67, 24, 255, 0.1);
-  border: none;
-  border-radius: 6px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #4318FF;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-  margin-left: 10px;
-}
-
-.sidebar-toggle:hover {
-  background: rgba(67, 24, 255, 0.2);
-}
-
-/* Collapsed Sidebar Styles */
-.sidebar.collapsed {
-  width: 80px;
-  padding: 1.5rem 0.5rem;
-}
-
-.sidebar.collapsed .sidebar-header {
-  padding: 0 0.5rem;
-}
-
-.sidebar.collapsed .logo {
-  font-size: 1.2rem;
-  padding: 0 0.25rem; /* Add some padding to prevent text from touching edges */
-}
-
-.sidebar.collapsed .sidebar-toggle {
-  margin-left: 0;
-}
-
-.sidebar.collapsed .menu-item {
-  justify-content: center;
-  padding: 0.75rem 0;
-}
-
-.sidebar.collapsed .menu-icon {
-  margin-right: 0;
-}
-
-.sidebar.collapsed .menu-item span {
-  display: none;
-}
-
-.sidebar.collapsed .menu-item.active::before {
-  width: 3px;
-}
-
-/* Sidebar Footer with Toggle */
-.sidebar-footer {
-  padding: 1rem 0.5rem;
-  border-top: 1px solid #f3f4f6;
-  margin-top: auto;
-}
-
-.sidebar-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 0.75rem;
-  background: rgba(67, 24, 255, 0.05);
-  border: none;
-  border-radius: 8px;
-  color: #4318FF;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.sidebar-toggle:hover {
-  background: rgba(67, 24, 255, 0.1);
-}
-
-.sidebar.collapsed .sidebar-toggle span {
-  display: none;
-}
-
 /* Main Content Adjustment */
-.projects-main-content {
-  margin-left: 280px;
-  transition: margin-left 0.3s ease;
-}
-
-.projects-main-content.collapsed {
-  margin-left: 80px;
+.main-content-lr {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 2rem;
+  overflow-y: auto;
 }
 
 /* Header Section */
@@ -811,10 +730,6 @@ LeaveRequest.css
   .leave-types-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
-  .projects-main-content.collapsed .leave-types-grid {
-    grid-template-columns: 1fr; /* Single column when sidebar is collapsed on mobile */
-  }
 }
 
 @media (max-width: 480px) {
@@ -871,7 +786,7 @@ LeaveRequest.css
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .calendar-header {
+  .calendar-header-lr {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
@@ -892,26 +807,8 @@ LeaveRequest.css
     padding: 1rem 0.5rem;
   }
   
-  .sidebar:not(.collapsed) {
-    width: 280px;
-    z-index: 1000;
-    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .projects-main-content {
+  .main-content-lr {
     margin-left: 80px;
-  }
-  
-  .projects-main-content:not(.collapsed) {
-    margin-left: 280px;
-  }
-
-  .projects-main-content.collapsed .leave-types-card {
-    width: calc(100% - 48px); /* More padding when sidebar is collapsed */
-  }
-  
-  .sidebar-toggle {
-    display: flex;
   }
 }
 
@@ -921,20 +818,7 @@ LeaveRequest.css
     transition: transform 0.3s ease;
   }
   
-  .sidebar.collapsed {
-    transform: translateX(0);
-  }
-  
-  .projects-main-content {
+  .main-content-lr {
     margin-left: 0;
-  }
-  
-  .sidebar-toggle {
-    position: fixed;
-    left: 10px;
-    top: 10px;
-    z-index: 1001;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 }

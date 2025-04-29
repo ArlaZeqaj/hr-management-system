@@ -4,7 +4,7 @@ const AdminFooter = () => {
   return (
     <div className="admin-footer">
       <span>
-        © 2023 HRCLOUDX Admin Portal. All Rights Reserved. Version 2.4.1
+        © 2025 HRCLOUDX Admin Portal. All Rights Reserved. Version 2.4.1
       </span>
       <div className="footer-links">
         <a href="#">
