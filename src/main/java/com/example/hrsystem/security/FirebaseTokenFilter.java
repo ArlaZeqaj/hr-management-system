@@ -24,8 +24,14 @@ public class FirebaseTokenFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String path = httpRequest.getRequestURI();
+
+        // ✅ Allow public access to uploaded files
+        if (path.startsWith("/uploads/")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         String authHeader = httpRequest.getHeader("Authorization");
         System.out.println("Authorization header: " + authHeader);

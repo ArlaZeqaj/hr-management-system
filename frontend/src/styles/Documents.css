@@ -143,9 +143,9 @@
     color: white;
   }
   
-  .documents-list {
+  /*.documents-list {
     flex: 1;
-  }
+  }*/
   
   /* Documents Grid */
   .documents-grid {
