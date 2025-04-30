@@ -3,30 +3,53 @@ package com.example.hrsystem.controller;
 import com.example.hrsystem.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/schedule")
 public class TaskController {
-    private final TaskService scheduleService;
+    private final TaskService taskService;
 
-    public TaskController(TaskService scheduleService) {
-        this.scheduleService = scheduleService;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+    @GetMapping("/{yearMonth}-taskcomponent")
+    public ResponseEntity<?> getTasks(@PathVariable String yearMonth, Authentication authentication) {
+        try {
+            String uid = (String) authentication.getPrincipal();
+            var result = taskService.getScheduleForMonth(uid, yearMonth);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error fetching schedule.");
+        }
     }
 
+    @PutMapping("/{yearMonth}/{taskId}")
+    public ResponseEntity<?> updateTask(
+            @PathVariable String yearMonth,
+            @PathVariable String taskId,
+            @RequestBody Map<String, Object> updates,
+            Authentication authentication
+    ) {
+        String uid = (String) authentication.getPrincipal();
+        try {
+            taskService.updateTask(uid, yearMonth, taskId, updates);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok("Task updated");
+    }
     @GetMapping("/{yearMonth}")
     public ResponseEntity<?> getScheduleForMonth(
             @PathVariable String yearMonth,
             Authentication authentication) {
-        try {
+        try{
             String uid = (String) authentication.getPrincipal();
-
-            var result = scheduleService.getScheduleForMonth(uid, yearMonth);
-
+            var result = taskService.getScheduleForMonth(uid, yearMonth);
             return ResponseEntity.ok(result);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Error fetching schedule.");

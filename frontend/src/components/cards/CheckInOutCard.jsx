@@ -45,6 +45,7 @@ const CheckInOutCard = () => {
                 Checked-out: 16:23:19
             </div>
         </div>
+
     );
 };
 

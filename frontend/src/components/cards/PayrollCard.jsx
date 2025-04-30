@@ -64,6 +64,7 @@ const PayrollCard = () => {
             <p className="payroll-label-z">Payroll for {month}</p>
             <p className="payroll-amount-z">${amount}</p>
             <a href="#" className="payroll-link-z">View details</a>
+
         </div>
     );
 };

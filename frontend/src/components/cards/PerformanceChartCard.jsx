@@ -10,31 +10,49 @@ const PerformanceChartCard = () => {
     const [chartLabels, setChartLabels] = useState([]);
     const [chartData, setChartData] = useState([]);
 
+    const getWeekNumber = (dateString) => {
+        const date = new Date(dateString);
+        const start = new Date(date.getFullYear(), date.getMonth(), 1);
+        const day = date.getDate();
+        return Math.ceil((day + start.getDay()) / 7); // Week 1–5
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (!user) return console.warn("⚠️ No user");
 
             try {
                 const token = await user.getIdToken();
-                const resp = await axios.get(
-                    "http://localhost:8080/api/performance/monthly",
-                    {
-                        headers: { Authorization: `Bearer ${token}` },
-                    }
-                );
-                // Expecting: [{ week:1, tasks:12 }, … up to week 5]
-                const weekly = resp.data;
-                const labels = weekly.map((w) => `Week ${w.week}`);
-                const data = weekly.map((w) => w.tasks);
+                const now = new Date();
+                const yearMonth = now.toISOString().slice(0, 7); // e.g. "2025-04"
 
-                setChartLabels(labels);
-                setChartData(data);
+                const resp = await axios.get(
+                    `http://localhost:8080/api/schedule/${yearMonth}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+
+                const rawTasks = resp.data.tasks || [];
+
+                // Count completed tasks per week
+                const weekCounts = [0, 0, 0, 0, 0]; // Weeks 1 to 5
+                rawTasks.forEach(task => {
+                    if (task.status === "completed") {
+                        const weekNum = getWeekNumber(task.dueDate || task.startDate);
+                        if (weekNum >= 1 && weekNum <= 5) {
+                            weekCounts[weekNum - 1]++;
+                        }
+                    }
+                });
+
+                setChartLabels(["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"]);
+                setChartData(weekCounts);
             } catch (err) {
-                console.error("Error loading performance:", err);
-                setChartLabels(["Week 1","Week 2","Week 3","Week 4","Week 5"]);
-                setChartData([0,0,0,0,0]);
+                console.error("Error loading tasks:", err);
+                setChartLabels(["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"]);
+                setChartData([0, 0, 0, 0, 0]);
             }
         });
+
         return () => unsubscribe();
     }, []);
 
@@ -68,45 +86,17 @@ const PerformanceChartCard = () => {
     }, [chartLabels, chartData]);
 
     return (
-        <div
-            className="chart-card-z"
-            style={{
-                height: "320px",
-                padding: "1rem",
-                borderRadius: "0.75rem",
-                backgroundColor: "#fff",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-            }}
-        >
-            <div
-                className="chart-header-z"
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "0.5rem",
-                }}
-            >
-                <h3 className="chart-title-z" style={{ fontWeight: 600, fontSize: "0.875rem" }}>
-                    Performance
-                </h3>
-                <span
-                    className="chart-badge-z"
-                    style={{
-                        fontSize: "0.75rem",
-                        backgroundColor: "#f3f4f6",
-                        color: "#6b7280",
-                        padding: "0.125rem 0.5rem",
-                        borderRadius: "0.25rem",
-                    }}
-                >
-          This Month
-        </span>
+        <div className="chart-card-z">
+            <div className="chart-header-z">
+                <h3 className="chart-title-z">Performance</h3>
+                <span className="chart-badge-z">This Month</span>
             </div>
             <div style={{ height: "calc(100% - 2rem)" }}>
                 <canvas ref={chartRef}></canvas>
             </div>
         </div>
     );
+
 };
 
 export default PerformanceChartCard;

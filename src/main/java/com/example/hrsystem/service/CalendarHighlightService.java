@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -20,26 +21,31 @@ public class CalendarHighlightService {
     public List<CalendarHighlightDTO> getBirthdaysForMonth(int year, int month) {
         List<CalendarHighlightDTO> results = new ArrayList<>();
         Firestore db = FirestoreClient.getFirestore();
-        System.out.println("Fetching birthdays...");
 
         try {
             ApiFuture<QuerySnapshot> query = db.collection("employees").get();
             List<QueryDocumentSnapshot> documents = query.get().getDocuments();
-            System.out.println("Fetched documents count: " + documents.size());
 
             for (QueryDocumentSnapshot doc : documents) {
                 String birthDateStr = doc.getString("birthDate");
+                String name = doc.getString("name");
 
                 if (birthDateStr != null) {
-                    LocalDate birthDate = LocalDate.parse(birthDateStr);
-                    if (birthDate.getMonthValue() == month) {
-                        CalendarHighlightDTO dto = new CalendarHighlightDTO("birthday", String.format("%d-%02d-%02d", year, month, birthDate.getDayOfMonth()));
-                        results.add(dto);
+                    try {
+                        LocalDate birthDate = LocalDate.parse(birthDateStr);
+                        if (birthDate.getMonthValue() == month) {
+                            String highlightDate = String.format("%04d-%02d-%02d", year, month, birthDate.getDayOfMonth());
+                            String title = (name != null ? name : "Employee") + "'s Birthday";
+                            results.add(new CalendarHighlightDTO("birthday", highlightDate, title));
+                        }
+                    } catch (Exception e) {
+                        System.err.println("[WARN] Invalid birth date: " + birthDateStr);
                     }
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         return results;
@@ -48,22 +54,42 @@ public class CalendarHighlightService {
     public List<CalendarHighlightDTO> getUserTasksForMonth(String userId, int year, int month) {
         List<CalendarHighlightDTO> results = new ArrayList<>();
         Firestore db = FirestoreClient.getFirestore();
+        String yearMonth = String.format("task_%04d-%02d", year, month);
 
         try {
-            ApiFuture<QuerySnapshot> query = db.collection("task").whereEqualTo("userId", userId).get();
-            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+            DocumentReference taskDocRef = db
+                    .collection("employees")
+                    .document(userId)
+                    .collection("tasks")
+                    .document(yearMonth);
 
-            for (QueryDocumentSnapshot doc : documents) {
-                String dueDateStr = doc.getString("dueDate");
-                if (dueDateStr != null) {
-                    LocalDate dueDate = LocalDate.parse(dueDateStr);
-                    if (dueDate.getYear() == year && dueDate.getMonthValue() == month) {
-                        results.add(new CalendarHighlightDTO("task", dueDateStr));
+            DocumentSnapshot snapshot = taskDocRef.get().get();
+
+            if (snapshot.exists() && snapshot.getData() != null) {
+                Map<String, Object> tasks = snapshot.getData();
+
+                for (Map.Entry<String, Object> entry : tasks.entrySet()) {
+                    if (entry.getValue() instanceof Map<?, ?> taskMap) {
+                        Object dueDateObj = taskMap.get("dueDate");
+                        Object titleObj = taskMap.get("title");
+
+                        if (dueDateObj instanceof String dueDateStr) {
+                            try {
+                                LocalDate date = LocalDate.parse(dueDateStr);
+                                if (date.getYear() == year && date.getMonthValue() == month) {
+                                    String title = titleObj instanceof String ? (String) titleObj : "Task";
+                                    results.add(new CalendarHighlightDTO("task", dueDateStr, title));
+                                }
+                            } catch (Exception e) {
+                                System.err.println("[WARN] Invalid dueDate in task: " + dueDateStr);
+                            }
+                        }
                     }
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         return results;
@@ -72,22 +98,37 @@ public class CalendarHighlightService {
     public List<CalendarHighlightDTO> getEventsForMonth(int year, int month) {
         List<CalendarHighlightDTO> results = new ArrayList<>();
         Firestore db = FirestoreClient.getFirestore();
+        String docId = String.format("event_%04d-%02d", year, month);
 
         try {
-            ApiFuture<QuerySnapshot> query = db.collection("calendarEvent").get();
-            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+            DocumentReference docRef = db.collection("calendarEvent").document(docId);
+            DocumentSnapshot snapshot = docRef.get().get();
 
-            for (QueryDocumentSnapshot doc : documents) {
-                String eventDateStr = doc.getString("date");
-                if (eventDateStr != null) {
-                    LocalDate eventDate = LocalDate.parse(eventDateStr);
-                    if (eventDate.getYear() == year && eventDate.getMonthValue() == month) {
-                        results.add(new CalendarHighlightDTO("event", eventDateStr));
+            if (snapshot.exists() && snapshot.getData() != null) {
+                Map<String, Object> events = snapshot.getData();
+
+                for (Map.Entry<String, Object> entry : events.entrySet()) {
+                    if (entry.getValue() instanceof Map<?, ?> event) {
+                        Object startDateObj = event.get("startDate");
+                        Object titleObj = event.get("title");
+
+                        if (startDateObj instanceof String dateStr) {
+                            try {
+                                LocalDate parsed = LocalDate.parse(dateStr);
+                                if (parsed.getYear() == year && parsed.getMonthValue() == month) {
+                                    String title = titleObj instanceof String ? (String) titleObj : "Event";
+                                    results.add(new CalendarHighlightDTO("event", dateStr, title));
+                                }
+                            } catch (Exception e) {
+                                System.err.println("[WARN] Invalid event startDate: " + dateStr);
+                            }
+                        }
                     }
                 }
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
         return results;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { auth } from "../../config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import {Link} from "react-router-dom";
 
 const ProjectsCard = () => {
     const [counts, setCounts] = useState({
@@ -24,7 +25,6 @@ const ProjectsCard = () => {
 
                     const projects = response.data; // Should be an array
 
-                    // ✅ Smarter counting with reduce
                     setCounts({
                         done: projects.done,
                         ongoing: projects.ongoing,
@@ -68,7 +68,7 @@ const ProjectsCard = () => {
                 </div>
             </div>
 
-            <a href="#" className="projects-link-z">See details →</a>
+            <Link to="/projects" className="projects-link-z">See details →</Link>
         </div>
     );
 };
