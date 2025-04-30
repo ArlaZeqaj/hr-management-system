@@ -15,20 +15,20 @@ export default () => {
   // Set active menu item based on current route
   const getActiveMenuItem = () => {
     const path = location.pathname;
-    if (path.includes('/admin/dashboard')) return 'AdminDashboard';
+    if (path.includes('/admin/dashboard')) return 'Dashboard';
     if (path.includes('/admin/profile')) return 'Profile';
     if (path.includes('/new-hires')) return 'New Hires';
     if (path.includes('/employee')) return 'Employees';
     if (path.includes('/billing')) return 'Billing';
     if (path.includes('/admin/projects')) return 'Projects';
-    return 'AdminDashboard'; // default
+    return 'Dashboard'; // default
   };
 
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
     switch (menuItem) {
-      case 'AdminDashboard':
+      case 'Dashboard':
         navigate('/admin/dashboard');
         break;
       case 'Profile':

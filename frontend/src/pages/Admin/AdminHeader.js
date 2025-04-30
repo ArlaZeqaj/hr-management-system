@@ -93,7 +93,7 @@ const AdminHeader = ({
                 </div>
               ))}
               <div className="admin-dropdown-divider"></div>
-              <a href="#" className="logout">
+              <a href="/" className="logout">
               <img src="https://img.icons8.com/?size=100&id=2444&format=png&color=FA5252" className="alerts-icon"/> Logout
               </a>
             </div>

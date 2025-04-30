@@ -15,19 +15,19 @@ const Documents = () => {
   // Set active menu item based on current route
   const getActiveMenuItem = () => {
     const path = location.pathname;
-    if (path.includes('/employee/dashboard')) return 'Employee Dashboard';
+    if (path.includes('/employee/dashboard')) return 'Dashboard';
     if (path.includes('/employee/profile')) return 'Profile';
     if (path.includes('/projects')) return 'Projects';
     if (path.includes('/leave-request')) return 'Leave Request';
     if (path.includes('/documents')) return 'Documents';
-    return 'Employee Dashboard'; // default
+    return 'Dashboard'; // default
   };
 
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
     switch (menuItem) {
-      case 'Employee Dashboard':
+      case 'Dashboard':
         navigate('/employee/dashboard');
         break;
       case 'Profile':
