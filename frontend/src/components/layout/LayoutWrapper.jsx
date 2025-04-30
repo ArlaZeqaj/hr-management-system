@@ -57,19 +57,19 @@ const LayoutWrapper = () => {
     };
     const getActiveMenuItem = () => {
         const path = location.pathname;
-        if (path.includes('/employee/dashboard')) return 'Employee Dashboard';
+        if (path.includes('/employee/dashboard')) return 'Dashboard';
         if (path.includes('/employee/profile')) return 'Profile';
         if (path.includes('/projects')) return 'Projects';
         if (path.includes('/leave-request')) return 'Leave Request';
         if (path.includes('/documents')) return 'Documents';
-        return 'Employee Dashboard';
+        return 'Dashboard';
     };
 
     const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
     const handleMenuItemClick = (menuItem) => {
         setActiveMenuItem(menuItem);
         switch (menuItem) {
-            case 'Employee Dashboard': navigate('/employee/dashboard'); break;
+            case 'Dashboard': navigate('/employee/dashboard'); break;
             case 'Profile': navigate('/employee/profile'); break;
             case 'Projects': navigate('/projects'); break;
             case 'Leave Request': navigate('/leave-request'); break;
@@ -81,12 +81,14 @@ const LayoutWrapper = () => {
     return (
         <div className="layout-wrapper-z">
             <EmployeeSidebar
-                activeMenuItem={activeMenuItem}
-                handleMenuItemClick={handleMenuItemClick}
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
             />
 
             <main className="main-content-z">
-                <EmployeeHeader />
+                <EmployeeHeader 
+                    activeMenuItem={activeMenuItem}
+                />
 
                 <div className="stad-section-z">
                     <EmployeeStadCard />
@@ -98,7 +100,7 @@ const LayoutWrapper = () => {
                         <PayrollCard />
                         <CheckInOutCard />
                         <button className="performance-toggle-z" onClick={() => setShowPerformance(true)}>
-                            see Performance >
+                            see Performance 
                         </button>
                     </div>
 
