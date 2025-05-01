@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
-const EmployeeSidebar = ({ activeMenuItem, handleMenuItemClick }) => {
+const EmployeeSidebar = ({ activeMenuItem, handleMenuItemClick, darkMode }) => {
   const navigate = useNavigate();
 
   const menuItems = [
@@ -13,7 +13,7 @@ const EmployeeSidebar = ({ activeMenuItem, handleMenuItemClick }) => {
   ];
 
   return (
-    <div className="employee-sidebar">
+    <div className={`employee-sidebar ${darkMode ? "dark-theme" : ""}`}>
       <div className="employee-sidebar-header">
         <span className="employee-logo">
           <span className="logo-highlight">HR</span>CLOUDX

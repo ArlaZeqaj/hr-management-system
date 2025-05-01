@@ -22,6 +22,16 @@ const LayoutWrapper = () => {
     const [selectedDate, setSelectedDate] = useState(null); // shared state
     const [randomFact, setRandomFact] = useState("");
 
+    // Add dark mode state here to share between components
+    const [darkMode, setDarkMode] = useState(() => {
+        const savedMode = localStorage.getItem("darkMode");
+        return savedMode ? JSON.parse(savedMode) : false;
+    });
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+    };
+
+
     const funFacts = [
         "Honey never spoils. Archaeologists have found pots of it in ancient tombs still edible.",
         "Bananas are berries, but strawberries aren’t.",
@@ -79,15 +89,18 @@ const LayoutWrapper = () => {
     };
 
     return (
-        <div className="layout-wrapper-z">
+        <div className={`layout-wrapper-z ${darkMode ? "dark-theme" : ""}`}>
             <EmployeeSidebar
-        activeMenuItem={activeMenuItem}
-        handleMenuItemClick={handleMenuItemClick}
+                activeMenuItem={activeMenuItem}
+                handleMenuItemClick={handleMenuItemClick}
+                darkMode={darkMode}  // Pass darkMode prop to Sidebar
             />
 
             <main className="main-content-z">
-                <EmployeeHeader 
+                <EmployeeHeader
                     activeMenuItem={activeMenuItem}
+                    darkMode={darkMode}
+                    toggleDarkMode={toggleDarkMode}  // Pass toggle function to Header
                 />
 
                 <div className="stad-section-z">
@@ -100,7 +113,7 @@ const LayoutWrapper = () => {
                         <PayrollCard />
                         <CheckInOutCard />
                         <button className="performance-toggle-z" onClick={() => setShowPerformance(true)}>
-                            see Performance 
+                            see Performance
                         </button>
                     </div>
 
