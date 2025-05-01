@@ -55,6 +55,26 @@
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
+.cancel-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancel-button:hover {
+  background: #dc2626;
+}
+.buttonstand-vertically {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* aligns buttons to the left */
+  gap: 10px; /* vertical spacing between buttons */
+}
 
 /* Header Styles */
 .calendar-header-lr {

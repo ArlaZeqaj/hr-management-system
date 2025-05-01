@@ -790,8 +790,28 @@
     background: rgba(239, 68, 68, 0.1);
     color: var(--danger);
   }
-  
-  /* Performance Tab Styles */
+
+.status-badge.submitted {
+  background: rgba(59, 130, 246, 0.1); /* blue-ish */
+  color: #3b82f6; /* Tailwind blue-500 */
+}
+
+.status-badge.approved {
+  background: rgba(16, 185, 129, 0.1); /* green */
+  color: #10b981; /* Tailwind green-500 */
+}
+
+.status-badge.rejected {
+  background: rgba(239, 68, 68, 0.1); /* red */
+  color: #ef4444; /* Tailwind red-500 */
+}
+
+.status-badge.cancelled {
+  background: rgba(107, 114, 128, 0.1); /* gray */
+  color: #6b7280; /* Tailwind gray-500 */
+}
+
+/* Performance Tab Styles */
   .performance-header {
     display: flex;
     justify-content: space-between;

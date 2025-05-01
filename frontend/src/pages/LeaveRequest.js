@@ -59,8 +59,11 @@ const LeaveRequest = () => {
 
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("darkMode");
-    return savedMode ? JSON.parse(savedMode) : false;
-  });
+    try {
+      return savedMode ? JSON.parse(savedMode) : false;
+    } catch {
+      return false;
+    }  });
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState({
     "Item update notifications": false,

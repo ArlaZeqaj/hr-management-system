@@ -46,4 +46,40 @@ public class LeaveRequestController {
         List<LeaveRequest> leaves = service.listLeaveRequests(uid);
         return ResponseEntity.ok(leaves);
     }
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelLeaveRequest(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String id
+    ) throws Exception {
+        String uid = extractUidFromHeader(authHeader);
+        service.cancelLeaveRequest(uid, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<LeaveRequest>> listAllForAdmin(
+            @RequestHeader("Authorization") String authHeader
+    ) throws Exception {
+        return ResponseEntity.ok(service.listAllLeaveRequests());
+    }
+
+
+    @PatchMapping("/{employeeId}/{leaveRequestId}/approve")
+    public ResponseEntity<Void> approve(
+            @PathVariable String employeeId,
+            @PathVariable String leaveRequestId
+    ) throws Exception {
+        service.updateLeaveStatus(employeeId, leaveRequestId, "approved");
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{employeeId}/{leaveRequestId}/reject")
+    public ResponseEntity<Void> reject(
+            @PathVariable String employeeId,
+            @PathVariable String leaveRequestId
+    ) throws Exception {
+        service.updateLeaveStatus(employeeId, leaveRequestId, "rejected");
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -7,6 +7,7 @@ import "../styles/AdminProfilePage.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
 import "./Admin/AdminFooter.css";
+import AdminLeaveRequestManager from "../components/cards/leaveRequestAdmin/AdminLeaveRequestManager";
 
 const AdminProfilePage = () => {
   const navigate = useNavigate();
@@ -536,84 +537,8 @@ const AdminProfilePage = () => {
               </div>
             )}
 
-            {activeTab === "leaves" && (
-              <div className="leaves-tab">
-                <div className="table-header">
-                  <h3>Leave Requests Management</h3>
-                  <div className="table-actions">
-                    <button className="btn primary">
-                      <i className="fas fa-calendar-plus"></i> Add Leave
-                    </button>
-                    <div className="view-options">
-                      <button className="view-option active">All</button>
-                      <button className="view-option">Pending</button>
-                      <button className="view-option">Approved</button>
-                      <button className="view-option">Rejected</button>
-                    </div>
-                  </div>
-                </div>
-                <div className="table-responsive">
-                  <table className="leaves-table">
-                    <thead>
-                      <tr>
-                        <th>Employee</th>
-                        <th>Leave Type</th>
-                        <th>Date Range</th>
-                        <th>Duration</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {leaveRequests.map((request) => (
-                        <tr key={request.id}>
-                          <td>{request.employee}</td>
-                          <td>{request.type}</td>
-                          <td>
-                            {request.startDate} to {request.endDate}
-                          </td>
-                          <td>{request.days} days</td>
-                          <td>
-                            <span
-                              className={`status-badge ${request.status === "pending"
-                                ? "warning"
-                                : request.status === "approved"
-                                  ? "success"
-                                  : "danger"
-                                }`}
-                            >
-                              {request.status}
-                            </span>
-                          </td>
-                          <td>
-                            {request.status === "pending" && (
-                              <div className="action-buttons">
-                                <button
-                                  className="btn success sm"
-                                  onClick={() =>
-                                    handleLeaveAction(request.id, "approved")
-                                  }
-                                >
-                                  Approve
-                                </button>
-                                <button
-                                  className="btn danger sm"
-                                  onClick={() =>
-                                    handleLeaveAction(request.id, "rejected")
-                                  }
-                                >
-                                  Reject
-                                </button>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
+            {activeTab === "leaves" && <AdminLeaveRequestManager />}
+
 
             {activeTab === "performance" && (
               <div className="performance-tab">

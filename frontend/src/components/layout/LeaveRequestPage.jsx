@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';import { auth } from '../../config/firebaseConfig';
+// LeaveRequestPage.jsx (updated for dynamic refresh, multi-stepper, and live calendar update)
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import { auth } from '../../config/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import LeaveForm from '../../components/cards/leaveRequestEmployee/LeaveForm';
 import LeaveTypesCard from '../../components/cards/leaveRequestEmployee/LeaveTypesCard';
@@ -14,6 +16,7 @@ import "../../pages/Employee/EmployeeSidebar.css";
 import "../../pages/Employee/EmployeeHeader.css";
 import "../../pages/Employee/EmployeeFooter.css";
 import axios from "axios";
+
 const LeaveRequestPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -21,10 +24,10 @@ const LeaveRequestPage = () => {
     const [uid, setUid] = useState(null);
     const [events, setEvents] = useState([]);
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [submittedRequest, setSubmittedRequest] = useState(null);
-    const [currentStep, setCurrentStep] = useState(0);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
+    const [submittedRequests, setSubmittedRequests] = useState([]);
+    const [currentSteps, setCurrentSteps] = useState({});
 
     const getActiveMenuItem = () => {
         const path = location.pathname;
@@ -35,6 +38,7 @@ const LeaveRequestPage = () => {
         if (path.includes('/documents')) return 'Documents';
         return 'Dashboard';
     };
+
     const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
     const handleMenuItemClick = (menuItem) => {
         setActiveMenuItem(menuItem);
@@ -47,104 +51,145 @@ const LeaveRequestPage = () => {
             default: navigate('/employee/dashboard');
         }
     };
-    // Month navigation
+
     const goToPreviousMonth = () => {
         setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
     };
+
     const goToNextMonth = () => {
         setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
     };
 
-    // Load existing leave requests
+    const fetchLeaveEvents = async (user) => {
+        const token = await user.getIdToken();
+        const resp = await axios.get('/api/leaves', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const requests = resp.data;
+
+        const visibleEvents = requests
+            .filter(req => ['approved', 'rejected', 'cancelled'].includes(req.status.toLowerCase()))
+            .map(req => {
+                const key = req.leaveType.replace(/\s+/g, '').toLowerCase();
+                const typeColors = {
+                    vacation: { bg: '#d1faf5', text: '#319795' },
+                    leavewithoutpay: { bg: '#ffedd5', text: '#dd6b20' },
+                    medicalleave: { bg: '#fce7f3', text: '#be185d' },
+                    remote: { bg: '#ede9fe', text: '#6b46c1' },
+                    pregnancyleave: { bg: '#dcfce7', text: '#22543d' },
+                    specialleave: { bg: '#dbeafe', text: '#1e40af' }
+                };
+                const { bg: bgColor, text: textColor } = typeColors[key] || { bg: '#bfdbfe', text: '#1e3a8a' };
+
+                return {
+                    id: req.id,
+                    title: req.leaveType,
+                    startDate: req.startDate,
+                    endDate: req.endDate,
+                    submittedAt: req.submittedAt,
+                    status: req.status,
+                    startDateObj: new Date(req.startDate),
+                    bgColor,
+                    textColor
+                };
+            });
+
+        setEvents(visibleEvents);
+
+        const activeSubmissions = requests.filter(req => req.status.toLowerCase() === 'submitted');
+        setSubmittedRequests(activeSubmissions);
+
+        const steps = {};
+        activeSubmissions.forEach(req => {
+            steps[req.id] = 1;
+            setTimeout(() => setCurrentSteps(prev => ({ ...prev, [req.id]: 2 })), 1500);
+            setTimeout(() => setCurrentSteps(prev => ({ ...prev, [req.id]: 3 })), 3000);
+        });
+        setCurrentSteps(steps);
+    };
+
     useEffect(() => {
         onAuthStateChanged(auth, async user => {
             if (!user) return;
-             setUid(user.uid);
-
-            const token = await user.getIdToken();
-            const resp  = await axios.get('/api/leaves', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            // map API data → calendar “events”
-            setEvents(resp.data.map(req => ({
-                id:         req.id,
-                title:      req.leaveType,
-                day:        new Date(req.startDate).getDate(),
-                color:      req.leaveType.replace(/\s+/g,'').toLowerCase(),
-                startDate:  req.startDate,
-                endDate:    req.endDate,
-                status:     req.status,
-                submittedAt:req.submittedAt
-            })));
+            setUid(user.uid);
+            await fetchLeaveEvents(user);
         });
     }, []);
 
-    // Handle new submission
     const handleSubmit = async (request) => {
-        console.log('Page.handleSubmit got', request, 'uid=', uid);
         if (!uid) return;
-
         try {
             const token = await auth.currentUser.getIdToken();
-            const resp = await axios.post(
-                '/api/leaves',
-                request,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            const created = resp.data;
+            const resp = await axios.post('/api/leaves', request, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
-            // Determine the colors for this leaveType
-            const typeColors = {
-                vacation:         { bg: '#d1faf5', text: '#319795' },
-                leavewithoutpay:  { bg: '#ffedd5', text: '#dd6b20' },
-                medicalleave:     { bg: '#fce7f3', text: '#be185d' },
-                remote:           { bg: '#ede9fe', text: '#6b46c1' },
-                pregnancyleave:   { bg: '#dcfce7', text: '#22543d' },
-                specialleave:     { bg: '#dbeafe', text: '#1e40af' }
-            };
+            const created = resp.data;
             const key = created.leaveType.replace(/\s+/g, '').toLowerCase();
+            const typeColors = {
+                vacation: { bg: '#d1faf5', text: '#319795' },
+                leavewithoutpay: { bg: '#ffedd5', text: '#dd6b20' },
+                medicalleave: { bg: '#fce7f3', text: '#be185d' },
+                remote: { bg: '#ede9fe', text: '#6b46c1' },
+                pregnancyleave: { bg: '#dcfce7', text: '#22543d' },
+                specialleave: { bg: '#dbeafe', text: '#1e40af' }
+            };
             const { bg: bgColor, text: textColor } = typeColors[key] || { bg: '#bfdbfe', text: '#1e3a8a' };
 
-            // Build the new event object
             const newEvent = {
-                id:         created.id,
-                title:      created.leaveType,
-                day:        new Date(created.startDate).getDate(),
-                startDate:  created.startDate,
-                endDate:    created.endDate,
-                status:     created.status,
-                submittedAt:created.submittedAt,
+                id: created.id,
+                title: created.leaveType,
+                startDate: created.startDate,
+                endDate: created.endDate,
+                status: created.status,
+                submittedAt: created.submittedAt,
                 bgColor,
-                textColor
+                textColor,
+                startDateObj: new Date(created.startDate)
             };
 
-            // Update UI state
-            setSubmittedRequest(created);
-            setCurrentStep(1);
             setEvents(prev => [...prev, newEvent]);
-
-            // Advance the stepper
-            setTimeout(() => setCurrentStep(2), 1500);
-            setTimeout(() => setCurrentStep(3), 3000);
-
+            setSubmittedRequests(prev => [...prev, created]);
+            setCurrentSteps(prev => ({ ...prev, [created.id]: 1 }));
+            setTimeout(() => setCurrentSteps(prev => ({ ...prev, [created.id]: 2 })), 1500);
+            setTimeout(() => setCurrentSteps(prev => ({ ...prev, [created.id]: 3 })), 3000);
         } catch (e) {
             console.error('Submit failed', e);
             alert('Failed to submit leave request');
         }
     };
 
+    const handleCancelRequest = async (requestId) => {
+        if (!uid || !requestId) return;
+        const confirmCancel = window.confirm("Are you sure you want to cancel this leave request?");
+        if (!confirmCancel) return;
 
+        try {
+            const token = await auth.currentUser.getIdToken();
+            await axios.patch(`/api/leaves/${requestId}/cancel`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
+            alert("Leave request cancelled.");
+
+            setEvents(prev =>
+                prev.map(e => e.id === requestId ? { ...e, status: 'cancelled' } : e)
+            );
+            setSubmittedRequests(prev => prev.filter(r => r.id !== requestId));
+        } catch (err) {
+            console.error("Cancel failed", err);
+            alert("Failed to cancel the leave request.");
+        }
+    };
 
     const monthLabel = currentDate.toLocaleString('default', { month: 'long' });
     const yearLabel = currentDate.getFullYear();
 
     return (
         <div className="page-container-lr">
-            <EmployeeSidebar
-                activeMenuItem={activeMenuItem}
-                handleMenuItemClick={handleMenuItemClick}
-            />            <div className="main-content-lr">
+            <EmployeeSidebar activeMenuItem={activeMenuItem} handleMenuItemClick={handleMenuItemClick} />
+            <div className="main-content-lr">
                 <EmployeeHeader />
 
                 <div className="calendar-container-lr">
@@ -155,8 +200,6 @@ const LeaveRequestPage = () => {
                             <button className="nav-button" onClick={goToNextMonth}>›</button>
                         </div>
                         <div className="view-options">
-                            <button className="view-button">Day</button>
-                            <button className="view-button">Week</button>
                             <button className="view-button active">Month</button>
                         </div>
                     </div>
@@ -164,16 +207,18 @@ const LeaveRequestPage = () => {
                     <LeaveForm onSubmit={handleSubmit} />
                     <LeaveTypesCard />
 
-                    {currentStep > 0 && (
+                    {submittedRequests.map((req) => (
                         <StatusStepper
-                            currentStep={currentStep}
-                            submittedRequest={submittedRequest}
+                            key={req.id}
+                            currentStep={currentSteps[req.id] || 1}
+                            submittedRequest={req}
+                            onCancel={() => handleCancelRequest(req.id)}
                         />
-                    )}
+                    ))}
 
                     <CalendarGrid
                         monthDate={currentDate}
-                        events={events}
+                        events={events.filter(req => ["approved", "rejected", "cancelled"].includes(req.status.toLowerCase()))}
                         onHover={(evt, pos) => {
                             setSelectedEvent(evt);
                             setHoverPosition(pos);
@@ -195,4 +240,3 @@ const LeaveRequestPage = () => {
 };
 
 export default LeaveRequestPage;
-
