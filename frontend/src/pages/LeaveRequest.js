@@ -158,7 +158,13 @@ const LeaveRequest = () => {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   return (
-   <LeaveRequestPage/>);
+    <LeaveRequestPage 
+    darkMode={darkMode}
+    toggleDarkMode={toggleDarkMode}
+    activeMenuItem={activeMenuItem}
+    handleMenuItemClick={handleMenuItemClick}
+  />
+   );
 };
 
 export default LeaveRequest;

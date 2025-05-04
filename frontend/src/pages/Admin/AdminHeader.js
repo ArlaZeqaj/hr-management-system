@@ -41,8 +41,8 @@ const AdminHeader = ({
             <img
               src={
                 darkMode
-                  ? "https://cdn-icons-png.flaticon.com/512/581/581601.png"
-                  : "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fc94b941-d6a8-49dd-9e4a-a8d7bce035cd"
+                  ? "https://img.icons8.com/?size=100&id=96205&format=png&color=FFFFFF"
+                  : "https://img.icons8.com/?size=100&id=96393&format=png&color=000000"
               }
               alt={darkMode ? "Light Mode" : "Dark Mode"}
               style={{ width: "24px", height: "24px" }}

@@ -17,7 +17,7 @@ import "../../pages/Employee/EmployeeHeader.css";
 import "../../pages/Employee/EmployeeFooter.css";
 import axios from "axios";
 
-const LeaveRequestPage = () => {
+const LeaveRequestPage = ({ darkMode, toggleDarkMode, activeMenuItem, handleMenuItemClick }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -37,19 +37,6 @@ const LeaveRequestPage = () => {
         if (path.includes('/leave-request')) return 'Leave Request';
         if (path.includes('/documents')) return 'Documents';
         return 'Dashboard';
-    };
-
-    const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
-    const handleMenuItemClick = (menuItem) => {
-        setActiveMenuItem(menuItem);
-        switch (menuItem) {
-            case 'Dashboard': navigate('/employee/dashboard'); break;
-            case 'Profile': navigate('/employee/profile'); break;
-            case 'Projects': navigate('/projects'); break;
-            case 'Leave Request': navigate('/leave-request'); break;
-            case 'Documents': navigate('/documents'); break;
-            default: navigate('/employee/dashboard');
-        }
     };
 
     const goToPreviousMonth = () => {
@@ -187,10 +174,18 @@ const LeaveRequestPage = () => {
     const yearLabel = currentDate.getFullYear();
 
     return (
-        <div className="page-container-lr">
-            <EmployeeSidebar activeMenuItem={activeMenuItem} handleMenuItemClick={handleMenuItemClick} />
+        <div className={`page-container-lr ${darkMode ? "dark-theme" : ""}`}>
+            <EmployeeSidebar
+                activeMenuItem={activeMenuItem}
+                handleMenuItemClick={handleMenuItemClick}
+                darkMode={darkMode}
+            />
             <div className="main-content-lr">
-                <EmployeeHeader />
+                <EmployeeHeader
+                    activeMenuItem={activeMenuItem}
+                    darkMode={darkMode}
+                    toggleDarkMode={toggleDarkMode}
+                />
 
                 <div className="calendar-container-lr">
                     <div className="calendar-header-lr">
