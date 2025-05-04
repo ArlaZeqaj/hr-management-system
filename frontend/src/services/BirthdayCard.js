@@ -20,7 +20,6 @@ const BirthdayCard = ({
       if (!employee.birthDate) return false;
 
       try {
-        // Parse yyyy-mm-dd format
         const [year, month, day] = employee.birthDate.split('-').map(Number);
         if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
         return month === currentMonth && day === currentDay;

@@ -7,11 +7,15 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -33,6 +37,58 @@ public class DocumentService {
 
         return documents;
     }
+
+    public List<Map<String, String>> uploadDocuments(MultipartFile[] files, String category, String userId) throws IOException {
+        Firestore db = FirestoreClient.getFirestore();
+        List<Map<String, String>> uploadedFiles = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String filename = UUID.randomUUID().toString() + fileExtension;
+
+
+            String uploadDir = "uploads/";
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            Map<String, Object> docData = new HashMap<>();
+            docData.put("name", originalFilename);
+            docData.put("type", file.getContentType());
+            docData.put("category", category);
+            docData.put("starred", false);
+            docData.put("url", "/" + uploadDir + filename);
+            docData.put("formattedDate", LocalDate.now().toString());
+            docData.put("size", formatFileSize(file.getSize()));
+            docData.put("uploadedBy", userId);
+
+            db.collection("employees")
+                    .document(userId)
+                    .collection("documents")
+                    .document()
+                    .set(docData);
+
+            uploadedFiles.add(Map.of(
+                    "originalName", originalFilename,
+                    "storedName", filename,
+                    "size", formatFileSize(file.getSize())
+            ));
+        }
+
+        return uploadedFiles;
+    }
+
+    private String formatFileSize(long size) {
+        if (size < 1024) return size + " B";
+        if (size < 1024 * 1024) return (size / 1024) + " KB";
+        return (size / (1024 * 1024)) + " MB";
+    }
+
     public void updateStarStatus(String uid, String docId, boolean starred) {
         Firestore db = FirestoreClient.getFirestore();
         db.collection("employees")
