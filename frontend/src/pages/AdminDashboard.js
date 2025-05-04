@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from "axios";
+import { getIdToken } from "firebase/auth";
+import { auth } from "../config/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
 import { Bar, Pie, Line } from 'react-chartjs-2';
@@ -7,6 +12,8 @@ import { Chart, registerables } from 'chart.js';
 import "../styles/Admin.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
+
+
 
 Chart.register(...registerables);
 
@@ -63,12 +70,146 @@ const AdminDashboard = () => {
   });
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeTab, setActiveTab] = useState('overview');
+   // New state to store employee count
+  const [employeeCount, setEmployeesCount] = useState(0);
+  const [activeProjectsCount, setActiveProjectsCount] = useState(0);
+  const [pendingTasksCount, setPendingTasksCount] = useState(0);
+  const [departmentDistribution, setDepartmentDistribution] = useState({});
   const [newHireForm, setNewHireForm] = useState({
     name: '',
     position: '',
     department: '',
     startDate: ''
+
   });
+    // Fetch employee count from backend
+useEffect(() => {
+  const fetchEmployeeCount = async () => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.error("❌ No authenticated user");
+      return;
+    }
+
+    try {
+      const token = await user.getIdToken();  // Firebase ID token
+      const response = await fetch("http://localhost:8080/api/admin1/count", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch employee count");
+
+      const count = await response.json();
+      console.log("✅ Employee count from backend:", count);
+      setEmployeesCount(count);
+    } catch (error) {
+      console.error("Error fetching employee count:", error);
+    }
+  };
+
+  // Listen to auth state
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is authenticated:", user);
+      fetchEmployeeCount();
+    } else {
+      console.error("❌ No authenticated user");
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
+// Fetch active projects count
+    useEffect(() => {
+      const fetchActiveProjectsCount = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("❌ No authenticated user");
+          return;
+        }
+
+        try {
+          const token = await getIdToken(user); // Use the token after verifying the user
+          const response = await fetch("http://localhost:8080/api/admin1/active-projects/count", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,  // Attach the token in the Authorization header
+            },
+          });
+
+          if (!response.ok) throw new Error("Failed to fetch active projects count");
+
+          const count = await response.json();  // Parse the count from the response
+          console.log("✅ Active projects count from backend:", count);  // For debugging purposes
+          setActiveProjectsCount(count);  // Update the state with the active projects count
+        } catch (error) {
+          console.error("Error fetching active projects count:", error);
+        }
+      };
+
+      fetchActiveProjectsCount();  // Call the function to fetch data when component mounts
+    }, []);  // Empty dependency array so this runs only once when the component mounts
+
+    useEffect(() => {
+      const fetchPendingTasks = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("❌ No authenticated user");
+          return;
+        }
+
+        try {
+          const token = await user.getIdToken();
+          const response = await fetch("http://localhost:8080/api/admin1/tasks/pending/count", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) throw new Error("Failed to fetch pending tasks count");
+
+          const count = await response.json();
+          console.log("✅ Pending tasks count:", count);
+          setPendingTasksCount(count);
+        } catch (error) {
+          console.error("Error fetching pending tasks:", error);
+        }
+      };
+
+      fetchPendingTasks();
+    }, []);
+
+    useEffect(() => {
+      const fetchDistribution = async () => {
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("❌ No authenticated user");
+          return;
+        }
+
+        try {
+          const token = await user.getIdToken();
+          const response = await fetch("http://localhost:8080/api/admin1/employees/distribution", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) throw new Error("Failed to fetch department distribution");
+
+          const data = await response.json();
+          setDepartmentDistribution(data);
+        } catch (error) {
+          console.error("Error fetching department distribution:", error);
+        }
+      };
+
+      fetchDistribution();
+    }, []);
 
   // Update current time every minute
   useEffect(() => {
@@ -78,7 +219,7 @@ const AdminDashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Sample data - in a real app, this would come from an API
+  // Sample data - in a real app, this would come from an API -- do e heqim
   const [employees, setEmployees] = useState([
     { id: 1, name: 'John Doe', position: 'Frontend Developer', department: 'Engineering', status: 'active' },
     { id: 2, name: 'Jane Smith', position: 'HR Manager', department: 'Human Resources', status: 'active' },
@@ -102,20 +243,20 @@ const AdminDashboard = () => {
   ]);
 
   // Charts data
-  const employeeDistributionData = {
-    labels: ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'],
-    datasets: [{
-      data: [45, 15, 20, 10, 10],
-      backgroundColor: [
-        '#4318FF',
-        '#6AD2FF',
-        '#EFF4FB',
-        '#05CD99',
-        '#FFB547'
-      ],
-      borderWidth: 0,
-    }]
-  };
+const employeeDistributionData = {
+  labels: Object.keys(departmentDistribution),
+  datasets: [{
+    data: Object.values(departmentDistribution),
+    backgroundColor: [
+      '#4318FF',
+      '#6AD2FF',
+      '#EFF4FB',
+      '#05CD99',
+      '#FFB547'
+    ],
+    borderWidth: 0,
+  }]
+};
 
   const payrollTrendData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -142,21 +283,21 @@ const AdminDashboard = () => {
   const statsData = [
     { 
       title: "Total Employees", 
-      value: employees.length, 
+      value: employeeCount,
       change: "+12%", 
       icon: "https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF",
       trend: "up"
     },
     { 
       title: "Active Projects", 
-      value: "24", 
+      value: activeProjectsCount.toString(),
       change: "+5%", 
       icon: "https://img.icons8.com/?size=100&id=102889&format=png&color=4318FF",
       trend: "up"
     },
     { 
       title: "Pending Tasks", 
-      value: tasks.filter(t => !t.completed).length, 
+      value: pendingTasksCount,
       change: "-3%", 
       icon: "https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF",
       trend: "down"
@@ -299,12 +440,7 @@ const AdminDashboard = () => {
             >
               Overview
             </button>
-            <button 
-              className={`tab-btn-ap ${activeTab === 'employees' ? 'active' : ''}`}
-              onClick={() => setActiveTab('employees')}
-            >
-              Employees
-            </button>
+
             <button 
               className={`tab-btn-ap ${activeTab === 'payroll' ? 'active' : ''}`}
               onClick={() => setActiveTab('payroll')}
@@ -495,43 +631,6 @@ const AdminDashboard = () => {
                     </form>
                   </div>
                 </dialog>
-
-                {/* Employees Table */}
-                <div className="employees-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Department</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {employees.map(employee => (
-                        <tr key={employee.id}>
-                          <td>{employee.name}</td>
-                          <td>{employee.position}</td>
-                          <td>{employee.department}</td>
-                          <td>
-                            <span className={`status-badge ${employee.status}`}>
-                              {employee.status}
-                            </span>
-                          </td>
-                          <td>
-                            <button className="action-btn view">
-                              View
-                            </button>
-                            <button className="action-btn edit">
-                              Edit
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
               </div>
             )}
 
