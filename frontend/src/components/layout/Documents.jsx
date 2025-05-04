@@ -17,7 +17,7 @@ import "../../pages/Employee/EmployeeSidebar.css";
 import "../../pages/Employee/EmployeeHeader.css";
 import "../../pages/Employee/EmployeeFooter.css";
 
-const Documents = () => {
+const Documents = ({ darkMode, toggleDarkMode }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -80,10 +80,6 @@ const Documents = () => {
         return () => unsubscribe();
     }, []);
 
-    const [darkMode, setDarkMode] = useState(() => {
-        const savedMode = localStorage.getItem("darkMode");
-        return savedMode ? JSON.parse(savedMode) : false;
-    });
     const [notifications, setNotifications] = useState({
         "Item update notifications": false,
         "Item comment notifications": false,
@@ -96,10 +92,6 @@ const Documents = () => {
         "Subscribe to newsletter": false,
         "Email me when someone follows me": false,
     });
-
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-    };
 
     const toggleNotification = (notification) => {
         setNotifications(prev => ({
@@ -219,13 +211,13 @@ const Documents = () => {
     });
 
     return (
-        <div className="documents-page-container">
-            <EmployeeSidebar />
+        <div className={`documents-page-container ${darkMode ? "dark-theme" : ""}`}>
+            <EmployeeSidebar
+            activeMenuItem={activeMenuItem}
+            handleMenuItemClick={handleMenuItemClick}
+            darkMode={darkMode}
+        />
             <div className="documents-main-content">
-                <EmployeeSidebar
-                    activeMenuItem={activeMenuItem}
-                    handleMenuItemClick={handleMenuItemClick}
-                />
                 <EmployeeHeader
                     activeMenuItem={activeMenuItem}
                     darkMode={darkMode}

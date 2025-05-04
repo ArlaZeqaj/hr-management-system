@@ -808,6 +808,167 @@
   color: var(--primary);
 }
 
+/* =======================
+   Dark Theme Styles
+========================== */
+body.dark-theme .page-container-lr {
+  background-color: #1a1a2e;
+  color: #e2e8f0;
+}
+
+body.dark-theme .calendar-container-lr {
+  background-color: #16213e;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .month-selector h1 {
+  color: #f8fafc;
+}
+
+body.dark-theme .nav-button {
+  color: #e2e8f0;
+}
+
+body.dark-theme .nav-button:hover {
+  background-color: #2d3748;
+}
+
+body.dark-theme .view-button {
+  background-color: #1e293b;
+  border-color: #2d3748;
+  color: #e2e8f0;
+}
+
+body.dark-theme .view-button:hover {
+  background-color: #2d3748;
+}
+
+body.dark-theme .view-button.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+body.dark-theme .calendar-cell {
+  background-color: #1e293b;
+  border-color: #2d3748;
+}
+
+body.dark-theme .calendar-cell:hover {
+  background-color: #2d3748;
+}
+
+body.dark-theme .day-number {
+  color: #e2e8f0;
+}
+
+body.dark-theme .leave-request-form,
+body.dark-theme .leave-types-card,
+body.dark-theme .status-stepper {
+  background-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .leave-request-form h2,
+body.dark-theme .leave-types-title,
+body.dark-theme .step.active .step-label,
+body.dark-theme .detail-row span:not(.detail-label) {
+  color: #f8fafc;
+}
+
+body.dark-theme .form-group label,
+body.dark-theme .detail-label,
+body.dark-theme .step-label {
+  color: #94a3b8;
+}
+
+body.dark-theme .form-group input,
+body.dark-theme .form-group select {
+  background-color: #1e293b;
+  border-color: #2d3748;
+  color: #e2e8f0;
+}
+
+body.dark-theme .form-group input:focus,
+body.dark-theme .form-group select:focus {
+  border-color: #3b82f6;
+}
+
+body.dark-theme .submit-button,
+body.dark-theme .cancel-button {
+  background-color: #3b82f6;
+}
+
+body.dark-theme .submit-button:hover,
+body.dark-theme .cancel-button:hover {
+  background-color: #2563eb;
+}
+
+body.dark-theme .leave-type-item:hover {
+  background-color: #2d3748;
+}
+
+body.dark-theme .leave-type-name {
+  color: #e2e8f0;
+}
+
+body.dark-theme .step-details {
+  border-bottom-color: #2d3748;
+}
+
+body.dark-theme .step-circle {
+  background-color: #2d3748;
+  color: #94a3b8;
+}
+
+body.dark-theme .step.active .step-circle {
+  background-color: #3b82f6;
+  color: white;
+}
+
+body.dark-theme .step-connector {
+  background-color: #2d3748;
+}
+
+body.dark-theme .step-connector.active {
+  background-color: #3b82f6;
+}
+
+/* Event pills in dark mode */
+body.dark-theme .event-pill.teal {
+  background: #234e52;
+  color: #81e6d9;
+}
+
+body.dark-theme .event-pill.orange {
+  background: #7b341e;
+  color: #f6ad55;
+}
+
+body.dark-theme .event-pill.green {
+  background: #22543d;
+  color: #68d391;
+}
+
+body.dark-theme .event-pill.blue {
+  background: #1e3a8a;
+  color: #93c5fd;
+}
+
+body.dark-theme .event-pill.purple {
+  background: #5b21b6;
+  color: #c4b5fd;
+}
+
+body.dark-theme .event-pill.pink {
+  background: #9d174d;
+  color: #f9a8d4;
+}
+
+/* Calendar header border in dark mode */
+body.dark-theme .calendar-header-lr {
+  border-bottom-color: #2d3748;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .calendar-header-lr {
