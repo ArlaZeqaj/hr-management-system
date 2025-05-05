@@ -1,15 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import axios from "axios";
+import 'inter-ui/inter.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import "../styles/ProfilePageEmployee.css";
 import { useBirthdays } from '../services/BirthdayContext';
 import BirthdayCard from '../services/BirthdayCard';
 
 const ProfilePageEmployee = () => {
+  const navigate = useNavigate();
+  const auth = getAuth();
+
+  // State management
   const [activeMenuItem, setActiveMenuItem] = useState("Profile");
   const [darkMode, setDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    return savedMode ? JSON.parse(savedMode) : false;
+    return JSON.parse(localStorage.getItem("darkMode")) || false;
   });
   const [showNotifications, setShowNotifications] = useState(false);
   const [userData, setUserData] = useState({
@@ -23,7 +28,7 @@ const ProfilePageEmployee = () => {
     workHistory: "",
     organization: "",
     birthDate: "",
-    avatarURL: "",
+    avatarURL: "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
     loading: true,
     error: null
   });
@@ -40,177 +45,358 @@ const ProfilePageEmployee = () => {
     "Email me when someone follows me": false,
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [currentProjects, setCurrentProjects] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+
 
   const notificationRef = useRef(null);
+  const { allBirthdays, loading: birthdaysLoading, error: birthdaysError, refreshEmployees } = useBirthdays();
 
-  const { allBirthdays, loading: birthdaysLoading, error: birthdaysError } = useBirthdays();
+  const getFileIcon = (fileType) => {
+    if (!fileType) return '📄';
+    if (fileType.includes('pdf')) return '📄';
+    if (fileType.includes('word')) return '📝';
+    if (fileType.includes('image')) return '🖼️';
+    return '📂';
+  };
 
+  // Dark theme effect
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-    localStorage.setItem("darkMode", darkMode);
+    document.body.classList.toggle("dark-theme", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
 
+  // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target) &&
+      if (notificationRef.current &&
+          !notificationRef.current.contains(event.target) &&
           !event.target.closest('.profile-button')) {
         setShowNotifications(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const auth = getAuth();
+  // File upload handler
+  const handleFileUpload = useCallback((e) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles(files);
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          const token = await user.getIdToken();
+    const filePreviews = files.map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      lastModified: file.lastModified,
+      preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : null
+    }));
 
-          const response = await axios.get(`/api/employees/by-email?email=${user.email}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
+    setUploadedFiles(filePreviews);
+  }, []);
 
-          setUserData({
-            name: response.data.firstName || response.data.name || "",
-            surname: response.data.lastName || response.data.surname || "",
-            email: response.data.email || user.email,
-            bio: response.data.bio || "No bio",
-            education: response.data.education || "No data",
-            languages: Array.isArray(response.data.languages)
-              ? response.data.languages.join(", ")
-              : response.data.languages || "No data",
-            workHistory: Array.isArray(response.data.workHistory)
-              ? response.data.workHistory.join(", ")
-              : response.data.workHistory || "No data",
-            departament: response.data.departament || "No data",
-            organization: response.data.organization || "No data",
-            birthDate: response.data.birthDate || "No data",
-            avatarURL: response.data.avatarURL || "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
-            loading: false,
-            error: null
-          });
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
-          setUserData({
-            ...userData,
-            loading: false,
-            error: error.response?.data?.message || error.message
-          });
+  // Publish files handler
+  const handlePublish = useCallback(async () => {
+
+   const user = auth.currentUser;
+    if (!user) {
+      alert('Please sign in again');
+      return;
+    }
+
+    const token = await user.getIdToken(true);
+
+    if (selectedFiles.length === 0) {
+      alert('Please select files to upload first');
+      return;
+    }
+
+    setIsUploading(true);
+
+console.log('Uploading with token:', token);
+console.log('Files:', selectedFiles);
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('User not authenticated');
+
+      const token = await user.getIdToken(true);
+      const formData = new FormData();
+
+      selectedFiles.forEach(file => {
+        formData.append('files', file);
+      });
+
+      formData.append('category', 'Personal Documents');
+      formData.append('userId', user.uid);
+
+      await axios.post(
+        'http://localhost:8080/api/documents/upload',
+        formData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
         }
+      );
+
+      // Clean up and redirect
+      setSelectedFiles([]);
+      setUploadedFiles([]);
+      navigate('/documents');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert(error?.response?.data?.message || error.message || 'Failed to upload files');
+    } finally {
+      setIsUploading(false);
+    }
+  }, [selectedFiles, navigate, auth]);
+
+  // Clean up object URLs
+  useEffect(() => {
+    return () => {
+      uploadedFiles.forEach(file => {
+        if (file.preview) URL.revokeObjectURL(file.preview);
+      });
+    };
+  }, [uploadedFiles]);
+
+  // Fetch user data
+  const fetchUserData = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get(`/api/employees/by-email?email=${user.email}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        timeout: 5000
+      });
+
+      setUserData(prev => ({
+        ...prev,
+        name: response.data.firstName || response.data.name || "",
+        surname: response.data.lastName || response.data.surname || "",
+        email: response.data.email || user.email,
+        bio: response.data.bio || "No bio",
+        education: response.data.education || "No data",
+        languages: Array.isArray(response.data.languages)
+          ? response.data.languages.join(", ")
+          : response.data.languages || "No data",
+        workHistory: Array.isArray(response.data.workHistory)
+          ? response.data.workHistory.join(", ")
+          : response.data.workHistory || "No data",
+        departament: response.data.departament || "No data",
+        organization: response.data.organization || "No data",
+        birthDate: response.data.birthDate || "No data",
+        avatarURL: response.data.avatarURL || prev.avatarURL,
+        loading: false,
+        error: null
+      }));
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+      setUserData(prev => ({
+        ...prev,
+        loading: false,
+        error: error.response?.data?.message || error.message
+      }));
+    }
+  }, []);
+
+  // Fetch projects
+  const fetchProjects = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get("http://localhost:8080/api/projects/all", {
+        headers: { 'Authorization': `Bearer ${token}` },
+        timeout: 5000
+      });
+
+      const ongoingProjects = response.data.filter(project => project.status === "Ongoing");
+      setCurrentProjects(ongoingProjects);
+      setProjectsLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+      setProjectsError(error.response?.data?.message || error.message);
+      setProjectsLoading(false);
+    }
+  }, []);
+
+  // Auth state change handler
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        Promise.all([
+          fetchUserData(user),
+          refreshEmployees(),
+          fetchProjects(user)
+        ]).catch(err => console.error("Error in parallel fetching:", err));
       } else {
-        setUserData({
-          ...userData,
+        setUserData(prev => ({
+          ...prev,
           loading: false,
           error: "No user logged in"
-        });
+        }));
       }
     });
 
-    return () => unsubscribe();
-  }, []);
+    return unsubscribe;
+  }, [fetchUserData, refreshEmployees, fetchProjects, auth]);
 
+  // Event handlers
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
+    if (menuItem === "Projects") {
+      navigate("/projects");
+    } else if (menuItem === "Dashboard") {
+      navigate("/employee/dashboard");
+    }
+    else if (menuItem === "Leave Request") {
+       navigate("/leave-request");
+        }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
+  }, []);
 
-  const toggleNotification = (notification) => {
+  const toggleNotification = useCallback((notification) => {
     setNotifications(prev => ({
       ...prev,
       [notification]: !prev[notification]
     }));
-  };
+  }, []);
 
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setSelectedFiles(files);
-    alert(`${files.length} file(s) selected`);
-  };
-
-  const handleSendWish = (employee) => {
+  const handleSendWish = useCallback((employee) => {
     alert(`Sending birthday wish to ${employee.name}!`);
+  }, []);
+
+  const handleProjectClick = useCallback(() => {
+    navigate("/projects");
+  }, [navigate]);
+
+  // Memoized components
+  const memoizedBirthdayCard = useMemo(() => (
+    <BirthdayCard
+      birthdays={allBirthdays}
+      loading={birthdaysLoading}
+      error={birthdaysError}
+      onSendWish={handleSendWish}
+    />
+  ), [allBirthdays, birthdaysLoading, birthdaysError, handleSendWish]);
+
+  // Render methods
+  const renderProfileContent = () => {
+    if (userData.loading) {
+      return <div className="loading-text">Loading user data, please wait.</div>;
+    }
+    if (userData.error) {
+      return <div className="error-message">Error loading profile: {userData.error}</div>;
+    }
+    return (
+      <>
+        <h1 className="profile-name">
+          {userData.name} {userData.surname}
+        </h1>
+        <p className="profile-title">{userData.email}</p>
+        <p className="profile-title">{userData.departament}</p>
+        <div className="profile-divider"></div>
+        <p className="profile-bio">{userData.bio}</p>
+      </>
+    );
+  };
+
+  const renderNotificationSettings = () => (
+    <div className="dropdown-menu">
+      <h3>Notification Settings</h3>
+      {Object.keys(notifications).map((item) => (
+        <div key={item} className="toggle-item">
+          <span>{item}</span>
+          <label className="toggle-switch">
+            <input
+              type="checkbox"
+              checked={notifications[item]}
+              onChange={() => toggleNotification(item)}
+            />
+            <span className="toggle-slider"></span>
+          </label>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderProjects = () => {
+    if (projectsLoading) {
+      return <div className="loading-text">Loading projects...</div>;
+    }
+    if (projectsError) {
+      return <div className="error-message">Error loading projects: {projectsError}</div>;
+    }
+    if (currentProjects.length === 0) {
+      return <div className="no-projects">No current projects found</div>;
+    }
+    return (
+      <div className="project-list">
+        {currentProjects.map((project, index) => (
+          <div
+            key={index}
+            className="project-item"
+            onClick={handleProjectClick}
+          >
+            <img
+              src={project.image || "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9c80177c-314a-4f0a-8b59-2f7172cc43f6"}
+              alt={project.project_Name}
+              loading="lazy"
+            />
+            <div className="project-info">
+              <h4>{project.project_Name}</h4>
+              <div className="project-meta">
+                <span>Status: {project.status}</span>
+                <span>•</span>
+                <span>Role: {project.role}</span>
+              </div>
+              <div className="project-dates">
+                <span>{project.start_Date} to {project.end_Date}</span>
+              </div>
+              <p className="project-description">
+                {project.description && project.description.length > 100
+                  ? `${project.description.substring(0, 100)}...`
+                  : project.description || "No description available"}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
-    <div className="profile-container">
+    <div className={`profile-container ${darkMode ? 'dark-theme' : ''}`}>
       {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-header">
           <span className="logo">HRCLOUDX</span>
         </div>
 
-        {/* Menu Items */}
         <div className="sidebar-menu">
-          <div
-            className={`menu-item ${
-              activeMenuItem === "Dashboard" ? "active" : ""
-            }`}
-            onClick={() => handleMenuItemClick("Dashboard")}
-          >
-            <img
-              src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a"
-              className="menu-icon"
-              alt="Dashboard"
-            />
-            <span>Dashboard</span>
-          </div>
-          <div
-            className={`menu-item ${
-              activeMenuItem === "Profile" ? "active" : ""
-            }`}
-            onClick={() => handleMenuItemClick("Profile")}
-          >
-            <img
-              src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f83d5003-9309-4c08-b4fb-effc29fd197d"
-              className="menu-icon"
-              alt="Profile"
-            />
-            <span>Profile</span>
-          </div>
-          <div
-            className={`menu-item ${
-              activeMenuItem === "Leave Requests" ? "active" : ""
-            }`}
-            onClick={() => handleMenuItemClick("Leave Requests")}
-          >
-            <img
-              src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a"
-              className="menu-icon"
-              alt="Leave Requests"
-            />
-            <span>Leave Requests</span>
-          </div>
-          <div
-            className={`menu-item ${
-              activeMenuItem === "Projects" ? "active" : ""
-            }`}
-            onClick={() => handleMenuItemClick("Projects")}
-          >
-            <img
-              src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png"
-              className="menu-icon"
-              alt="Projects"
-            />
-            <span>Projects</span>
-          </div>
+          {['Dashboard', 'Profile', 'Leave Requests', 'Projects'].map((item) => (
+            <div
+              key={item}
+              className={`menu-item ${activeMenuItem === item ? "active" : ""}`}
+              onClick={() => handleMenuItemClick(item)}
+            >
+              <img
+                src={getMenuItemIcon(item)}
+                className="menu-icon"
+                alt={item}
+              />
+              <span>{item}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Upgrade Card */}
         <div className="sidebar-bottom">
           <div className="upgrade-card">
             <div className="upgrade-content">
@@ -236,51 +422,32 @@ const ProfilePageEmployee = () => {
             <div className="action-icons">
               <button
                 onClick={toggleDarkMode}
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                }}
+                className="theme-toggle-btn"
+                aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
               >
                 <img
-                  src={
-                    darkMode
-                      ? "https://cdn-icons-png.flaticon.com/512/581/581601.png"
-                      : "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fc94b941-d6a8-49dd-9e4a-a8d7bce035cd"
-                  }
+                  src={darkMode ?
+                    "https://cdn-icons-png.flaticon.com/512/581/581601.png" :
+                    "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fc94b941-d6a8-49dd-9e4a-a8d7bce035cd"}
                   alt={darkMode ? "Light Mode" : "Dark Mode"}
-                  style={{ width: "24px", height: "24px" }}
+                  width="24"
+                  height="24"
                 />
               </button>
               <div className="profile-dropdown" ref={notificationRef}>
                 <button
                   className="profile-button"
                   onClick={() => setShowNotifications(!showNotifications)}
+                  aria-expanded={showNotifications}
                 >
                   <img
                     src={userData.avatarURL}
                     alt="Profile"
+                    width="40"
+                    height="40"
                   />
                 </button>
-                {showNotifications && (
-                  <div className="dropdown-menu">
-                    <h3>Notification Settings</h3>
-                    {Object.keys(notifications).map((item) => (
-                      <div key={item} className="toggle-item">
-                        <span>{item}</span>
-                        <label className="toggle-switch">
-                          <input
-                            type="checkbox"
-                            checked={notifications[item]}
-                            onChange={() => toggleNotification(item)}
-                          />
-                          <span className="toggle-slider"></span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {showNotifications && renderNotificationSettings()}
               </div>
             </div>
           </div>
@@ -295,53 +462,34 @@ const ProfilePageEmployee = () => {
                 src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/57709ee9-ee37-41a1-8342-a56a90377035"
                 className="cover-photo"
                 alt="Cover"
+                loading="lazy"
               />
               <div className="profile-photo-container">
                 <img
                   src={userData.avatarURL}
                   className="profile-photo"
                   alt="Profile"
+                  loading="lazy"
+                  width="120"
+                  height="120"
                 />
               </div>
             </div>
 
             <div className="profile-content">
-              {userData.loading ? (
-                <div className="loading-spinner">Loading user data...</div>
-              ) : userData.error ? (
-                <div className="error-message">
-                  Error loading profile: {userData.error}
-                </div>
-              ) : (
-                <>
-                  <h1 className="profile-name">
-                    {userData.name} {userData.surname}
-                  </h1>
-                  <p className="profile-title">{userData.email}</p>
-                  <p className="profile-title">{userData.departament}</p>
-                  <div className="profile-divider"></div>
-                  <p className="profile-bio">{userData.bio}</p>
-                </>
-              )}
+              {renderProfileContent()}
             </div>
           </div>
 
-          {/* Birthday Card */}
-          <BirthdayCard
-            birthdays={allBirthdays}
-            loading={birthdaysLoading}
-            error={birthdaysError}
-            onSendWish={handleSendWish}
-          />
+          {memoizedBirthdayCard}
 
-          {/* Upload Card */}
           <div className="upload-card">
             <div className="upload-area">
               <input
                 type="file"
                 id="file-upload"
                 className="file-input"
-                accept=".png,.jpg,.jpeg,.gif"
+                accept=".png,.jpg,.jpeg,.gif,.pdf,.doc,.docx"
                 multiple
                 onChange={handleFileUpload}
               />
@@ -349,19 +497,53 @@ const ProfilePageEmployee = () => {
                 <img
                   src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f81c15c3-242e-4ba1-91ed-f191592c92b7"
                   alt="Upload"
+                  width="40"
+                  height="40"
                 />
                 <h3>Upload Files</h3>
-                <p>PNG, JPG and GIF files are allowed</p>
+                <p>PNG, JPG, GIF, PDF, DOC, DOCX files are allowed</p>
               </label>
+
+              {uploadedFiles.length > 0 && (
+                <div className="uploaded-files-preview">
+                  <h4>Selected Files:</h4>
+                  <ul>
+                    {uploadedFiles.map((file, index) => (
+                      <li key={index}>
+                        {file.preview ? (
+                          <img src={file.preview} alt={file.name} width="50" />
+                        ) : (
+                          <div className="file-icon">{getFileIcon(file.type)}</div>
+                        )}
+                        <span>{file.name}</span>
+                        <span>({(file.size / 1024).toFixed(2)} KB)</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div className="complete-profile">
               <h3>Complete your profile</h3>
               <p>
-                Stay on the pulse of distributed projects with an online
-                whiteboard to plan, coordinate and discuss
+                Securely store your important documents,
+                 Upload and save your essential files!
               </p>
-              <button className="publish-btn">Publish now</button>
+              <button
+                className="publish-btn"
+                onClick={handlePublish}
+                disabled={isUploading || selectedFiles.length === 0}
+              >
+                {isUploading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Publishing...
+                  </>
+                ) : (
+                  'Publish now'
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -369,77 +551,13 @@ const ProfilePageEmployee = () => {
         {/* Content Section */}
         <div className="content-section">
           <div className="projects-card">
-            <h2>All Projects</h2>
+            <h2>Current Projects</h2>
             <p className="subtext">
-              Here you can find more details about your projects. Keep your user
-              engaged by providing meaningful information.
+              Your currently active projects. Click for more details.
             </p>
-
-            <div className="project-list">
-              {/* Project Items */}
-              <div className="project-item">
-                <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/9c80177c-314a-4f0a-8b59-2f7172cc43f6"
-                  alt="Project 1"
-                />
-                <div className="project-info">
-                  <h4>Technology behind the Blockchain</h4>
-                  <div className="project-meta">
-                    <span>Project #1</span>
-                    <span>•</span>
-                    <a href="#">See project details</a>
-                  </div>
-                </div>
-                <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b35fea9b-a952-4264-af4d-0402a2c28137"
-                  className="more-icon"
-                  alt="More"
-                />
-              </div>
-
-              <div className="project-item">
-                <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e72c4cfd-fba8-4609-b6b2-3bb212d5b895"
-                  alt="Project 2"
-                />
-                <div className="project-info">
-                  <h4>Greatest way to a good Economy</h4>
-                  <div className="project-meta">
-                    <span>Project #2</span>
-                    <span>•</span>
-                    <a href="#">See project details</a>
-                  </div>
-                </div>
-                <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/7691a40f-5bb1-4649-ac52-b4c3fd40e625"
-                  className="more-icon"
-                  alt="More"
-                />
-              </div>
-
-              <div className="project-item">
-                <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cc91f55f-a364-4d2b-b9ab-a674cd9f7238"
-                  alt="Project 3"
-                />
-                <div className="project-info">
-                  <h4>Most essential tips for Burnout</h4>
-                  <div className="project-meta">
-                    <span>Project #3</span>
-                    <span>•</span>
-                    <a href="#">See project details</a>
-                  </div>
-                </div>
-                <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b95b63a7-a150-43a1-b94a-67095e2d7146"
-                  className="more-icon"
-                  alt="More"
-                />
-              </div>
-            </div>
+            {renderProjects()}
           </div>
 
-          {/* Info Card (expanded) */}
           <div className="info-card expanded-info">
             <h2>General Information</h2>
             <p className="info-text">
@@ -448,53 +566,16 @@ const ProfilePageEmployee = () => {
             </p>
 
             <div className="info-grid">
-              <button
-                className="info-item"
-                onClick={() => alert("Education clicked")}
-              >
-                <span className="info-label">Education</span>
-                <span className="info-value">{userData.education}</span>
-              </button>
-
-              <button
-                className="info-item"
-                onClick={() => alert("Languages clicked")}
-              >
-                <span className="info-label">Languages</span>
-                <span className="info-value">{userData.languages}</span>
-              </button>
-
-              <button
-                className="info-item"
-                onClick={() => alert("Department clicked")}
-              >
-                <span className="info-label">Department</span>
-                <span className="info-value">{userData.departament}</span>
-              </button>
-
-              <button
-                className="info-item"
-                onClick={() => alert("Work History clicked")}
-              >
-                <span className="info-label">Work History</span>
-                <span className="info-value">{userData.workHistory}</span>
-              </button>
-
-              <button
-                className="info-item"
-                onClick={() => alert("Organization clicked")}
-              >
-                <span className="info-label">Organization</span>
-                <span className="info-value">{userData.organization}</span>
-              </button>
-
-              <button
-                className="info-item"
-                onClick={() => alert("Birthday clicked")}
-              >
-                <span className="info-label">Birthday</span>
-                <span className="info-value">{userData.birthDate}</span>
-              </button>
+              {infoItems.map((item) => (
+                <button
+                  key={item.key}
+                  className="info-item"
+                  onClick={() => alert(`${item.label} clicked`)}
+                >
+                  <span className="info-label">{item.label}</span>
+                  <span className="info-value">{userData[item.key]}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -505,15 +586,34 @@ const ProfilePageEmployee = () => {
             © 2025 HRCLOUDX UI. All Rights Reserved. Made with love!
           </span>
           <div className="footer-links">
-            <a href="/marketplace">Marketplace</a>
-            <a href="/license">License</a>
-            <a href="/terms">Terms of Use</a>
-            <a href="/blog">Blog</a>
+            {['Marketplace', 'License', 'Terms of Use', 'Blog'].map((link) => (
+              <a key={link} href={`/${link.toLowerCase()}`}>{link}</a>
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+// Helper functions
+const getMenuItemIcon = (menuItem) => {
+  const icons = {
+    Dashboard: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a",
+    Profile: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f83d5003-9309-4c08-b4fb-effc29fd197d",
+    "Leave Requests": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a",
+    Projects: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png"
+  };
+  return icons[menuItem] || "";
+};
+
+const infoItems = [
+  { key: "education", label: "Education" },
+  { key: "languages", label: "Languages" },
+  { key: "departament", label: "Department" },
+  { key: "workHistory", label: "Work History" },
+  { key: "organization", label: "Organization" },
+  { key: "birthDate", label: "Birthday" }
+];
 
 export default ProfilePageEmployee;

@@ -59,8 +59,11 @@ const LeaveRequest = () => {
 
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("darkMode");
-    return savedMode ? JSON.parse(savedMode) : false;
-  });
+    try {
+      return savedMode ? JSON.parse(savedMode) : false;
+    } catch {
+      return false;
+    }  });
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState({
     "Item update notifications": false,
@@ -155,7 +158,13 @@ const LeaveRequest = () => {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   return (
-   <LeaveRequestPage/>);
+    <LeaveRequestPage 
+    darkMode={darkMode}
+    toggleDarkMode={toggleDarkMode}
+    activeMenuItem={activeMenuItem}
+    handleMenuItemClick={handleMenuItemClick}
+  />
+   );
 };
 
 export default LeaveRequest;

@@ -4,12 +4,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const EmployeeHeader = ({
   activeMenuItem,
+  darkMode,
+  toggleDarkMode
 }) => {
 
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    return savedMode ? JSON.parse(savedMode) : false;
-  });
   const [showNotifications, setShowNotifications] = useState(false);
 
   const [userData, setUserData] = useState({
@@ -118,10 +116,6 @@ const EmployeeHeader = ({
     return () => unsubscribe();
   }, []);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   const toggleNotification = (notification) => {
     setNotifications(prev => ({
       ...prev,
@@ -150,8 +144,8 @@ const EmployeeHeader = ({
             <img
               src={
                 darkMode
-                  ? "https://cdn-icons-png.flaticon.com/512/581/581601.png"
-                  : "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fc94b941-d6a8-49dd-9e4a-a8d7bce035cd"
+                  ? "https://img.icons8.com/?size=100&id=96205&format=png&color=FFFFFF"
+                  : "https://img.icons8.com/?size=100&id=96393&format=png&color=000000"
               }
               alt={darkMode ? "Light Mode" : "Dark Mode"}
               style={{ width: "24px", height: "24px" }}
@@ -183,6 +177,21 @@ const EmployeeHeader = ({
                     </label>
                   </div>
                 ))}
+                <div className="employee-dropdown-divider">
+                <button className="employee-logout-btn" onClick={() => {
+                  // Add your logout logic here
+                  const auth = getAuth();
+                  auth.signOut();
+                  window.location.href = "/"; // or your login route
+                }}>
+                  <img
+                    src="https://img.icons8.com/?size=100&id=2444&format=png&color=FA5252"
+                    className="logout-icon"
+                    alt="Logout"
+                  />
+                  <span>Logout</span>
+                </button>
+                </div>
               </div>
             )}
           </div>

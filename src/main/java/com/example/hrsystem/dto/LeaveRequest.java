@@ -7,6 +7,14 @@ public class LeaveRequest {
     private String leaveType;
     private String status;
     private String submittedAt;
+    private String employeeId;
+    private String employee;
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+
 
     // getters/setters
     public String getId() { return id; }
@@ -21,4 +29,17 @@ public class LeaveRequest {
     public void setStatus(String status) { this.status = status; }
     public String getSubmittedAt() { return submittedAt; }
     public void setSubmittedAt(String submittedAt) { this.submittedAt = submittedAt; }
+
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
 }

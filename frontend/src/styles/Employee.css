@@ -65,86 +65,7 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
 }
-/*
-/* =======================
-   Sidebar
-========================== *//*
-.sidebar-z {
-  width: 240px;
-  background: white;
-  border-right: 1px solid #e5e7eb;
-  padding: 1.5rem;
-}
-.sidebar-title-z {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 3rem;
-}
-.sidebar-nav-z {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  font-size: 0.875rem;
-}
-.sidebar-item-z {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #9ca3af;
-}
-.sidebar-item-z.active {
-  color: #4f46e5;
-  font-weight: 600;
-  position: relative;
-}
-.sidebar-indicator-z {
-  position: absolute;
-  left: -1.5rem;
-  height: 1rem;
-  width: 0.25rem;
-  background-color: #4f46e5;
-  border-radius: 9999px;
-}
-.sidebar-icon-z {
-  width: 1rem;
-  height: 1rem;
-}
-*/
-/* =======================
-   Header
-========================== *//*
-.header-z {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.header-title-z {
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-.header-user-z {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.header-user-info-z {
-  font-size: 0.875rem;
-  text-align: right;
-  line-height: 1.25rem;
-}
-.header-user-name-z {
-  font-weight: 600;
-}
-.header-user-role-z {
-  color: #9ca3af;
-}
-.header-user-avatar-z {
-  width: 40px;
-  height: 40px;
-  border-radius: 9999px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-*/
+
 /* =======================
    Projects Card
 ========================== */
@@ -1358,6 +1279,187 @@
 
 .fact-popup-z button:hover {
   background-color: #4338ca;
+}
+
+/* =======================
+   Dark Theme Styles
+========================== */
+body.dark-theme .layout-wrapper-z {
+  background-color: #1a1a2e;
+}
+
+body.dark-theme .main-content-z {
+  background-color: #1a1a2e;
+}
+
+body.dark-theme .stat-card-z,
+body.dark-theme .projects-card-z,
+body.dark-theme .schedule-card-z,
+body.dark-theme .check-card-z,
+body.dark-theme .calendar-card-z,
+body.dark-theme .overview-card-z,
+body.dark-theme .chart-card-z,
+body.dark-theme .tasks-card-z,
+body.dark-theme .performance-popup-z,
+body.dark-theme .fact-popup-z {
+  background-color: #16213e;
+  color: #e2e8f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .projects-title-z,
+body.dark-theme .projects-count-z,
+body.dark-theme .schedule-date-z,
+body.dark-theme .event-title-z,
+body.dark-theme .overview-title-z,
+body.dark-theme .chart-title-z,
+body.dark-theme .task-title-z,
+body.dark-theme .modal-header-z {
+  color: #f8fafc;
+}
+
+body.dark-theme .projects-list-z,
+body.dark-theme .projects-item-z,
+body.dark-theme .schedule-events-z,
+body.dark-theme .event-time-z,
+body.dark-theme .overview-timeline-z,
+body.dark-theme .overview-time-z,
+body.dark-theme .task-description-z,
+body.dark-theme .due-date-z {
+  color: #94a3b8;
+}
+
+body.dark-theme .projects-item-z,
+body.dark-theme .task-item-z {
+  border-bottom-color: #2d3748;
+}
+
+body.dark-theme .event-z {
+  background-color: #1e293b;
+  border-left-color: #6366f1;
+}
+
+body.dark-theme .event-z:hover {
+  background-color: #334155;
+}
+
+body.dark-theme .overview-slot-z {
+  border-left-color: #6366f1;
+}
+
+body.dark-theme .check-btn-z {
+  background-color: #1e293b;
+  color: #818cf8;
+}
+
+body.dark-theme .check-btn-z:hover {
+  background-color: #334155;
+}
+
+body.dark-theme .check-status-z {
+  background-color: #1e293b;
+  color: #94a3b8;
+}
+
+body.dark-theme .calendar-month-z,
+body.dark-theme .calendar-arrow-z {
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+body.dark-theme .calendar-arrow-z:hover {
+  background-color: #334155;
+}
+
+body.dark-theme .calendar-date-z {
+  color: #e2e8f0;
+}
+
+body.dark-theme .calendar-date-z:hover {
+  background-color: rgba(99, 102, 241, 0.2);
+}
+
+body.dark-theme .calendar-muted {
+  color: #4a5568;
+}
+
+body.dark-theme .task-search-z,
+body.dark-theme .filter-btn-z {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-theme .task-search-z:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+body.dark-theme .filter-btn-z.active {
+  background-color: #6366f1;
+  color: white;
+}
+
+body.dark-theme .filter-btn-z:hover:not(.active) {
+  background-color: #334155;
+  color: #818cf8;
+}
+
+body.dark-theme .task-item-z:hover {
+  background-color: #1e293b;
+}
+
+body.dark-theme .performance-toggle-z,
+body.dark-theme .fact-toggle-z {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+body.dark-theme .performance-toggle-z:hover,
+body.dark-theme .fact-toggle-z:hover {
+  background: linear-gradient(to bottom right, #6366f1, #8b5cf6);
+}
+
+body.dark-theme .performance-popup-z button,
+body.dark-theme .fact-popup-z button {
+  background-color: #6366f1;
+}
+
+body.dark-theme .performance-popup-z button:hover,
+body.dark-theme .fact-popup-z button:hover {
+  background-color: #4f46e5;
+}
+
+body.dark-theme .modal-content-z {
+  background-color: #16213e;
+}
+
+body.dark-theme .modal-btn-z.secondary {
+  background-color: #1e293b;
+  color: #818cf8;
+  border-color: #4f46e5;
+}
+
+body.dark-theme .modal-btn-z.secondary:hover {
+  background-color: #334155;
+}
+
+body.dark-theme .close-modal-z {
+  color: #94a3b8;
+}
+
+/* Special case for payroll card in dark mode */
+body.dark-theme .payroll-card-z {
+  background: linear-gradient(to bottom right, #6366f1, #8b5cf6);
+}
+
+body.dark-theme .payroll-link-z {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+body.dark-theme .payroll-link-z:hover {
+  color: white;
 }
 
 @keyframes fadeIn {
