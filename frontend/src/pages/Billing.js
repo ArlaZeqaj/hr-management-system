@@ -12,6 +12,9 @@ import { auth } from "../config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { db } from "../config/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc } from "firebase/firestore";
+//import { db } from "../firebaseConfig";
+
 export default () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,6 +42,9 @@ export default () => {
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // 'success' or 'error'
+
+  const [billingData, setBillingData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleSaveCard = async () => {
     try {
@@ -156,6 +162,57 @@ export default () => {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const idTokenResult = await user.getIdTokenResult();
+      const isAdmin = idTokenResult.claims.admin === true;
+
+      console.log("User is admin");
+    } else {
+      console.log("User is not admin");
+    }
+  });
+
+  useEffect(() => {
+    const fetchBillingData = async () => {
+      try {
+        const billingInfoSnapshot = await getDocs(
+          collection(db, "BillingInfo")
+        );
+        const data = [];
+
+        for (const docSnap of billingInfoSnapshot.docs) {
+          const employeeId = docSnap.id;
+          const accNo = docSnap.data().accNo;
+
+          const employeeRef = doc(db, "employees", employeeId);
+          const employeeSnap = await getDoc(employeeRef);
+
+          if (employeeSnap.exists()) {
+            const emp = employeeSnap.data();
+            data.push({
+              id: employeeId,
+              name: emp.name,
+              surname: emp.surname,
+              department: emp.department,
+              email: emp.email,
+              accNo,
+            });
+            console.log("Fetched billing info: ", emp);
+          }
+        }
+
+        setBillingData(data);
+      } catch (error) {
+        console.error("Error fetching billing info:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBillingData();
   }, []);
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
@@ -285,30 +342,23 @@ export default () => {
               <h3>Billing Information</h3>
 
               <div className="info-cards">
-                <InfoCard
-                  name="Oliver Liam"
-                  company="Viking Burrito"
-                  email="oliver@burrito.com"
-                  vat="FRB1235476"
-                  deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/136x2u2r_expires_30_days.png"
-                  editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7otne8qi_expires_30_days.png"
-                />
-                <InfoCard
-                  name="Oliver Liam"
-                  company="Viking Burrito"
-                  email="oliver@burrito.com"
-                  vat="FRB1235476"
-                  deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/8gp8cepw_expires_30_days.png"
-                  editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/mpsu2ukv_expires_30_days.png"
-                />
-                <InfoCard
-                  name="Oliver Liam"
-                  company="Viking Burrito"
-                  email="oliver@burrito.com"
-                  vat="FRB1235476"
-                  deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/vzrk6yfn_expires_30_days.png"
-                  editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4bui3bmk_expires_30_days.png"
-                />
+                {loading ? (
+                  <p>Loading billing info...</p>
+                ) : billingData.length === 0 ? (
+                  <p>No billing information found.</p>
+                ) : (
+                  billingData.map((emp) => (
+                    <InfoCard
+                      key={emp.id}
+                      name={`${emp.name} ${emp.surname}`}
+                      company={emp.department}
+                      email={emp.email}
+                      vat={emp.accNo}
+                      deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/136x2u2r_expires_30_days.png"
+                      editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7otne8qi_expires_30_days.png"
+                    />
+                  ))
+                )}
               </div>
             </section>
           </div>
@@ -469,9 +519,9 @@ const InfoCard = ({ name, company, email, vat, deleteIcon, editIcon }) => (
       </div>
     </div>
     <div className="card-content">
-      <p>Company Name: {company}</p>
+      <p>Department: {company}</p>
       <p>Email Address: {email}</p>
-      <p>VAT Number: {vat}</p>
+      <p>IBAN: {vat}</p>
     </div>
   </div>
 );
