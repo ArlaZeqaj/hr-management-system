@@ -131,18 +131,18 @@
     border: 1px solid var(--gray-light);
   }
   
-  .profile-header {
+  .admin-profile-header {
     position: relative;
     height: 180px;
   }
   
-  .cover-photo {
+  .admin-cover-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
   
-  .cover-photo-overlay {
+  .admin-cover-photo-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -151,7 +151,7 @@
     background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(67,24,255,0.15));
   }
   
-  .profile-photo-container {
+  .admin-profile-photo-container {
     position: absolute;
     bottom: -50px;
     left: 50%;
@@ -167,7 +167,7 @@
     align-items: center;
   }
   
-  .profile-photo {
+  .admin-profile-photo {
     width: 112px;
     height: 112px;
     border-radius: 50%;
@@ -190,12 +190,12 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
   
-  .profile-content {
+  .admin-profile-content {
     padding: 70px 30px 30px;
     text-align: center;
   }
   
-  .profile-name {
+  .admin-profile-name {
     margin: 0;
     color: var(--dark);
     font-size: 1.8rem;
@@ -203,21 +203,21 @@
     line-height: 1.2;
   }
   
-  .profile-title {
+  .admin-profile-title {
     margin: 8px 0 0;
     color: var(--primary);
     font-size: 1rem;
     font-weight: 600;
   }
   
-  .profile-divider {
+  .admin-profile-divider {
     width: 60px;
     height: 2px;
     background: var(--gray-light);
     margin: 20px auto;
   }
   
-  .profile-bio {
+  .admin-profile-bio {
     color: var(--gray);
     font-size: 0.95rem;
     line-height: 1.6;
@@ -225,7 +225,7 @@
     max-width: 280px;
   }
   
-  .profile-stats {
+  .admin-profile-stats {
     display: flex;
     justify-content: space-around;
     margin: 1.5rem 0;
@@ -234,31 +234,31 @@
     border-radius: 12px;
   }
   
-  .stat-item {
+  .admin-stat-item {
     text-align: center;
   }
   
-  .stat-number {
+  .admin-stat-number {
     display: block;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--dark);
   }
   
-  .stat-label {
+  .admin-stat-label {
     display: block;
     font-size: 0.8rem;
     color: var(--gray);
     margin-top: 0.3rem;
   }
   
-  .profile-actions {
+  .admin-profile-actions {
     display: flex;
     gap: 1rem;
     padding: 0 1.5rem 1.5rem;
   }
   
-  .action-btn {
+  .admin-action-btn {
     flex: 1;
     padding: 0.8rem;
     border-radius: 12px;
@@ -273,28 +273,28 @@
     border: none;
   }
   
-  .action-btn i {
+  .admin-action-btn i {
     font-size: 0.9rem;
   }
   
-  .action-btn.primary {
+  .admin-action-btn.primary {
     background: var(--primary);
     color: white;
   }
   
-  .action-btn.primary:hover {
+  .admin-action-btn.primary:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
   }
   
-  .action-btn.secondary {
+  .admin-action-btn.secondary {
     background: white;
     color: var(--primary);
     border: 1px solid var(--gray-light);
   }
   
-  .action-btn.secondary:hover {
+  .admin-action-btn.secondary:hover {
     background: var(--gray-light);
     transform: translateY(-2px);
   }
@@ -463,31 +463,31 @@
   }
   
   /* Tab Content Styles */
-  .tab-content {
+  .admin-tab-content {
     padding: 0.5rem;
   }
   
-  .overview-tab {
+  .admin-overview-tab {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
   
-  .chart-container {
+  .admin-chart-container {
     background: var(--light);
     border-radius: 16px;
     padding: 1.5rem;
     border: 1px solid var(--gray-light);
   }
   
-  .chart-container h3 {
+  .admin-chart-container h3 {
     margin: 0 0 1rem 0;
     color: var(--dark);
     font-size: 1.1rem;
     font-weight: 600;
   }
   
-  .chart-placeholder {
+  .admin-chart-placeholder {
     height: 250px;
     display: flex;
     flex-direction: column;
@@ -499,7 +499,7 @@
     color: var(--gray);
   }
   
-  .chart-placeholder i {
+  .admin-chart-placeholder i {
     font-size: 2rem;
     color: var(--gray-light);
     margin-bottom: 1rem;
@@ -1033,7 +1033,7 @@
   body.dark-theme .admin-content-section,
   body.dark-theme .settings-card,
   body.dark-theme .performance-card,
-  body.dark-theme .chart-container,
+  body.dark-theme .admin-chart-container,
   body.dark-theme .employees-table th,
   body.dark-theme .employees-table td,
   body.dark-theme .leaves-table th,
@@ -1063,7 +1063,7 @@
     color: #a3aed0 !important;
   }
   
-  body.dark-theme .action-btn.secondary,
+  body.dark-theme .admin-action-btn.secondary,
   body.dark-theme .btn.secondary,
   body.dark-theme .icon-btn {
     background: #3a3a4e;
@@ -1071,7 +1071,7 @@
     color: #e0e0e0;
   }
   
-  body.dark-theme .action-btn.secondary:hover,
+  body.dark-theme .admin-action-btn.secondary:hover,
   body.dark-theme .btn.secondary:hover,
   body.dark-theme .icon-btn:hover {
     background: #444;
@@ -1122,7 +1122,7 @@
       width: 100%;
     }
     
-    .overview-tab {
+    .admin-overview-tab {
       grid-template-columns: 1fr;
     }
   }

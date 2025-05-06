@@ -20,6 +20,7 @@ export default () => {
   const location = useLocation();
   const [cardData, setCardData] = useState({});
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+  const [showModal, setShowModal] = useState(false);
   const [notifications, setNotifications] = useState({
     "New employee registrations": true,
     "Leave request approvals": true,
@@ -33,7 +34,6 @@ export default () => {
   const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [showModal, setShowModal] = useState(false);
   const [cardForm, setCardForm] = useState({
     number: "",
     expiry: "",
@@ -46,11 +46,47 @@ export default () => {
   const [billingData, setBillingData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const handleSaveCard = async () => {
+  const handleSaveCard = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
     try {
       const user = auth.currentUser;
       if (!user) {
         console.error("User not authenticated");
+        return;
+      }
+
+      // Validate card number (16 digits)
+      if (!/^\d{16}$/.test(cardForm.number)) {
+        setMessage("Please enter a valid 16-digit card number");
+        setMessageType("error");
+        return;
+      }
+
+      // Validate expiry date format (MM/YY) and future date
+      const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+      if (!expiryRegex.test(cardForm.expiry)) {
+        setMessage("Please enter a valid expiry date (MM/YY)");
+        setMessageType("error");
+        return;
+      }
+
+      // Check if expiry date is in the future
+      const [month, year] = cardForm.expiry.split('/');
+      const expiryDate = new Date(`20${year}`, month - 1); // Convert to Date object
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Compare just dates
+
+      if (expiryDate < currentDate) {
+        setMessage("Card has expired. Please use a valid expiry date");
+        setMessageType("error");
+        return;
+      }
+
+      // Validate CVV (3 or 4 digits)
+      if (!/^\d{3,4}$/.test(cardForm.cvv)) {
+        setMessage("Please enter a valid CVV (3-4 digits)");
+        setMessageType("error");
         return;
       }
 
@@ -105,6 +141,19 @@ export default () => {
     };
     navigate(routes[menuItem] || "/admin/dashboard");
   };
+
+  {/* SHOW ADD NEW CARD MODAL */ }
+  useEffect(() => {
+    if (showModal) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [showModal]);
 
   // Theme init
   useEffect(() => {
@@ -274,7 +323,7 @@ export default () => {
                 <h3>Payment Method</h3>
                 <button
                   className="add-card-btn"
-                  onClick={() => setShowModal(true)}
+                  onClick={() => document.getElementById('billing-card-modal').showModal()}
                 >
                   ADD A NEW CARD
                 </button>
@@ -292,50 +341,165 @@ export default () => {
                 />
               </div>
             </section>
-            {showModal && (
-              <div className="modal-backdrop">
-                <div className="modal">
-                  <h3>Add New Card</h3>
-                  <input
-                    type="text"
-                    placeholder="Card Number"
-                    value={cardForm.number}
-                    onChange={(e) =>
-                      setCardForm({ ...cardForm, number: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Expiry (MM/YY)"
-                    value={cardForm.expiry}
-                    onChange={(e) =>
-                      setCardForm({ ...cardForm, expiry: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="CVV"
-                    value={cardForm.cvv}
-                    onChange={(e) =>
-                      setCardForm({ ...cardForm, cvv: e.target.value })
-                    }
-                  />
+            {/* ADD NEW CARD MODAL */}
+            <dialog id="billing-card-modal" className="billing-modal">
+              <div className="billing-modal-content">
+                <div className="billing-modal-header">
+                  <h3>Add Payment Method</h3>
+                  <button
+                    className="billing-modal-close"
+                    onClick={() => document.getElementById('billing-card-modal').close()}
+                  >
+                    &times;
+                  </button>
+                </div>
+
+                {/* Card Preview */}
+                <div className="billing-card-preview">
+                  <div className="billing-card-preview-header">
+                    <span className="billing-card-company">HRCloudX</span>
+                    <div className="billing-card-type-logo">
+                      <img
+                        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+                        alt="Mastercard"
+                        width="40"
+                      />
+                    </div>
+                  </div>
+                  <div className="billing-card-number">
+                    {cardForm.number ? (
+                      cardForm.number.replace(/(\d{4})/g, '$1 ').trim()
+                    ) : '•••• •••• •••• ••••'}
+                  </div>
+                  <div className="billing-card-footer">
+                    <div className="billing-card-detail">
+                      <span className="billing-detail-label">Expires</span>
+                      <span className="billing-detail-value">{cardForm.expiry || '••/••'}</span>
+                    </div>
+                    <div className="billing-card-detail">
+                      <span className="billing-detail-label">CVV</span>
+                      <span className="billing-detail-value">{cardForm.cvv ? '•••' : '•••'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <form onSubmit={handleSaveCard} className="billing-card-form">
+                  <div className="billing-form-group floating">
+                    <input
+                      type="text"
+                      id="cardNumber"
+                      placeholder=" "
+                      value={cardForm.number}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '').substring(0, 16);
+                        setCardForm({ ...cardForm, number: value });
+                      }}
+                      maxLength="19"
+                      required
+                    />
+                    <label htmlFor="cardNumber">Card Number</label>
+                    <div className="billing-card-icons">
+                      <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png" alt="Visa" width="40" />
+                      <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png" alt="Mastercard" width="40" />
+                    </div>
+                  </div>
+
+                  <div className="billing-form-row">
+                    <div className="billing-form-group floating">
+                      <input
+                        type="text"
+                        id="expiry"
+                        placeholder="MM/YY"
+                        value={cardForm.expiry}
+                        onChange={(e) => {
+                          let value = e.target.value.replace(/\D/g, '');
+
+                          // Auto-insert slash after 2 digits
+                          if (value.length > 2) {
+                            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                          }
+
+                          // Validate month (01-12)
+                          if (value.length >= 2) {
+                            const month = parseInt(value.substring(0, 2), 10);
+                            if (month < 1 || month > 12) {
+                              // Invalid month - don't update
+                              return;
+                            }
+                          }
+
+                          // Limit to MM/YY format (5 chars max)
+                          setCardForm({ ...cardForm, expiry: value.substring(0, 5) });
+                        }}
+                        maxLength="5"
+                        pattern="(0[1-9]|1[0-2])\/\d{2}"
+                        required
+                      />
+                      <label htmlFor="expiry">Expiry Date</label>
+                    </div>
+
+                    <div className="billing-form-group floating">
+                      <div className="billing-input-with-icon">
+                        <input
+                          type="password"
+                          id="cvv"
+                          placeholder=" "
+                          value={cardForm.cvv}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').substring(0, 3);
+                            setCardForm({ ...cardForm, cvv: value });
+                          }}
+                          maxLength="3"
+                          required
+                        />
+                        <label htmlFor="cvv">Security Code</label>
+                        <button
+                          type="button"
+                          className="billing-info-icon"
+                          aria-label="What is CVV?"
+                          title="3-digit code on back of card"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12" y2="17" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                   {message && (
-                    <div
-                      className={`p-2 mb-2 rounded text-sm ${
-                        messageType === "success"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {message}
+                    <div className={`billing-form-message ${messageType}`}>
+                      <svg width="20" height="20" viewBox="0 0 24 24">
+                        {messageType === 'success' ? (
+                          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        ) : (
+                          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                        )}
+                      </svg>
+                      <span>{message}</span>
                     </div>
                   )}
-                  <button onClick={handleSaveCard}>Save</button>
-                  <button onClick={() => setShowModal(false)}>Cancel</button>
-                </div>
+
+                  <div className="billing-form-actions">
+                    <button
+                      type="button"
+                      className="billing-secondary-btn"
+                      onClick={() => document.getElementById('billing-card-modal').close()}
+                    >
+                      Cancel
+                    </button>
+                    <button type="submit" className="billing-primary-btn">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                      Save Card
+                    </button>
+                  </div>
+                </form>
               </div>
-            )}
+            </dialog>
 
             {/* Billing Information */}
             <section className="billing-info">

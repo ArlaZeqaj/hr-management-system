@@ -7,13 +7,13 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
+import AdminFooter from "./Admin/AdminFooter";
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import "../styles/Admin.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
-
-
+import "./Admin/AdminFooter.css";
 
 Chart.register(...registerables);
 
@@ -820,6 +820,8 @@ const employeeDistributionData = {
             )}
           </div>
         </div>
+        {/* Footer */}
+        <AdminFooter />
       </div>
     </div>
   );

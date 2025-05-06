@@ -145,7 +145,7 @@ const EmployeeHeader = ({
               src={
                 darkMode
                   ? "https://img.icons8.com/?size=100&id=96205&format=png&color=FFFFFF"
-                  : "https://img.icons8.com/?size=100&id=96393&format=png&color=000000"
+                  : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
               }
               alt={darkMode ? "Light Mode" : "Dark Mode"}
               style={{ width: "24px", height: "24px" }}

@@ -271,17 +271,17 @@ const AdminProfilePage = () => {
         <div className="admin-profile-section">
           {/* Admin Profile Card */}
           <div className="admin-profile-card">
-            <div className="profile-header">
-              <div className="cover-photo-overlay"></div>
+            <div className="admin-profile-header">
+              <div className="admin-cover-photo-overlay"></div>
               <img
                 src="https://images.unsplash.com/photo-1579547945413-497e1b99dac0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                className="cover-photo"
+                className="admin-cover-photo"
                 alt="Cover"
               />
-              <div className="profile-photo-container">
+              <div className="admin-profile-photo-container">
                 <img
                   src="https://randomuser.me/api/portraits/men/75.jpg"
-                  className="profile-photo"
+                  className="admin-profile-photo"
                   alt="Profile"
                 />
                 <span className="admin-status-badge">
@@ -290,36 +290,36 @@ const AdminProfilePage = () => {
               </div>
             </div>
 
-            <div className="profile-content">
-              <h1 className="profile-name">Admin User</h1>
-              <p className="profile-title">System Administrator</p>
-              <div className="profile-divider"></div>
-              <p className="profile-bio">
+            <div className="admin-profile-content">
+              <h1 className="admin-profile-name">Admin User</h1>
+              <p className="admin-profile-title">System Administrator</p>
+              <div className="admin-profile-divider"></div>
+              <p className="admin-profile-bio">
                 Managing all HR operations, employee data, and system
                 configurations with highest privileges.
               </p>
 
-              <div className="profile-stats">
-                <div className="stat-item">
-                  <span className="stat-number">143</span>
-                  <span className="stat-label">Employees</span>
+              <div className="admin-profile-stats">
+                <div className="admin-stat-item">
+                  <span className="admin-stat-number">143</span>
+                  <span className="admin-stat-label">Employees</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">24</span>
-                  <span className="stat-label">Projects</span>
+                <div className="admin-stat-item">
+                  <span className="admin-stat-number">24</span>
+                  <span className="admin-stat-label">Projects</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">17</span>
-                  <span className="stat-label">Pending</span>
+                <div className="admin-stat-item">
+                  <span className="admin-stat-number">17</span>
+                  <span className="admin-stat-label">Pending</span>
                 </div>
               </div>
             </div>
 
-            <div className="profile-actions">
-              <button className="action-btn primary">
+            <div className="admin-profile-actions">
+              <button className="admin-action-btn primary">
                 <i className="fas fa-cog"></i> System Settings
               </button>
-              <button className="action-btn secondary">
+              <button className="admin-action-btn secondary">
                 <i className="fas fa-user-shield"></i> Admin Console
               </button>
             </div>
@@ -414,19 +414,19 @@ const AdminProfilePage = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="tab-content">
+          <div className="admin-tab-content">
             {activeTab === "overview" && (
-              <div className="overview-tab">
-                <div className="chart-container">
+              <div className="admin-overview-tab">
+                <div className="admin-chart-container">
                   <h3>Employee Distribution by Department</h3>
-                  <div className="chart-placeholder">
+                  <div className="admin-chart-placeholder">
                     <i className="fas fa-chart-bar"></i>
                     <p>Department distribution chart would display here</p>
                   </div>
                 </div>
-                <div className="chart-container">
+                <div className="admin-chart-container">
                   <h3>Leave Requests Trend</h3>
-                  <div className="chart-placeholder">
+                  <div className="admin-chart-placeholder">
                     <i className="fas fa-chart-line"></i>
                     <p>Leave trend chart would display here</p>
                   </div>

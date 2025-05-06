@@ -267,6 +267,20 @@
   .download-button:hover, .preview-button:hover {
     background-color: #f9faff;
   }
+
+  .tab-badge-c {
+    background: var(--border);
+    color: var(--text);
+    padding: 0.25rem 0.5rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}
+
+.categories-sidebar li.active .tab-badge-c {
+    background: var(--primary);
+    color: white;
+}
   
   /* No Documents */
   .no-documents {

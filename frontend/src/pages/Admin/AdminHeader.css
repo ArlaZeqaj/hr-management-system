@@ -274,7 +274,7 @@
     height: 0;
   }
   
-  .toggle-slider {
+  .admin-toggle-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -286,7 +286,7 @@
     border-radius: 34px;
   }
   
-  .toggle-slider:before {
+  .admin-toggle-slider:before {
     position: absolute;
     content: "";
     height: 16px;
@@ -298,11 +298,11 @@
     border-radius: 50%;
   }
   
-  input:checked + .toggle-slider {
+  input:checked + .admin-toggle-slider {
     background-color: var(--primary);
   }
   
-  input:checked + .toggle-slider:before {
+  input:checked + .admin-toggle-slider:before {
     transform: translateX(18px);
   }
   

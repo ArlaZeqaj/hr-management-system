@@ -1,14 +1,11 @@
 import React from 'react';
-// Document categories
-const categories = [
-    'All Documents',
-    'Company Policies',
-    'Payroll',
-    'Contracts',
-    'Training Materials',
-    'Personal Documents'
-];
-const CategoriesSidebar = ({ categories, selectedCategory, onSelect }) => (
+
+const CategoriesSidebar = ({ 
+    categories, 
+    selectedCategory, 
+    onSelect,
+    documentCounts // New prop for document counts
+}) => (
     <div className="categories-sidebar">
         <h3>Categories</h3>
         <ul>
@@ -19,6 +16,9 @@ const CategoriesSidebar = ({ categories, selectedCategory, onSelect }) => (
                     onClick={() => onSelect(cat)}
                 >
                     {cat}
+                    {documentCounts && documentCounts[cat] !== undefined && (
+                        <span className="tab-badge-c">{documentCounts[cat]}</span>
+                    )}
                 </li>
             ))}
         </ul>

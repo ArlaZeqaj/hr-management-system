@@ -17,6 +17,17 @@ import "../../pages/Employee/EmployeeSidebar.css";
 import "../../pages/Employee/EmployeeHeader.css";
 import "../../pages/Employee/EmployeeFooter.css";
 
+// Define categories at the top level (before the component)
+const categories = [
+    'All Documents',
+    'Company Policies',
+    'Payroll',
+    'Contracts',
+    'Training Materials',
+    'Personal Documents',
+    'HR Documents'
+];
+
 const Documents = ({ darkMode, toggleDarkMode }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -25,6 +36,20 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
     const [sortOption, setSortOption] = useState("date-desc");
     const [selectedCategory, setSelectedCategory] = useState("All Documents");
     const [documents, setDocuments] = useState([]);
+    const [documentCounts, setDocumentCounts] = useState({});
+    const [notifications, setNotifications] = useState({
+        "Item update notifications": false,
+        "Item comment notifications": false,
+        "Buyer review notifications": false,
+        "Rating reminders notifications": true,
+        "Meetups near you notifications": false,
+        "Company news notifications": false,
+        "New launches and projects": false,
+        "Monthly product changes": false,
+        "Subscribe to newsletter": false,
+        "Email me when someone follows me": false,
+    });
+
     const getActiveMenuItem = () => {
         const path = location.pathname;
         if (path.includes('/employee/dashboard')) return 'Employee Dashboard';
@@ -47,7 +72,19 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
             default: navigate('/employee/dashboard');
         }
     };
-    // 🔄 Fetch documents for logged-in user
+
+    // Calculate document counts whenever documents change
+    useEffect(() => {
+        const counts = categories.reduce((acc, category) => {
+            acc[category] = category === 'All Documents' 
+                ? documents.length 
+                : documents.filter(doc => doc.category === category).length;
+            return acc;
+        }, {});
+        setDocumentCounts(counts);
+    }, [documents]);
+
+    // Fetch documents for logged-in user
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (!user) return;
@@ -58,11 +95,7 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
 
                 const response = await axios.get(
                     `http://localhost:8080/api/documents/${uid}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    { headers: { Authorization: `Bearer ${token}` } }
                 );
 
                 const docs = response.data.map(doc => ({
@@ -79,19 +112,6 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
 
         return () => unsubscribe();
     }, []);
-
-    const [notifications, setNotifications] = useState({
-        "Item update notifications": false,
-        "Item comment notifications": false,
-        "Buyer review notifications": false,
-        "Rating reminders notifications": true,
-        "Meetups near you notifications": false,
-        "Company news notifications": false,
-        "New launches and projects": false,
-        "Monthly product changes": false,
-        "Subscribe to newsletter": false,
-        "Email me when someone follows me": false,
-    });
 
     const toggleNotification = (notification) => {
         setNotifications(prev => ({
@@ -213,10 +233,10 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
     return (
         <div className={`documents-page-container ${darkMode ? "dark-theme" : ""}`}>
             <EmployeeSidebar
-            activeMenuItem={activeMenuItem}
-            handleMenuItemClick={handleMenuItemClick}
-            darkMode={darkMode}
-        />
+                activeMenuItem={activeMenuItem}
+                handleMenuItemClick={handleMenuItemClick}
+                darkMode={darkMode}
+            />
             <div className="documents-main-content">
                 <EmployeeHeader
                     activeMenuItem={activeMenuItem}
@@ -238,9 +258,10 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
 
                 <div className="documents-content">
                     <CategoriesSidebar
-                        categories={allCategories}
+                        categories={categories}
                         selectedCategory={selectedCategory}
                         onSelect={handleCategorySelect}
+                        documentCounts={documentCounts}
                     />
 
                     <div className="documents-container"> {/* ✅ Wrap the grid */}
