@@ -13,7 +13,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { db } from "../config/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { collection, getDocs, getDoc } from "firebase/firestore";
-//import { db } from "../firebaseConfig";
+import { updateDoc } from "firebase/firestore";
 
 export default () => {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ export default () => {
       }
 
       // Check if expiry date is in the future
-      const [month, year] = cardForm.expiry.split('/');
+      const [month, year] = cardForm.expiry.split("/");
       const expiryDate = new Date(`20${year}`, month - 1); // Convert to Date object
       const currentDate = new Date();
       currentDate.setHours(0, 0, 0, 0); // Compare just dates
@@ -142,16 +142,18 @@ export default () => {
     navigate(routes[menuItem] || "/admin/dashboard");
   };
 
-  {/* SHOW ADD NEW CARD MODAL */ }
+  {
+    /* SHOW ADD NEW CARD MODAL */
+  }
   useEffect(() => {
     if (showModal) {
-      document.body.classList.add('modal-open');
+      document.body.classList.add("modal-open");
     } else {
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove("modal-open");
     }
 
     return () => {
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove("modal-open");
     };
   }, [showModal]);
 
@@ -213,56 +215,79 @@ export default () => {
     return () => unsubscribe();
   }, []);
 
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const idTokenResult = await user.getIdTokenResult();
-      const isAdmin = idTokenResult.claims.admin === true;
-
-      console.log("User is admin");
-    } else {
-      console.log("User is not admin");
-    }
-  });
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchBillingData = async () => {
-      try {
-        const billingInfoSnapshot = await getDocs(
-          collection(db, "BillingInfo")
-        );
-        const data = [];
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
 
-        for (const docSnap of billingInfoSnapshot.docs) {
-          const employeeId = docSnap.id;
-          const accNo = docSnap.data().accNo;
-
-          const employeeRef = doc(db, "employees", employeeId);
-          const employeeSnap = await getDoc(employeeRef);
-
-          if (employeeSnap.exists()) {
-            const emp = employeeSnap.data();
-            data.push({
-              id: employeeId,
-              name: emp.name,
-              surname: emp.surname,
-              department: emp.department,
-              email: emp.email,
-              accNo,
-            });
-            console.log("Fetched billing info: ", emp);
-          }
-        }
-
-        setBillingData(data);
-      } catch (error) {
-        console.error("Error fetching billing info:", error);
-      } finally {
-        setLoading(false);
+      if (firebaseUser) {
+        const idTokenResult = await firebaseUser.getIdTokenResult();
+        const isAdmin = idTokenResult.claims.admin === true;
+        console.log("User is admin:", isAdmin);
+      } else {
+        console.log("User is not authenticated");
       }
-    };
+    });
 
+    return () => unsubscribe();
+  }, []);
+
+  const fetchBillingData = async () => {
+    try {
+      const billingInfoSnapshot = await getDocs(collection(db, "BillingInfo"));
+      const data = [];
+
+      for (const docSnap of billingInfoSnapshot.docs) {
+        const employeeId = docSnap.id;
+        const accNo = docSnap.data().accNo;
+
+        const employeeRef = doc(db, "employees", employeeId);
+        const employeeSnap = await getDoc(employeeRef);
+
+        if (employeeSnap.exists()) {
+          const emp = employeeSnap.data();
+          data.push({
+            id: employeeId,
+            name: emp.name,
+            surname: emp.surname,
+            department: emp.department,
+            email: emp.email,
+            accNo,
+          });
+          console.log("Fetched billing info: ", emp);
+        }
+      }
+      setBillingData(data);
+    } catch (error) {
+      console.error("Error fetching billing info:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBillingData();
   }, []);
+
+  // edit acc no
+  const [editingId, setEditingId] = useState(null);
+  const [editAccNo, setEditAccNo] = useState("");
+
+  const handleEdit = (emp) => {
+    setEditingId(emp.id);
+    setEditAccNo(emp.accNo || "");
+  };
+
+  const handleSave = async (id) => {
+    try {
+      await updateDoc(doc(db, "BillingInfo", id), { accNo: editAccNo });
+      setEditingId(null);
+      fetchBillingData(); // Refresh
+    } catch (error) {
+      console.error("Error saving accNo:", error);
+    }
+  };
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
@@ -323,7 +348,9 @@ export default () => {
                 <h3>Payment Method</h3>
                 <button
                   className="add-card-btn"
-                  onClick={() => document.getElementById('billing-card-modal').showModal()}
+                  onClick={() =>
+                    document.getElementById("billing-card-modal").showModal()
+                  }
                 >
                   ADD A NEW CARD
                 </button>
@@ -348,7 +375,9 @@ export default () => {
                   <h3>Add Payment Method</h3>
                   <button
                     className="billing-modal-close"
-                    onClick={() => document.getElementById('billing-card-modal').close()}
+                    onClick={() =>
+                      document.getElementById("billing-card-modal").close()
+                    }
                   >
                     &times;
                   </button>
@@ -367,18 +396,22 @@ export default () => {
                     </div>
                   </div>
                   <div className="billing-card-number">
-                    {cardForm.number ? (
-                      cardForm.number.replace(/(\d{4})/g, '$1 ').trim()
-                    ) : '•••• •••• •••• ••••'}
+                    {cardForm.number
+                      ? cardForm.number.replace(/(\d{4})/g, "$1 ").trim()
+                      : "•••• •••• •••• ••••"}
                   </div>
                   <div className="billing-card-footer">
                     <div className="billing-card-detail">
                       <span className="billing-detail-label">Expires</span>
-                      <span className="billing-detail-value">{cardForm.expiry || '••/••'}</span>
+                      <span className="billing-detail-value">
+                        {cardForm.expiry || "••/••"}
+                      </span>
                     </div>
                     <div className="billing-card-detail">
                       <span className="billing-detail-label">CVV</span>
-                      <span className="billing-detail-value">{cardForm.cvv ? '•••' : '•••'}</span>
+                      <span className="billing-detail-value">
+                        {cardForm.cvv ? "•••" : "•••"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -391,7 +424,9 @@ export default () => {
                       placeholder=" "
                       value={cardForm.number}
                       onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, '').substring(0, 16);
+                        const value = e.target.value
+                          .replace(/\D/g, "")
+                          .substring(0, 16);
                         setCardForm({ ...cardForm, number: value });
                       }}
                       maxLength="19"
@@ -399,8 +434,16 @@ export default () => {
                     />
                     <label htmlFor="cardNumber">Card Number</label>
                     <div className="billing-card-icons">
-                      <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png" alt="Visa" width="40" />
-                      <img src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png" alt="Mastercard" width="40" />
+                      <img
+                        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png"
+                        alt="Visa"
+                        width="40"
+                      />
+                      <img
+                        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+                        alt="Mastercard"
+                        width="40"
+                      />
                     </div>
                   </div>
 
@@ -412,11 +455,14 @@ export default () => {
                         placeholder="MM/YY"
                         value={cardForm.expiry}
                         onChange={(e) => {
-                          let value = e.target.value.replace(/\D/g, '');
+                          let value = e.target.value.replace(/\D/g, "");
 
                           // Auto-insert slash after 2 digits
                           if (value.length > 2) {
-                            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                            value =
+                              value.substring(0, 2) +
+                              "/" +
+                              value.substring(2, 4);
                           }
 
                           // Validate month (01-12)
@@ -429,7 +475,10 @@ export default () => {
                           }
 
                           // Limit to MM/YY format (5 chars max)
-                          setCardForm({ ...cardForm, expiry: value.substring(0, 5) });
+                          setCardForm({
+                            ...cardForm,
+                            expiry: value.substring(0, 5),
+                          });
                         }}
                         maxLength="5"
                         pattern="(0[1-9]|1[0-2])\/\d{2}"
@@ -446,7 +495,9 @@ export default () => {
                           placeholder=" "
                           value={cardForm.cvv}
                           onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, '').substring(0, 3);
+                            const value = e.target.value
+                              .replace(/\D/g, "")
+                              .substring(0, 3);
                             setCardForm({ ...cardForm, cvv: value });
                           }}
                           maxLength="3"
@@ -459,7 +510,13 @@ export default () => {
                           aria-label="What is CVV?"
                           title="3-digit code on back of card"
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
                             <circle cx="12" cy="12" r="10" />
                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                             <line x1="12" y1="17" x2="12" y2="17" />
@@ -472,10 +529,16 @@ export default () => {
                   {message && (
                     <div className={`billing-form-message ${messageType}`}>
                       <svg width="20" height="20" viewBox="0 0 24 24">
-                        {messageType === 'success' ? (
-                          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        {messageType === "success" ? (
+                          <path
+                            fill="currentColor"
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                          />
                         ) : (
-                          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                          <path
+                            fill="currentColor"
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                          />
                         )}
                       </svg>
                       <span>{message}</span>
@@ -486,12 +549,20 @@ export default () => {
                     <button
                       type="button"
                       className="billing-secondary-btn"
-                      onClick={() => document.getElementById('billing-card-modal').close()}
+                      onClick={() =>
+                        document.getElementById("billing-card-modal").close()
+                      }
                     >
                       Cancel
                     </button>
                     <button type="submit" className="billing-primary-btn">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
                         <path d="M20 6L9 17l-5-5" />
                       </svg>
                       Save Card
@@ -511,16 +582,42 @@ export default () => {
                 ) : billingData.length === 0 ? (
                   <p>No billing information found.</p>
                 ) : (
-                  billingData.map((emp) => (
-                    <InfoCard
-                      key={emp.id}
-                      name={`${emp.name} ${emp.surname}`}
-                      company={emp.department}
-                      email={emp.email}
-                      vat={emp.accNo}
-                      deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/136x2u2r_expires_30_days.png"
-                      editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7otne8qi_expires_30_days.png"
-                    />
+                  billingData.slice(0, 3).map((emp) => (
+                    <div key={emp.id} className="info-card">
+                      <InfoCard
+                        name={`${emp.name} ${emp.surname}`}
+                        company={emp.department}
+                        email={emp.email}
+                        vat={
+                          editingId === emp.id ? (
+                            <input
+                              type="text"
+                              value={editAccNo}
+                              onChange={(e) => setEditAccNo(e.target.value)}
+                              className="border p-1 rounded w-full"
+                            />
+                          ) : (
+                            emp.accNo
+                          )
+                        }
+                        deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/136x2u2r_expires_30_days.png"
+                        editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7otne8qi_expires_30_days.png"
+                        onEdit={() => {
+                          setEditingId(emp.id);
+                          setEditAccNo(emp.accNo || "");
+                        }}
+                        onSave={() => handleSave(emp.id)}
+                      />
+
+                      {editingId === emp.id && (
+                        <button
+                          onClick={() => handleSave(emp.id)}
+                          className="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
+                        >
+                          Save
+                        </button>
+                      )}
+                    </div>
                   ))
                 )}
               </div>
@@ -667,7 +764,16 @@ const PaymentMethod = ({ icon, title, amount, color }) => (
   </div>
 );
 
-const InfoCard = ({ name, company, email, vat, deleteIcon, editIcon }) => (
+const InfoCard = ({
+  name,
+  company,
+  email,
+  vat,
+  deleteIcon,
+  editIcon,
+  onEdit,
+  onSave,
+}) => (
   <div className="info-card">
     <div className="card-header">
       <span>{name}</span>
@@ -676,7 +782,7 @@ const InfoCard = ({ name, company, email, vat, deleteIcon, editIcon }) => (
           <img src={deleteIcon} alt="Delete" />
           <span>DELETE</span>
         </button>
-        <button className="edit-btn">
+        <button className="edit-btn" onClick={onEdit}>
           <img src={editIcon} alt="Edit" />
           <span>EDIT</span>
         </button>
