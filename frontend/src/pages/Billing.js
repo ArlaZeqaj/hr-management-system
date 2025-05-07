@@ -14,6 +14,9 @@ import { db } from "../config/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { collection, getDocs, getDoc } from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
+import jsPDF from "jspdf";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getFirestore, Timestamp } from "firebase/firestore";
 
 export default () => {
   const navigate = useNavigate();
@@ -44,7 +47,6 @@ export default () => {
   const [messageType, setMessageType] = useState(""); // 'success' or 'error'
 
   const [billingData, setBillingData] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const handleSaveCard = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -289,6 +291,89 @@ export default () => {
     }
   };
 
+  //invoices pdf
+
+  // Firebase references
+  // const db = getFirestore();
+  // const storage = getStorage();
+
+  // // 🔹 1. Generate Invoice PDF (returns Blob)
+  // const generateInvoicePDF = (invoice) => {
+  //   const doc = new jsPDF();
+
+  //   doc.setFontSize(16);
+  //   doc.text("Invoice", 20, 20);
+  //   doc.setFontSize(12);
+  //   doc.text(`Invoice #: ${invoice.invoiceNumber}`, 20, 40);
+  //   doc.text(`Date: ${invoice.date}`, 20, 50);
+  //   doc.text(`Amount: $${invoice.amount}`, 20, 60);
+
+  //   return doc.output("blob"); // return PDF blob instead of saving to file directly
+  // };
+
+  // // 🔹 2. Upload PDF to Firebase Storage
+  // const uploadInvoicePDF = async (blob, invoiceId) => {
+  //   const storageRef = ref(storage, `invoices/${invoiceId}.pdf`);
+  //   await uploadBytes(storageRef, blob);
+  //   return await getDownloadURL(storageRef);
+  // };
+
+  // // 🔹 3. Save Invoice Metadata to Firestore
+  // const saveInvoiceToFirestore = async (invoiceId, invoiceData, pdfUrl) => {
+  //   const invoiceRef = doc(db, "Invoices", invoiceId);
+  //   await setDoc(invoiceRef, {
+  //     ...invoiceData,
+  //     pdfUrl,
+  //     createdAt: Timestamp.now(),
+  //   });
+  // };
+
+  // // 🔹 4. Main function to handle full invoice creation
+  // const createAndStoreInvoice = async (invoiceId, invoiceData) => {
+  //   try {
+  //     const pdfBlob = generateInvoicePDF(invoiceData);
+  //     const pdfUrl = await uploadInvoicePDF(pdfBlob, invoiceId);
+  //     await saveInvoiceToFirestore(invoiceId, invoiceData, pdfUrl);
+  //     console.log("✅ Invoice created and uploaded:", invoiceId);
+  //   } catch (error) {
+  //     console.error("❌ Error creating invoice:", error);
+  //   }
+  // };
+
+  // const InvoiceSection = () => {
+  //   const [invoices, setInvoices] = useState([]);
+  //   const invoicesRef = collection(db, "Invoices");
+
+  //   useEffect(() => {
+  //     const fetchInvoices = async () => {
+  //       try {
+  //         const querySnapshot = await getDocs(invoicesRef);
+  //         const data = querySnapshot.docs.map((doc) => ({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         }));
+  //         setInvoices(data);
+  //       } catch (error) {
+  //         console.error("Error fetching invoices:", error);
+  //       }
+  //     };
+
+  //     fetchInvoices();
+  //   }, []);
+
+  //   const generateInvoicePDF = (invoice) => {
+  //     const doc = new jsPDF();
+
+  //     doc.setFontSize(16);
+  //     doc.text("Invoice", 20, 20);
+  //     doc.setFontSize(12);
+  //     doc.text(`Invoice #: ${invoice.invoiceNumber}`, 20, 40);
+  //     doc.text(`Date: ${invoice.date}`, 20, 50);
+  //     doc.text(`Amount: $${invoice.amount}`, 20, 60);
+
+  //     doc.save(`${invoice.invoiceNumber}.pdf`);
+  //   };
+
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
   const toggleNotification = (notification) => {
@@ -296,6 +381,41 @@ export default () => {
       ...prev,
       [notification]: !prev[notification],
     }));
+  };
+
+  const [invoices, setInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchInvoices = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "Invoices"));
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setInvoices(data);
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInvoices();
+  }, []);
+
+  const generateInvoicePDF = (invoice) => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Invoice", 20, 20);
+
+    doc.setFontSize(12);
+    doc.text(`Invoice #: ${invoice.invoiceNumber}`, 20, 40);
+    doc.text(`Date: ${invoice.date}`, 20, 50);
+    doc.text(`Amount: $${invoice.amount}`, 20, 60);
+
+    doc.save(`${invoice.invoiceNumber}.pdf`);
   };
 
   return (
@@ -632,7 +752,29 @@ export default () => {
                 <h4>Invoices</h4>
                 <button className="view-all">VIEW ALL</button>
               </div>
-
+              <h2>Invoices</h2>
+              {invoices.length === 0 ? (
+                <p>No invoices found.</p>
+              ) : (
+                invoices.map((invoice) => (
+                  <InvoiceItem
+                    key={invoice.id}
+                    date={invoice.date}
+                    invoiceNumber={invoice.invoiceNumber}
+                    amount={invoice.amount}
+                    currency={invoice.currency}
+                    pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/ooymt6ca_expires_30_days.png"
+                    //onDownload={() => console.log("Generate PDF for", invoice)}
+                    onGeneratePDF={() =>
+                      generateInvoicePDF({
+                        invoiceNumber: invoice.invoiceNumber,
+                        date: invoice.date,
+                        amount: invoice.amount,
+                      })
+                    }
+                  />
+                ))
+              )}
               <InvoiceItem
                 date="March, 01, 2020"
                 id="#MS-415646"
@@ -811,22 +953,47 @@ const SavedCard = ({ icon, number, active = false }) => (
   </div>
 );
 
-const InvoiceItem = ({ date, id, amount, pdfIcon }) => (
+const InvoiceItem = ({
+  date,
+  id,
+  amount,
+  pdfIcon,
+  invoiceNumber,
+  currency,
+  onGeneratePDF,
+}) => (
   <div className="invoice-item">
     <div className="invoice-info">
       <span className="date">{date}</span>
-      <span className="id">{id}</span>
+      <span className="id">{invoiceNumber}</span>
     </div>
     <div className="divider"></div>
     <div className="invoice-actions">
-      <span className="amount">{amount}</span>
-      <button className="pdf-btn">
+      <span className="amount">
+        {" "}
+        {currency}
+        {amount}
+      </span>
+      <button className="pdf-btn" onClick={onGeneratePDF}>
         <img src={pdfIcon} alt="PDF" />
         <span>PDF</span>
       </button>
     </div>
   </div>
 );
+
+// const InvoiceList = ({ invoices }) => (
+//   <div>
+//     {invoices.map((inv) => (
+//       <InvoiceItem
+//         key={inv.id}
+//         invoice={inv}
+//         pdfIcon={pdfIcon}
+//         onDownload={generateInvoicePDF}
+//       />
+//     ))}
+//   </div>
+// );
 
 const Transaction = ({ icon, name, date, amount, type }) => (
   <div className="transaction">
