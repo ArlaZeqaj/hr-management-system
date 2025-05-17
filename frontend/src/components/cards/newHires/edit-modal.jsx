@@ -4,34 +4,34 @@ import { useState, useEffect } from "react"
 import { Edit } from "lucide-react"
 
 const EditModal = ({ isOpen, onClose, hire, onSave }) => {
+  console.log("🧪 EditModal rendered | isOpen:", isOpen, "| hire:", hire?.fullName);
   const [formData, setFormData] = useState({
-    id: "",
     fullName: "",
     roleTitle: "",
     department: "",
-    status: "",
+    status: "Initial Review",
     email: "",
     phoneNr: "",
-    priority: "",
+    priority: "Medium",
     documents: "",
   })
 
   useEffect(() => {
-    if (hire) {
-      // Normalize the data to ensure consistent property names
-      setFormData({
-        id: hire.id || "",
-        fullName: hire.fullName || "",
-        roleTitle: hire.roleTitle || "",
-        department: hire.department || "",
-        status: hire.status || "Initial Review",
-        email: hire.email || "",
-        phoneNr: hire.phoneNr || "",
-        priority: hire.priority || "Medium",
-        documents: hire.documents || "",
-      })
-    }
-  }, [hire])
+  if (isOpen && hire) {
+    setFormData({
+      fullName: hire.fullName || "",
+      roleTitle: hire.roleTitle || "",
+      department: hire.department || "",
+      status: hire.status || "Initial Review",
+      email: hire.email || "",
+      phoneNr: hire.phoneNr || "",
+      priority: hire.priority || "Medium",
+      documents: hire.documents || "",
+      docId: hire.docId || "",
+    });
+  }
+}, [isOpen, hire]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -42,30 +42,36 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    onSave(formData)
+  e.preventDefault();
+  const dataToSend = { ...formData };
+
+  if (hire?.id) {
+    dataToSend.id = hire.id;
   }
+
+  console.log("📤 Submitting data to parent:", dataToSend); // ADD THIS
+  onSave?.(dataToSend);
+};
+
+
 
   if (!isOpen) return null
 
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <div className="modal-header">
-          <h2 className="modal-title">
-            <Edit className="mr-2" size={18} /> Edit New Hire
-          </h2>
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <div className="modal-body">
-          <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-header">
+            <h2 className="modal-title">
+              <Edit className="mr-2" size={18} /> Edit New Hire
+            </h2>
+            <button className="modal-close" type="button" onClick={onClose}>×</button>
+          </div>
+
+          <div className="modal-body">
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="fullName" className="form-label">
-                  Full Name
-                </label>
+                <label htmlFor="fullName">Full Name</label>
                 <input
                   type="text"
                   id="fullName"
@@ -77,9 +83,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
@@ -94,9 +98,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="department" className="form-label">
-                  Department
-                </label>
+                <label htmlFor="department">Department</label>
                 <input
                   type="text"
                   id="department"
@@ -108,9 +110,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="roleTitle" className="form-label">
-                  Role Title
-                </label>
+                <label htmlFor="roleTitle">Role Title</label>
                 <input
                   type="text"
                   id="roleTitle"
@@ -125,9 +125,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="status" className="form-label">
-                  Status
-                </label>
+                <label htmlFor="status">Status</label>
                 <select
                   id="status"
                   name="status"
@@ -143,9 +141,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="priority" className="form-label">
-                  Priority
-                </label>
+                <label htmlFor="priority">Priority</label>
                 <select
                   id="priority"
                   name="priority"
@@ -162,9 +158,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="phoneNr" className="form-label">
-                  Phone Number
-                </label>
+                <label htmlFor="phoneNr">Phone Number</label>
                 <input
                   type="tel"
                   id="phoneNr"
@@ -175,9 +169,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="documents" className="form-label">
-                  Documents
-                </label>
+                <label htmlFor="documents">Documents</label>
                 <input
                   type="text"
                   id="documents"
@@ -189,17 +181,19 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 />
               </div>
             </div>
-          </form>
-        </div>
-        <div className="modal-footer">
-          <button type="button" className="button button-outline" onClick={onClose}>
-            Cancel
-          </button>
-          <button type="submit" className="button button-primary" onClick={handleSubmit}>
-            Save Changes
-          </button>
-        </div>
+          </div>
+
+          <div className="modal-footer">
+            <button type="button" className="button button-outline" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className="button button-primary">
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
+      
     </div>
   )
 }

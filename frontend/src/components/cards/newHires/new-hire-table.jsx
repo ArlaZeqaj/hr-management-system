@@ -1,3 +1,4 @@
+// Updated new-hire-table.jsx
 "use client"
 
 import React from "react"
@@ -17,20 +18,20 @@ const NewHireTable = ({
   console.log("📋 HIRES PASSED TO TABLE:", hires)
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div className="loading">Loading...</div>
   }
 
   if (error) {
-    return <div>Error: {error}</div>
+    return <div className="error">Error: {error}</div>
   }
 
   if (!hires || hires.length === 0) {
-    return <div>No hires found.</div>
+    return <div className="empty-state">No hires found.</div>
   }
 
   return (
     <div className="table-container">
-      <table className="table" style={{ border: '2px solid red', backgroundColor: '#fff' }}>
+      <table className="table">
         <thead>
           <tr>
             <th>Full Name</th>
@@ -45,25 +46,33 @@ const NewHireTable = ({
         <tbody>
           {hires.map((hire) => (
             <React.Fragment key={hire.id}>
-              <tr onClick={() => toggleRowExpansion(hire.id)} style={{ cursor: "pointer" }}>
+              <tr onClick={() => toggleRowExpansion(hire.id)} className="table-row">
                 <td>{hire.fullName}</td>
                 <td>{hire.department}</td>
                 <td>{hire.roleTitle}</td>
                 <td>{hire.status}</td>
                 <td>{hire.priority}</td>
                 <td>{hire.email}</td>
-                <td>
+                <td className="table-actions">
                   <button onClick={(e) => handleEdit(hire, e)}><Edit size={16} /></button>
-                  <button onClick={(e) => handleDelete(hire.id, e)}><Trash2 size={16} /></button>
+                  <button onClick={(e) => handleDelete(hire, e)}><Trash2 size={16} /></button>
                   <button onClick={(e) => handleDownload(hire, e)}><Download size={16} /></button>
                   <button onClick={(e) => handleApprove(hire, e)}><CheckCircle size={16} /></button>
                 </td>
               </tr>
               {expandedRows.includes(hire.id) && (
-                <tr>
+                <tr className="expanded-row">
                   <td colSpan="7">
-                    <strong>Phone:</strong> {hire.phoneNr} <br />
-                    <strong>Documents:</strong> {hire.documents}
+                    <div className="expanded-content">
+                      <div className="expanded-item">
+                        <span className="expanded-label">Phone:</span>
+                        <span className="expanded-value">{hire.phoneNr}</span>
+                      </div>
+                      <div className="expanded-item">
+                        <span className="expanded-label">Documents:</span>
+                        <span className="expanded-value">{hire.documents}</span>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               )}
