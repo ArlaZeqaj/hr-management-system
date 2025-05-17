@@ -367,13 +367,13 @@ const employeeDistributionData = {
   const formattedDate = currentTime.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <div className={`admin-dashboard ${darkMode ? "dark-theme" : ""}`}>
+    <div className={`admin-dashboard-page-container ${darkMode ? "dark-theme" : ""}`}>
       <AdminSidebar 
         activeMenuItem={activeMenuItem} 
         handleMenuItemClick={handleMenuItemClick} 
       />
 
-      <div className="admin-main-content">
+      <div className="admin-dashboard-main-content">
         <AdminHeader
           activeMenuItem={activeMenuItem}
           searchQuery={searchQuery}

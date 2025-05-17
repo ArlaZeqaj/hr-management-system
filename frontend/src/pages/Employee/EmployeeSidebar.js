@@ -32,7 +32,7 @@ const EmployeeSidebar = ({ activeMenuItem, handleMenuItemClick, darkMode }) => {
               <img src={item.icon} className="admin-icons" />
               <span>{item.name}</span>
             </div>
-            <div className="active-indicator"></div>
+            <div className="employee-active-indicator"></div>
           </div>
         ))}
       </div>

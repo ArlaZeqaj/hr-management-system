@@ -28,17 +28,18 @@
 
 /* Layout */
 .projects-page-container {
+  padding-left: 20px;
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg);
-  color: var(--text);
-  transition: var(--transition);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
 }
 
 .projects-main-content {
-  flex: 1;
-  padding: 2rem 3rem;
-  margin-left: 280px;
+  margin-left: 250px;
+  width: calc(100% - 280px);
+  padding: 2rem;
   overflow-y: auto;
 }
 
@@ -315,10 +316,10 @@
   width: 200%;
   height: 200%;
   background: linear-gradient(
-          to right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.1) 50%,
-          rgba(255, 255, 255, 0) 100%
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
   transform: rotate(30deg);
   transition: all 0.3s ease;
@@ -377,6 +378,11 @@
   color: #555;
 }
 
+.dark-theme .projects-page-container {
+  background-color: #1a1a2e;
+  color: #e2e8f0;
+}
+
 .dark-theme .status-done {
   background-color: #22543d;
   color: #9ae6b4;
@@ -401,7 +407,7 @@
 
 /* Enhanced Project Modal */
 .project-modal-overlay {
-  position: fixed;
+  position: fixed;   
   top: 0;
   left: 0;
   right: 0;
@@ -620,7 +626,7 @@
     grid-template-columns: 1fr;
     max-height: 95vh;
   }
-
+  
   .modal-image-container {
     height: 250px;
   }
@@ -661,7 +667,7 @@
     grid-template-columns: 1fr;
     max-height: 95vh;
   }
-
+  
   .modal-image-container {
     height: 250px;
   }

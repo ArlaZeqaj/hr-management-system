@@ -60,7 +60,7 @@ const AdminSidebar = ({ activeMenuItem, handleMenuItemClick }) => {
       <div className="sidebar-bottom-a">
         <div className="upgrade-card-a">
           <img
-            src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/c3gcj8eo_expires_30_days.png"
+            src="https://img.icons8.com/?size=100&id=84109&format=png&color=000000"
             className="upgrade-icon-a"
             alt="Upgrade"
           />
