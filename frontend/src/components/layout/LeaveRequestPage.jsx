@@ -190,11 +190,11 @@ const LeaveRequestPage = ({ darkMode, toggleDarkMode, activeMenuItem, handleMenu
                 <div className="calendar-container-lr">
                     <div className="calendar-header-lr">
                         <div className="month-selector">
-                            <button className="nav-button" onClick={goToPreviousMonth}>‹</button>
+                            <button className="nav-button-lr" onClick={goToPreviousMonth}>‹</button>
                             <h1>{monthLabel} {yearLabel}</h1>
-                            <button className="nav-button" onClick={goToNextMonth}>›</button>
+                            <button className="nav-button-lr" onClick={goToNextMonth}>›</button>
                         </div>
-                        <div className="view-options">
+                        <div className="view-options-lr">
                             <button className="view-button active">Month</button>
                         </div>
                     </div>
