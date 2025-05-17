@@ -60,11 +60,21 @@ const NewHires = () => {
   const itemsPerPage = 5
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-    document.body.classList.toggle("dark-theme", !darkMode)
+    const newMode = !darkMode
+    setDarkMode(newMode)
+    document.body.classList.toggle("dark-theme", newMode)
+    localStorage.setItem("darkMode", newMode)
   }
 
-  const toggleNotification = (item) => {
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode")
+    if (savedMode !== null) {
+      setDarkMode(savedMode === "true")
+      document.body.classList.toggle("dark-theme", savedMode === "true")
+    }
+  }, [])
+
+    const toggleNotification = (item) => {
     setNotificationSettings((prev) => ({
       ...prev,
       [item]: !prev[item],
@@ -145,16 +155,13 @@ const NewHires = () => {
   }
 
   useEffect(() => {
-    let unsubscribe = () => {}
-
-    unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         const mockToken = "mock-token-for-testing"
         setUserToken(mockToken)
         fetchNewHires(mockToken)
         return
       }
-
       try {
         const token = await user.getIdToken()
         setUserToken(token)
@@ -165,7 +172,6 @@ const NewHires = () => {
         setLoading(false)
       }
     })
-
     return () => unsubscribe()
   }, [])
 
@@ -175,9 +181,16 @@ const NewHires = () => {
     setShowEditModal(true)
   }
 
-  const handleDelete = async (index, e) => {
+  const handleDelete = async (hire, e) => {
     e.stopPropagation()
-    setHireList((prev) => prev.filter((_, i) => i !== index))
+    try {
+      await axios.delete(`http://localhost:8080/api/new-hires/${hire.docId}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      })
+      fetchNewHires(userToken)
+    } catch (error) {
+      console.error("❌ Failed to delete hire:", error)
+    }
   }
 
   const handleDownload = (hire, e) => {
@@ -187,18 +200,38 @@ const NewHires = () => {
 
   const handleApprove = async (hire, e) => {
     e.stopPropagation()
-    console.log("✅ Approve clicked:", hire)
+    try {
+      await axios.post(`http://localhost:8080/api/new-hires/${hire.docId}/approve`, {}, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      })
+      fetchNewHires(userToken)
+    } catch (error) {
+      console.error("❌ Failed to approve hire:", error)
+    }
   }
 
   const handleSaveChanges = async (formData) => {
-    console.log("💾 Save changes called with:", formData)
-    setShowEditModal(false)
+    try {
+      await axios.put(`http://localhost:8080/api/new-hires/${formData.docId}`, formData, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      })
+      fetchNewHires(userToken)
+      setShowEditModal(false)
+    } catch (error) {
+      console.error("❌ Failed to update hire:", error)
+    }
   }
 
   const handleAddNewHire = async (formData) => {
-    console.log("➕ Add new hire called with:", formData)
-    setHireList((prev) => [...prev, formData])
-    setShowAddModal(false)
+    try {
+      await axios.post("http://localhost:8080/api/new-hires", formData, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      })
+      fetchNewHires(userToken)
+      setShowAddModal(false)
+    } catch (error) {
+      console.error("❌ Failed to add new hire:", error)
+    }
   }
 
   const filteredHires = hireList
@@ -212,7 +245,10 @@ const NewHires = () => {
   return (
     <div className={`app-container ${darkMode ? "dark-theme" : ""}`}>
       {showConnectionStatus && (
-        <div className={`connection-status ${error ? "error" : "success"}`}>{connectionStatus}</div>
+        <div className={`connection-status ${error ? "error" : "success"}`}>
+          <span className="status-icon">{error ? "✕" : "✓"}</span>
+          {connectionStatus}
+        </div>
       )}
 
       <AdminSidebar activeMenuItem={activeMenuItem} handleMenuItemClick={handleMenuItemClick} />
@@ -224,19 +260,23 @@ const NewHires = () => {
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
           notifications={notificationSettings}
-          toggleNotification={toggleNotification}
+          toggleNotification={(item) => setNotificationSettings((prev) => ({ ...prev, [item]: !prev[item] }))}
         />
 
-        <div className="card">
+        <div className="card hires-card">
           <div className="card-header">
-            <h2 className="card-title">
-              <UserPlus className="mr-2" size={18} /> New Hires Management
-            </h2>
-            <div className="card-actions">
-              <button className="button button-primary" onClick={() => setShowAddModal(true)}>
-                <Plus size={16} className="mr-1" /> Add New Hire
-              </button>
+            <div className="card-title-wrapper">
+              <UserPlus className="card-icon" size={20} />
+              <h2>New Hires Management</h2>
+              <span className="badge-count">{filteredHires.length}</span>
             </div>
+            <button 
+              className="button button-primary add-button" 
+              onClick={() => setShowAddModal(true)}
+            >
+              <Plus size={16} className="button-icon" />
+              Add New Hire
+            </button>
           </div>
 
           <FilterBar
@@ -246,21 +286,23 @@ const NewHires = () => {
             setSearchTerm={setSearchTerm}
           />
 
-          <NewHireTable
-            hires={currentItems}
-            loading={loading}
-            error={error}
-            expandedRows={expandedRows}
-            toggleRowExpansion={(key) =>
-              setExpandedRows((prev) =>
-                prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
-              )
-            }
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-            handleDownload={handleDownload}
-            handleApprove={handleApprove}
-          />
+          <div className="table-wrapper">
+            <NewHireTable
+              hires={currentItems}
+              loading={loading}
+              error={error}
+              expandedRows={expandedRows}
+              toggleRowExpansion={(key) =>
+                setExpandedRows((prev) =>
+                  prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+                )
+              }
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              handleDownload={handleDownload}
+              handleApprove={handleApprove}
+            />
+          </div>
 
           {!loading && !error && filteredHires.length > 0 && (
             <Pagination
@@ -273,8 +315,6 @@ const NewHires = () => {
           )}
         </div>
 
-        {showEditModal && <p style={{ color: "green" }}>🟢 Edit Modal Open</p>}
-        {showAddModal && <p style={{ color: "blue" }}>🟦 Add Modal Open</p>}
         <AdminFooter />
       </div>
 
