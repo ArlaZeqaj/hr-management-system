@@ -115,7 +115,7 @@
     filter: invert(24%) sepia(98%) saturate(5425%) hue-rotate(251deg) brightness(98%) contrast(101%);
   }
   
-  .active-indicator {
+  .employee-active-indicator {
     position: absolute;
     right: -10px;
     top: 50%;

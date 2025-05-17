@@ -439,19 +439,19 @@ export default () => {
 
         <div className="card-row">
           <PaymentCard
-            logo="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png"
+            logo="https://img.icons8.com/?size=100&id=106942&format=png&color=FFFFFFD4"
             number={cardData.number}
             expiry={cardData.expiry}
             cvv={cardData.cvv}
           />
           <PaymentMethod
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/vxv57pzf_expires_30_days.png"
+            icon="https://img.icons8.com/?size=100&id=106586&format=png&color=FFFFFF"
             title="Balance"
             amount={`+${cardData.salary || "$0.00"}`}
             color="#4318FF"
           />
           <PaymentMethod
-            icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/358903cd_expires_30_days.png"
+            icon="https://img.icons8.com/?size=100&id=106945&format=png&color=FFFFFF"
             title="Paypal"
             amount={cardData.paypal || "$0.00"}
             color="#2D3748"
@@ -509,7 +509,7 @@ export default () => {
                     <span className="billing-card-company">HRCloudX</span>
                     <div className="billing-card-type-logo">
                       <img
-                        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+                        src="https://img.icons8.com/?size=100&id=106942&format=png&color=FFFFFFD4"
                         alt="Mastercard"
                         width="40"
                       />
@@ -555,12 +555,7 @@ export default () => {
                     <label htmlFor="cardNumber">Card Number</label>
                     <div className="billing-card-icons">
                       <img
-                        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png"
-                        alt="Visa"
-                        width="40"
-                      />
-                      <img
-                        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+                        src="https://img.icons8.com/?size=100&id=106942&format=png&color=000000A6"
                         alt="Mastercard"
                         width="40"
                       />
@@ -720,8 +715,8 @@ export default () => {
                             emp.accNo
                           )
                         }
-                        deleteIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/136x2u2r_expires_30_days.png"
-                        editIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7otne8qi_expires_30_days.png"
+                        deleteIcon="https://img.icons8.com/?size=100&id=99961&format=png&color=e53e3e"
+                        editIcon="https://img.icons8.com/?size=100&id=85962&format=png&color=000000"
                         onEdit={() => {
                           setEditingId(emp.id);
                           setEditAccNo(emp.accNo || "");
@@ -763,7 +758,7 @@ export default () => {
                     invoiceNumber={invoice.invoiceNumber}
                     amount={invoice.amount}
                     currency={invoice.currency}
-                    pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/ooymt6ca_expires_30_days.png"
+                    pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
                     //onDownload={() => console.log("Generate PDF for", invoice)}
                     onGeneratePDF={() =>
                       generateInvoicePDF({
@@ -779,31 +774,31 @@ export default () => {
                 date="March, 01, 2020"
                 id="#MS-415646"
                 amount="$180"
-                pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/ooymt6ca_expires_30_days.png"
+                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
               />
               <InvoiceItem
                 date="February, 10, 2021"
                 id="#RV-126749"
                 amount="$250"
-                pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7i42j92c_expires_30_days.png"
+                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
               />
               <InvoiceItem
                 date="April, 05, 2020"
                 id="#FB-212562"
                 amount="$560"
-                pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/kl8fuv50_expires_30_days.png"
+                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
               />
               <InvoiceItem
                 date="June, 25, 2019"
                 id="#QW-103578"
                 amount="$120"
-                pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/dc9dvqi5_expires_30_days.png"
+                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
               />
               <InvoiceItem
                 date="March, 01, 2019"
                 id="#AR-803481"
                 amount="$300"
-                pdfIcon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/dc04btsr_expires_30_days.png"
+                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
               />
             </section>
 

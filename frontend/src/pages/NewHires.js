@@ -22,6 +22,18 @@ const NewHires = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
+    // Get active menu item based on current route
+    const getActiveMenuItem = () => {
+      const path = location.pathname;
+      if (path.includes('/admin/dashboard')) return 'Dashboard';
+      if (path.includes('/admin/profile')) return 'Profile';
+      if (path.includes('/new-hires')) return 'New Hires';
+      if (path.includes('/employee')) return 'Employees';
+      if (path.includes('/billing')) return 'Billing';
+      if (path.includes('/admin/projects')) return 'Projects';
+      return 'Dashboard'; // default
+    };
+
   const [userToken, setUserToken] = useState(null)
   const [hireList, setHireList] = useState([])
   const [loading, setLoading] = useState(true)
@@ -34,7 +46,7 @@ const NewHires = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [currentHire, setCurrentHire] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
-  const [activeMenuItem, setActiveMenuItem] = useState("New Hires")
+  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem())
 
   const [notificationSettings, setNotificationSettings] = useState({
     "Email Notifications": true,
@@ -64,22 +76,6 @@ const NewHires = () => {
 
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem)
-    switch (menuItem) {
-      case 'AdminDashboard':
-        navigate('/admin/dashboard'); break
-      case 'Profile':
-        navigate('/admin/profile'); break
-      case 'New Hires':
-        navigate('/new-hires'); break
-      case 'Employees':
-        navigate('/employee'); break
-      case 'Billing':
-        navigate('/billing'); break
-      case 'Projects':
-        navigate('/admin/projects'); break
-      default:
-        navigate('/admin/dashboard')
-    }
   }
 
   const fetchNewHires = async (token) => {
