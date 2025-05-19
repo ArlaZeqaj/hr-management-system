@@ -27,4 +27,9 @@ public class EmployeeService {
     public List<Employee> getAllEmployees() throws ExecutionException, InterruptedException {
         return retrieveProfile.getAllEmployees();
     }
+    public boolean updateEmployeeFields(String id, Employee updatedFields) throws ExecutionException, InterruptedException {
+        return retrieveProfile.updateEmployeeFields(id, updatedFields);
+    }
+
+
 }

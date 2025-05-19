@@ -31,8 +31,8 @@ public class Employee {
     @PropertyName("Education")
     private String education;
 
-    @PropertyName("Departament")
-    private String departament;
+    @PropertyName("Department")
+    private String department;
 
     @PropertyName("Work History")
     private List<String> workHistory;
@@ -41,7 +41,7 @@ public class Employee {
     private String gender;
 
 
-    @PropertyName("Lanuages")
+    @PropertyName("Languages")
     private List<String> languages;
 
 
@@ -78,7 +78,7 @@ public class Employee {
 
     }
 
-    // Getters and setters
+
 
     public String getId() {
         return id;
@@ -88,13 +88,7 @@ public class Employee {
         this.id = id;
     }
 
-    public String getEmployeeID() {
-        return employeeID;
-    }
 
-    public void setEmployeeID(String employeeID) {
-        this.employeeID = employeeID;
-    }
 
     public String getName() {
         return name;
@@ -124,12 +118,12 @@ public class Employee {
         this.education = education;
     }
 
-    public String getDepartament() {
-        return departament;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setDepartament(String departament) {
-        this.departament = departament;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public List<String> getWorkHistory() {

@@ -5,12 +5,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,25 +23,24 @@ public class ProjectController {
         this.projectService = projectSummaryService;
     }
 
+    // 🔹 Per-user: Get all projects
     @GetMapping("/all")
     public ResponseEntity<List<Map<String, Object>>> getAllProjects(@RequestHeader("Authorization") String token) {
         try {
-            // Extract the UID from Firebase authentication token
             String idToken = token.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String uid = decodedToken.getUid();
 
-            // Get all projects for the user
             List<Map<String, Object>> allProjects = projectService.getAllProjectsForUser(uid);
             return ResponseEntity.ok(allProjects);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    @GetMapping("/summary")
 
+    // 🔹 Per-user: Get status summary
+    @GetMapping("/summary")
     public ResponseEntity<Map<String, Integer>> getProjectSummary(@RequestHeader("Authorization") String token) {
         try {
             String idToken = token.replace("Bearer ", "");
@@ -52,7 +49,6 @@ public class ProjectController {
 
             Map<String, Integer> summary = projectService.getProjectStatusSummaryForUser(uid);
             return ResponseEntity.ok(summary);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -60,7 +56,18 @@ public class ProjectController {
     }
 
 
+    @GetMapping("/ongoing")
+    public ResponseEntity<List<Map<String, Object>>> getAllOngoingProjects(@RequestHeader("Authorization") String token) {
+        try {
+            String idToken = token.replace("Bearer ", "");
+            FirebaseAuth.getInstance().verifyIdToken(idToken); // Validate token
+
+            List<Map<String, Object>> ongoingProjects = projectService.getAllOngoingProjects();
+            return ResponseEntity.ok(ongoingProjects);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
-
-
