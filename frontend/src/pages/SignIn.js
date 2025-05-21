@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { sendTokenToBackend } from "../services/AuthService";
+import logo from '../assets/hrcloudx-logo.png';
 import "../styles/SignIn.css";
 
 export default function SignIn() {
@@ -21,7 +22,7 @@ export default function SignIn() {
 
         try {
             // 1. Firebase login
-          //  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            //  const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const { user } = await signInWithEmailAndPassword(auth, email, password);
             const token = await user.getIdToken(); // ✅ get token
 
@@ -54,16 +55,19 @@ export default function SignIn() {
 
     return (
         <div className="sigin-contain">
+            
+
             <div className="sigin-scroll-view">
-                <div className="sigin-column">
-                    <div className="sigin-row-view" style={{ cursor: 'pointer' }} onClick={() => navigate(-1)}>
+            <div className="sigin-row-view" style={{ cursor: 'pointer' }} onClick={() => navigate(-1)}>
                         <img
-                            src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e9d5f866-ccd5-4f87-b56e-e9d164fb7995"
+                            src="https://img.icons8.com/?size=100&id=85498&format=png&color=a3aed0"
                             className="sigin-image"
                             alt="Back arrow icon"
                         />
                         <span className="sigin-text">Back to dashboard</span>
                     </div>
+                <div className="sigin-column">
+                    
 
                     <div className="sigin-column2">
                         <div className="sigin-column3">
@@ -75,7 +79,7 @@ export default function SignIn() {
 
                         <form className="sigin-column4" onSubmit={handleLogin}>
                             <div className="sigin-column5">
-                                <label className="sigin-text4">Email*</label>
+                                <label className="sigin-text4">Email</label>
                                 <div className="sigin-view">
                                     <input
                                         type="email"
@@ -89,7 +93,7 @@ export default function SignIn() {
                             </div>
 
                             <div className="sigin-column6">
-                                <label className="sigin-text4">Password*</label>
+                                <label className="sigin-text4">Password</label>
                                 <div className="sigin-row-view3">
                                     <input
                                         type={showPassword ? "text" : "password"}
@@ -104,7 +108,12 @@ export default function SignIn() {
                                         className="password-toggle"
                                         onClick={() => setShowPassword(!showPassword)}
                                     >
-                                        {showPassword ? "Hide" : "Show"}
+                                        <img
+                                            src={showPassword ? "https://img.icons8.com/?size=100&id=85137&format=png&color=8291BE66" : "https://img.icons8.com/?size=100&id=85130&format=png&color=8291BE66"}
+                                            alt={showPassword ? "Hide" : "Show"}
+                                            style={{ width: "24px", height: "24px" }}
+                                        />
+
                                     </span>
                                 </div>
                             </div>
@@ -149,20 +158,21 @@ export default function SignIn() {
                             </button>
                         </form>
                     </div>
+                 
 
-                    <p className="sigin-text10" style={{ left: '150px', bottom: '30px' }}>
-                        © 2025 HRCLOUDX UI. All Rights Reserved. Made with love!
-                    </p>
                 </div>
+                <footer className="sigin-footer">
+                        © 2025 HRCLOUDX UI. All Rights Reserved. Made with love!
+                    </footer>
             </div>
 
             <div className="sigin-column7"
-                 style={{
-                     backgroundImage: 'url(https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/514880e0-ce96-4b99-af83-1803937c3087)',
-                 }}
+                style={{
+                    backgroundImage: 'url(https://i.pinimg.com/736x/18/d2/84/18d2846a78b4d6bead5eeba215378d3e.jpg)',
+                }}
             >
                 <img
-                    src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/fe4f555a-4d41-45f0-869d-acebc7dd082b"
+                    src={logo}
                     className="sigin-image4"
                     alt="HRCLOUDX Company Logo"
                 />
@@ -176,6 +186,7 @@ export default function SignIn() {
                 <div className="sigin-view4">
                     <span className="sigin-text12">EMPOWERING TEAMS, ANYWHERE</span>
                 </div>
+
 
                 <div className="sigin-row-view6">
                     <a href="/marketplace">Marketplace</a>

@@ -8,17 +8,17 @@ const EventSidebar = ({ event, position }) => {
 
     return (
         <div
-            className="event-sidebar"
+            className="event-sidebar-lr"
             style={{
                 position: 'fixed',
                 left: `${position.x + 20}px`,
                 top: `${position.y + 20}px`
             }}
         >
-            <div className="sidebar-header">
+            <div className="sidebar-header-lr">
                 <h3>Leave Details</h3>
             </div>
-            <div className="event-details">
+            <div className="event-details-lr">
                 <h4>{event.title}</h4>
                 <p><strong>Start:</strong> {event.startDate}</p>
                 <p><strong>End:</strong> {event.endDate}</p>
