@@ -56,21 +56,6 @@ public class EmployeeController {
         }
     }
 
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> updateEmployee(@PathVariable String id, @RequestBody Employee updatedFields) {
-        try {
-            boolean success = service.updateEmployeeFields(id, updatedFields);
-            return success
-                    ? ResponseEntity.ok("Employee updated successfully.")
-                    : ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Error: " + e.getMessage());
-        }
-    }
-
-
     /*@PostMapping
     public ResponseEntity<String> addEmployee(@RequestBody Employee employee) {
         try {
