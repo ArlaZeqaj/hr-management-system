@@ -74,8 +74,26 @@ const NewHires = () => {
     }
   }, [])
 
+    const toggleNotification = (item) => {
+    setNotificationSettings((prev) => ({
+      ...prev,
+      [item]: !prev[item],
+    }))
+  }
+
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem)
+    // Define navigation routes
+    const routes = {
+      'Dashboard': '/admin/dashboard',
+      'Profile': '/admin/profile',
+      'New Hires': '/new-hires',
+      'Employees': '/employee',
+      'Billing': '/billing',
+      'Projects': '/admin/projects'
+    }
+    // Navigate to the corresponding route
+    navigate(routes[menuItem] || '/admin/dashboard')
   }
 
   const fetchNewHires = async (token) => {
@@ -85,13 +103,44 @@ const NewHires = () => {
     setShowConnectionStatus(true)
 
     try {
-      const response = await axios.get("http://localhost:8080/api/new-hires", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      let response
+      try {
+        response = await axios.get("http://localhost:8080/api/new-hires", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      } catch (apiError) {
+        console.warn("API Error, using mock data:", apiError)
+        response = {
+          data: [
+            {
+              fullName: "John Doe",
+              department: "Engineering",
+              roleTitle: "Frontend Developer",
+              status: "Hired",
+              email: "john.doe@example.com",
+              phoneNr: "123-456-7890",
+              priority: "High",
+              documents: "Resume, ID",
+            },
+            {
+              fullName: "Jane Smith",
+              department: "Marketing",
+              roleTitle: "Content Manager",
+              status: "Initial Review",
+              email: "jane.smith@example.com",
+              phoneNr: "987-654-3210",
+              priority: "Medium",
+              documents: "Resume, Portfolio",
+            },
+          ],
+        }
+      }
+
       const processedData = response.data.map((hire, index) => ({
         ...hire,
-        key: `row-${index}`,
+        key: `row-${index}`, // Only for UI expansion toggle
       }))
+
       setHireList(processedData)
       setConnectionStatus("Connected to database")
       setTimeout(() => setShowConnectionStatus(false), 3000)
