@@ -4,6 +4,7 @@ import com.google.cloud.firestore.annotation.PropertyName;
 
 public class NewHire {
 
+    private String docId;
     private String fullName;
     private String department;
     private String roleTitle;
@@ -12,10 +13,20 @@ public class NewHire {
     private String phoneNr;
     private String priority;
     private String documents;
+    
 
     public NewHire() {
         // Required by Firestore
     }
+
+
+public String getDocId() {
+    return docId;
+}
+
+public void setDocId(String docId) {
+    this.docId = docId;
+}
 
     @PropertyName("Full Name")
     public String getFullName() {

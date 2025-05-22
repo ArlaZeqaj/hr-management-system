@@ -31,6 +31,27 @@ public class NewHireController {
         return newHireService.getAllHires();
     }
 
+    @PutMapping("/{id}")
+public void updateNewHire(@PathVariable String id, @RequestBody NewHire hire,
+                          @RequestHeader("Authorization") String authHeader) throws Exception {
+    FirebaseAuth.getInstance().verifyIdToken(authHeader.replace("Bearer ", ""));
+    newHireService.updateNewHire(id, hire);
+}
+
+@DeleteMapping("/{id}")
+public void deleteNewHire(@PathVariable String id,
+                          @RequestHeader("Authorization") String authHeader) throws Exception {
+    FirebaseAuth.getInstance().verifyIdToken(authHeader.replace("Bearer ", ""));
+    newHireService.deleteNewHire(id);
+}
+
+@PostMapping("/{id}/approve")
+public void approveNewHire(@PathVariable String id,
+                           @RequestHeader("Authorization") String authHeader) throws Exception {
+    FirebaseAuth.getInstance().verifyIdToken(authHeader.replace("Bearer ", ""));
+    newHireService.approveNewHire(id);
+}
+
 
     
 }
