@@ -59,7 +59,7 @@ public void approveNewHire(String id) throws Exception {
     NewHire hire = snapshot.toObject(NewHire.class);
 
     // Create Auth account
-    String password = "password123"; // or generate based on policy
+    String password = "password123"; // use secure policy in production
     com.google.firebase.auth.UserRecord.CreateRequest request = new com.google.firebase.auth.UserRecord.CreateRequest()
         .setEmail(hire.getEmail())
         .setPassword(password);
@@ -67,12 +67,26 @@ public void approveNewHire(String id) throws Exception {
     com.google.firebase.auth.UserRecord userRecord = com.google.firebase.auth.FirebaseAuth.getInstance().createUser(request);
     String uid = userRecord.getUid();
 
-    // Convert data and store in employees collection
+    // Convert NewHire to Employee format
     Map<String, Object> employeeData = com.example.hrsystem.util.NewHireToEmployeeConverter.convert(hire);
+
+    // Save to employees/{uid}
     db.collection("employees").document(uid).set(employeeData).get();
 
-    // Delete from NewHires
+    // 🔁 Copy documents subcollection
+    CollectionReference sourceDocs = db.collection(COLLECTION_NAME).document(id).collection("documents");
+    CollectionReference targetDocs = db.collection("employees").document(uid).collection("documents");
+
+    ApiFuture<QuerySnapshot> docsFuture = sourceDocs.get();
+    List<QueryDocumentSnapshot> docSnapshots = docsFuture.get().getDocuments();
+
+    for (QueryDocumentSnapshot docSnap : docSnapshots) {
+        targetDocs.document(docSnap.getId()).set(docSnap.getData()).get();
+    }
+
+    // Delete NewHire entry
     db.collection(COLLECTION_NAME).document(id).delete().get();
 }
+
 
 }

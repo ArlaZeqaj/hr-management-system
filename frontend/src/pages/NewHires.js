@@ -238,10 +238,12 @@ const NewHires = () => {
   }
 
   const filteredHires = hireList.filter((hire) => {
-    const matchesStatus = statusFilter === "All" || hire.status === statusFilter
-    const matchesSearch = hire.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesStatus && matchesSearch
-  })
+  const fullName = `${hire.name || ""} ${hire.surname || ""}`.toLowerCase();
+  const matchesName = fullName.includes(searchTerm.toLowerCase());
+  const matchesStatus = statusFilter === "All" || hire.status === statusFilter;
+  return matchesName && matchesStatus;
+});
+
   const totalPages = Math.ceil(filteredHires.length / itemsPerPage)
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage

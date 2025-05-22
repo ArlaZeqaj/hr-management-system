@@ -45,22 +45,39 @@ const NewHireTable = ({
         </thead>
         <tbody>
           {hires.map((hire) => (
-            <React.Fragment key={hire.id}>
-              <tr onClick={() => toggleRowExpansion(hire.id)} className="table-row">
-                <td>{hire.fullName}</td>
+            <React.Fragment key={hire.key || hire.id}>
+              <tr onClick={() => toggleRowExpansion(hire.key || hire.id)} className="table-row">
+<td>{hire.name} {hire.surname}</td>
                 <td>{hire.department}</td>
                 <td>{hire.roleTitle}</td>
-                <td>{hire.status}</td>
-                <td>{hire.priority}</td>
+                <td>
+  <span className={`status-badge ${(hire.status || "unknown").replace(/\s+/g, "-").toLowerCase()}`}>
+    {hire.status || "Unknown"}
+  </span>
+</td>
+<td>
+  <span className={`priority-badge ${(hire.priority || "unknown").toLowerCase()}`}>
+    {hire.priority || "Unknown"}
+  </span>
+</td>
+
                 <td>{hire.email}</td>
                 <td className="table-actions">
-                  <button onClick={(e) => handleEdit(hire, e)}><Edit size={16} /></button>
-                  <button onClick={(e) => handleDelete(hire, e)}><Trash2 size={16} /></button>
-                  <button onClick={(e) => handleDownload(hire, e)}><Download size={16} /></button>
-                  <button onClick={(e) => handleApprove(hire, e)}><CheckCircle size={16} /></button>
+                  <button className="action-button edit" onClick={(e) => handleEdit(hire, e)}>
+                    <Edit size={16} />
+                  </button>
+                  <button className="action-button delete" onClick={(e) => handleDelete(hire, e)}>
+                    <Trash2 size={16} />
+                  </button>
+                  <button className="action-button download" onClick={(e) => handleDownload(hire, e)}>
+                    <Download size={16} />
+                  </button>
+                  <button className="action-button approve" onClick={(e) => handleApprove(hire, e)}>
+                    <CheckCircle size={16} />
+                  </button>
                 </td>
               </tr>
-              {expandedRows.includes(hire.id) && (
+              {expandedRows.includes(hire.key || hire.id) && (
                 <tr className="expanded-row">
                   <td colSpan="7">
                     <div className="expanded-content">
@@ -72,6 +89,22 @@ const NewHireTable = ({
                         <span className="expanded-label">Documents:</span>
                         <span className="expanded-value">{hire.documents}</span>
                       </div>
+                      {hire.education && (
+  <div className="expanded-item">
+    <div className="expanded-label">Education</div>
+    <div className="expanded-value">{hire.education}</div>
+  </div>
+)}
+
+{hire.workHistory && hire.workHistory.length > 0 && (
+  <div className="expanded-item">
+    <div className="expanded-label">Work History</div>
+    <div className="expanded-value">
+      {hire.workHistory.join(", ")}
+    </div>
+  </div>
+)}
+
                     </div>
                   </td>
                 </tr>

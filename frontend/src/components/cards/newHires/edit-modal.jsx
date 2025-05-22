@@ -4,34 +4,42 @@ import { useState, useEffect } from "react"
 import { Edit } from "lucide-react"
 
 const EditModal = ({ isOpen, onClose, hire, onSave }) => {
-  console.log("🧪 EditModal rendered | isOpen:", isOpen, "| hire:", hire?.fullName);
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
+    surname: "",
+    email: "",
     roleTitle: "",
     department: "",
     status: "Initial Review",
-    email: "",
     phoneNr: "",
     priority: "Medium",
     documents: "",
+    birthDate: "",
+    education: "",
+    languages: "",
+    workHistory: "",
   })
 
   useEffect(() => {
-  if (isOpen && hire) {
-    setFormData({
-      fullName: hire.fullName || "",
-      roleTitle: hire.roleTitle || "",
-      department: hire.department || "",
-      status: hire.status || "Initial Review",
-      email: hire.email || "",
-      phoneNr: hire.phoneNr || "",
-      priority: hire.priority || "Medium",
-      documents: hire.documents || "",
-      docId: hire.docId || "",
-    });
-  }
-}, [isOpen, hire]);
-
+    if (isOpen && hire) {
+      setFormData({
+        name: hire.name || "",
+        surname: hire.surname || "",
+        email: hire.email || "",
+        roleTitle: hire.roleTitle || "",
+        department: hire.department || "",
+        status: hire.status || "Initial Review",
+        phoneNr: hire.phoneNr || "",
+        priority: hire.priority || "Medium",
+        documents: hire.documents || "",
+        birthDate: hire.birthDate || "",
+        education: hire.education || "",
+        languages: (hire.languages || []).join(", "),
+        workHistory: (hire.workHistory || []).join(", "),
+        docId: hire.docId || "",
+      })
+    }
+  }, [isOpen, hire])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -42,18 +50,17 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
   }
 
   const handleSubmit = (e) => {
-  e.preventDefault();
-  const dataToSend = { ...formData };
+    e.preventDefault()
 
-  if (hire?.id) {
-    dataToSend.id = hire.id;
+    const dataToSend = {
+      ...formData,
+      languages: formData.languages.split(",").map((l) => l.trim()).filter(Boolean),
+      workHistory: formData.workHistory.split(",").map((w) => w.trim()).filter(Boolean),
+    }
+
+    console.log("📤 Submitting updated hire:", dataToSend)
+    onSave?.(dataToSend)
   }
-
-  console.log("📤 Submitting data to parent:", dataToSend); // ADD THIS
-  onSave?.(dataToSend);
-};
-
-
 
   if (!isOpen) return null
 
@@ -71,17 +78,32 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
           <div className="modal-body">
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="fullName">Full Name</label>
+                <label htmlFor="name">First Name</label>
                 <input
                   type="text"
-                  id="fullName"
-                  name="fullName"
+                  id="name"
+                  name="name"
                   className="form-input"
-                  value={formData.fullName}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="surname">Surname</label>
+                <input
+                  type="text"
+                  id="surname"
+                  name="surname"
+                  className="form-input"
+                  value={formData.surname}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
@@ -92,6 +114,42 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="birthDate">Birth Date</label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  name="birthDate"
+                  className="form-input"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="education">Education</label>
+                <input
+                  type="text"
+                  id="education"
+                  name="education"
+                  className="form-input"
+                  value={formData.education}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phoneNr">Phone Number</label>
+                <input
+                  type="tel"
+                  id="phoneNr"
+                  name="phoneNr"
+                  className="form-input"
+                  value={formData.phoneNr}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -158,16 +216,32 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="phoneNr">Phone Number</label>
+                <label htmlFor="languages">Languages</label>
                 <input
-                  type="tel"
-                  id="phoneNr"
-                  name="phoneNr"
+                  type="text"
+                  id="languages"
+                  name="languages"
                   className="form-input"
-                  value={formData.phoneNr}
+                  placeholder="e.g. English, Spanish"
+                  value={formData.languages}
                   onChange={handleChange}
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="workHistory">Work History</label>
+                <input
+                  type="text"
+                  id="workHistory"
+                  name="workHistory"
+                  className="form-input"
+                  placeholder="e.g. Google, Meta"
+                  value={formData.workHistory}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
               <div className="form-group">
                 <label htmlFor="documents">Documents</label>
                 <input
@@ -175,9 +249,9 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                   id="documents"
                   name="documents"
                   className="form-input"
+                  placeholder="CV, Cover Letter, etc."
                   value={formData.documents}
                   onChange={handleChange}
-                  placeholder="CV, Cover Letter, etc."
                 />
               </div>
             </div>
@@ -193,7 +267,6 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
           </div>
         </form>
       </div>
-      
     </div>
   )
 }

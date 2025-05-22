@@ -2,10 +2,11 @@ package com.example.hrsystem.model;
 
 import com.google.cloud.firestore.annotation.PropertyName;
 
+import java.util.List;
+
 public class NewHire {
 
     private String docId;
-    private String fullName;
     private String department;
     private String roleTitle;
     private String status;
@@ -13,29 +14,24 @@ public class NewHire {
     private String phoneNr;
     private String priority;
     private String documents;
-    
+
+    private String name;
+    private String surname;
+    private String birthDate;
+    private String education;
+    private List<String> languages;
+    private List<String> workHistory;
 
     public NewHire() {
         // Required by Firestore
     }
 
-
-public String getDocId() {
-    return docId;
-}
-
-public void setDocId(String docId) {
-    this.docId = docId;
-}
-
-    @PropertyName("Full Name")
-    public String getFullName() {
-        return fullName;
+    public String getDocId() {
+        return docId;
     }
 
-    @PropertyName("Full Name")
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setDocId(String docId) {
+        this.docId = docId;
     }
 
     @PropertyName("Department")
@@ -106,5 +102,65 @@ public void setDocId(String docId) {
     @PropertyName("Documents")
     public void setDocuments(String documents) {
         this.documents = documents;
+    }
+
+    @PropertyName("name")
+    public String getName() {
+        return name;
+    }
+
+    @PropertyName("name")
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @PropertyName("surname")
+    public String getSurname() {
+        return surname;
+    }
+
+    @PropertyName("surname")
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    @PropertyName("birthDate")
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    @PropertyName("birthDate")
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    @PropertyName("education")
+    public String getEducation() {
+        return education;
+    }
+
+    @PropertyName("education")
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    @PropertyName("languages")
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    @PropertyName("languages")
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
+
+    @PropertyName("workHistory")
+    public List<String> getWorkHistory() {
+        return workHistory;
+    }
+
+    @PropertyName("workHistory")
+    public void setWorkHistory(List<String> workHistory) {
+        this.workHistory = workHistory;
     }
 }
