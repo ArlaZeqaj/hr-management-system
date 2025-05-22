@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import AdminSidebar from './Admin/AdminSidebar';
@@ -8,8 +9,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import axios from "axios";
 
 const getProgressColor = (status) => {
-    if (!status) return '#FFB547';
-    const s = status.toLowerCase();
+    const s = status?.toLowerCase();
     if (s === 'done') return '#05CD99';
     if (s === 'ongoing') return '#4318FF';
     if (s === 'canceled') return '#FF5B5B';
@@ -17,8 +17,7 @@ const getProgressColor = (status) => {
 };
 
 const getStatusIcon = (status) => {
-    if (!status) return '⏳';
-    const s = status.toLowerCase();
+    const s = status?.toLowerCase();
     if (s === 'done') return '✔️';
     if (s === 'ongoing') return '🛠️';
     if (s === 'canceled') return '❌';
@@ -63,12 +62,7 @@ export default function ProjectAdminPage() {
         localStorage.setItem('darkMode', newMode);
     };
 
-    const [notifications, setNotifications] = useState([
-        { id: 1, title: 'New project created', read: false, time: '2 min ago' },
-        { id: 2, title: 'Project update', read: true, time: '1 hour ago' },
-        { id: 3, title: 'System alert', read: false, time: '3 hours ago' },
-        { id: 4, title: 'Project completed', read: true, time: 'Yesterday' }
-    ]);
+    const [notifications, setNotifications] = useState([]);
     const toggleNotification = (id) => setNotifications(n => n.map(x => x.id === id ? { ...x, read: !x.read } : x));
 
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -98,9 +92,12 @@ export default function ProjectAdminPage() {
 
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedProject, setSelectedProject] = useState(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const [newProject, setNewProject] = useState({ project_Name: '', company: '', budget: '', status: 'ongoing' });
+    const [newProject, setNewProject] = useState({
+        project_Name: '', company: '', budget: '', role: '', description: '',
+        start_Date: '', end_Date: '', image: '', company_img: '',
+        assigned_Employees: [], status: 'ongoing'
+    });
 
     useEffect(() => {
         const auth = getAuth();
@@ -111,7 +108,6 @@ export default function ProjectAdminPage() {
                     const res = await axios.get("http://localhost:8080/api/projects", {
                         headers: { Authorization: `Bearer ${token}` }
                     });
-                    console.log("✅ Received from backend:", res.data);
                     setProjects(res.data);
                 } catch (err) {
                     console.error("Error fetching projects:", err);
@@ -122,11 +118,6 @@ export default function ProjectAdminPage() {
         });
         return () => unsubscribe();
     }, []);
-
-    const formatDate = (timestamp) => {
-        if (!timestamp || !timestamp.seconds) return '—';
-        return new Date(timestamp.seconds * 1000).toLocaleDateString();
-    };
 
     const handleCreateProject = async () => {
         try {
@@ -141,7 +132,11 @@ export default function ProjectAdminPage() {
 
             setProjects(prev => [...prev, res.data]);
             setShowCreateModal(false);
-            setNewProject({ project_Name: '', company: '', budget: '', status: 'ongoing' });
+            setNewProject({
+                project_Name: '', company: '', budget: '', role: '', description: '',
+                start_Date: '', end_Date: '', image: '', company_img: '',
+                assigned_Employees: [], status: 'ongoing'
+            });
         } catch (err) {
             console.error("Error creating project:", err);
         }
@@ -158,9 +153,7 @@ export default function ProjectAdminPage() {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            setProjects(prev =>
-                prev.map(p => (p.id === projectId ? { ...p, status: newStatus } : p))
-            );
+            setProjects(prev => prev.map(p => (p.id === projectId ? { ...p, status: newStatus } : p)));
         } catch (err) {
             console.error("Error updating status:", err);
         }
@@ -186,6 +179,7 @@ export default function ProjectAdminPage() {
 
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
 
+                {/* 🔷 PROJECT CARDS SECTION */}
                 <div className="projects-section">
                     <div className="projects-header-flex">
                         <div>
@@ -193,6 +187,7 @@ export default function ProjectAdminPage() {
                             <p className="section-subtitle">Latest active projects with progress</p>
                         </div>
                     </div>
+
                     <div className="projects-grid">
                         {projects.filter(p => p.status?.toLowerCase() === 'ongoing').slice(0, 4).map(p => (
                             <div key={p.id} className="project-card">
@@ -214,10 +209,6 @@ export default function ProjectAdminPage() {
                                 </div>
                             </div>
                         ))}
-                        {projects.filter(p => p.status?.toLowerCase() === 'ongoing').length === 0 && (
-                            <p className="section-subtitle">No ongoing projects available right now.</p>
-                        )}
-
 
                         <div className="create-project-card" onClick={() => setShowCreateModal(true)}>
                             <div className="create-project-content">
@@ -225,10 +216,10 @@ export default function ProjectAdminPage() {
                                 <span>Add New Project</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
+            {/* Projects Section */}
                 <div className="projects-table-section">
                     <div className="table-header-section">
                         <h2 className="section-title">All Projects</h2>
@@ -244,7 +235,6 @@ export default function ProjectAdminPage() {
                         {projects.map(proj => {
                             const status = proj.status?.toLowerCase();
                             const completion = status === "done" ? 100 : status === "ongoing" ? 50 : status === "canceled" ? 10 : 0;
-
                             return (
                                 <div key={proj.id} className="table-row">
                                     <div className="cell-company">
@@ -256,7 +246,7 @@ export default function ProjectAdminPage() {
                                     <div className="cell-budget">{proj.budget || "—"}</div>
                                     <div className="cell-status">
                                         <select
-                                            value={proj.status}
+                                            value={status}
                                             onChange={(e) => handleStatusChange(proj.id, e.target.value)}
                                             className={`status-dropdown status-${status}`}
                                         >
@@ -280,194 +270,28 @@ export default function ProjectAdminPage() {
                     </div>
                 </div>
 
+                {/* Modal */}
                 {showCreateModal && (
                     <div className="modal-overlay">
                         <div className="modal-content">
                             <h2>Create New Project</h2>
+                            {Object.entries({
+                                project_Name: 'Project Name', company: 'Company', budget: 'Budget', role: 'Role',
+                                start_Date: 'Start Date (e.g., 2/1/2025)', end_Date: 'End Date (e.g., 5/5/2025)',
+                                image: 'Project Image URL', company_img: 'Company Logo URL'
+                            }).map(([key, placeholder]) => (
+                                <input key={key} type="text" placeholder={placeholder} value={newProject[key]}
+                                       onChange={e => setNewProject({ ...newProject, [key]: e.target.value })} />
+                            ))}
 
-                            <input
-                                type="text"
-                                placeholder="Project Name"
-                                value={newProject.assigned_id?.[0]?.project_Name || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                project_Name: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
+                            <textarea placeholder="Description" value={newProject.description}
+                                      onChange={e => setNewProject({ ...newProject, description: e.target.value })} />
 
-                            <input
-                                type="text"
-                                placeholder="Company"
-                                value={newProject.assigned_id?.[0]?.company || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                company: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
+                            <input type="text" placeholder="Assigned Employees (comma-separated)"
+                                   value={newProject.assigned_Employees.join(', ')}
+                                   onChange={e => setNewProject({ ...newProject, assigned_Employees: e.target.value.split(',').map(emp => emp.trim()) })} />
 
-                            <input
-                                type="text"
-                                placeholder="Budget"
-                                value={newProject.assigned_id?.[0]?.budget || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                budget: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="Role"
-                                value={newProject.assigned_id?.[0]?.role || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                role: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="Start Date (e.g., 6/21/2025)"
-                                value={newProject.assigned_id?.[0]?.start_Date || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                start_Date: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="End Date (e.g., 1/25/2025)"
-                                value={newProject.assigned_id?.[0]?.end_Date || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                end_Date: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <textarea
-                                placeholder="Description"
-                                value={newProject.assigned_id?.[0]?.description || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                description: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="Project Image URL"
-                                value={newProject.assigned_id?.[0]?.image || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                image: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="Company Logo URL"
-                                value={newProject.assigned_id?.[0]?.company_img || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                company_img: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <input
-                                type="text"
-                                placeholder="Assigned Employees (comma-separated)"
-                                value={newProject.assigned_id?.[0]?.assigned_Employees?.join(', ') || ''}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                assigned_Employees: e.target.value.split(',').map(emp => emp.trim())
-                                            }
-                                        ]
-                                    })
-                                }
-                            />
-
-                            <select
-                                value={newProject.assigned_id?.[0]?.status || 'ongoing'}
-                                onChange={e =>
-                                    setNewProject({
-                                        ...newProject,
-                                        assigned_id: [
-                                            {
-                                                ...newProject.assigned_id?.[0],
-                                                status: e.target.value
-                                            }
-                                        ]
-                                    })
-                                }
-                            >
+                            <select value={newProject.status} onChange={e => setNewProject({ ...newProject, status: e.target.value })}>
                                 <option value="ongoing">Ongoing</option>
                                 <option value="done">Done</option>
                                 <option value="canceled">Canceled</option>
@@ -480,7 +304,6 @@ export default function ProjectAdminPage() {
                         </div>
                     </div>
                 )}
-
 
                 <AdminFooter />
             </div>
