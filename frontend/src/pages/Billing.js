@@ -15,8 +15,14 @@ import { doc, setDoc } from "firebase/firestore";
 import { collection, getDocs, getDoc } from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
 import jsPDF from "jspdf";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, Timestamp } from "firebase/firestore";
+import { query, orderBy } from "firebase/firestore";
+import { format } from "date-fns";
+import AddCardModal from "../components/modals/AddCardModal";
+import PaymentMethodsSection from "../components/sections/PaymentMethodsSection";
+import PaymentCardsSection from "../components/sections/PaymentCardsSection";
+import BillingInfoSection from "../components/sections/BillingInfoSection";
+import InvoicesSection from "../components/sections/InvoicesSection";
+import TransactionsSection from "../components/sections/TransactionsSection";
 
 export default () => {
   const navigate = useNavigate();
@@ -102,7 +108,6 @@ export default () => {
       console.log("✅ Card saved successfully!");
       setMessage("Card saved successfully!");
       setMessageType("success");
-      //setShowModal(false);
     } catch (error) {
       console.error("❌ Error saving card:", error);
       setMessage("Failed to save card. Check permissions and try again.");
@@ -291,89 +296,6 @@ export default () => {
     }
   };
 
-  //invoices pdf
-
-  // Firebase references
-  // const db = getFirestore();
-  // const storage = getStorage();
-
-  // // 🔹 1. Generate Invoice PDF (returns Blob)
-  // const generateInvoicePDF = (invoice) => {
-  //   const doc = new jsPDF();
-
-  //   doc.setFontSize(16);
-  //   doc.text("Invoice", 20, 20);
-  //   doc.setFontSize(12);
-  //   doc.text(`Invoice #: ${invoice.invoiceNumber}`, 20, 40);
-  //   doc.text(`Date: ${invoice.date}`, 20, 50);
-  //   doc.text(`Amount: $${invoice.amount}`, 20, 60);
-
-  //   return doc.output("blob"); // return PDF blob instead of saving to file directly
-  // };
-
-  // // 🔹 2. Upload PDF to Firebase Storage
-  // const uploadInvoicePDF = async (blob, invoiceId) => {
-  //   const storageRef = ref(storage, `invoices/${invoiceId}.pdf`);
-  //   await uploadBytes(storageRef, blob);
-  //   return await getDownloadURL(storageRef);
-  // };
-
-  // // 🔹 3. Save Invoice Metadata to Firestore
-  // const saveInvoiceToFirestore = async (invoiceId, invoiceData, pdfUrl) => {
-  //   const invoiceRef = doc(db, "Invoices", invoiceId);
-  //   await setDoc(invoiceRef, {
-  //     ...invoiceData,
-  //     pdfUrl,
-  //     createdAt: Timestamp.now(),
-  //   });
-  // };
-
-  // // 🔹 4. Main function to handle full invoice creation
-  // const createAndStoreInvoice = async (invoiceId, invoiceData) => {
-  //   try {
-  //     const pdfBlob = generateInvoicePDF(invoiceData);
-  //     const pdfUrl = await uploadInvoicePDF(pdfBlob, invoiceId);
-  //     await saveInvoiceToFirestore(invoiceId, invoiceData, pdfUrl);
-  //     console.log("✅ Invoice created and uploaded:", invoiceId);
-  //   } catch (error) {
-  //     console.error("❌ Error creating invoice:", error);
-  //   }
-  // };
-
-  // const InvoiceSection = () => {
-  //   const [invoices, setInvoices] = useState([]);
-  //   const invoicesRef = collection(db, "Invoices");
-
-  //   useEffect(() => {
-  //     const fetchInvoices = async () => {
-  //       try {
-  //         const querySnapshot = await getDocs(invoicesRef);
-  //         const data = querySnapshot.docs.map((doc) => ({
-  //           id: doc.id,
-  //           ...doc.data(),
-  //         }));
-  //         setInvoices(data);
-  //       } catch (error) {
-  //         console.error("Error fetching invoices:", error);
-  //       }
-  //     };
-
-  //     fetchInvoices();
-  //   }, []);
-
-  //   const generateInvoicePDF = (invoice) => {
-  //     const doc = new jsPDF();
-
-  //     doc.setFontSize(16);
-  //     doc.text("Invoice", 20, 20);
-  //     doc.setFontSize(12);
-  //     doc.text(`Invoice #: ${invoice.invoiceNumber}`, 20, 40);
-  //     doc.text(`Date: ${invoice.date}`, 20, 50);
-  //     doc.text(`Amount: $${invoice.amount}`, 20, 60);
-
-  //     doc.save(`${invoice.invoiceNumber}.pdf`);
-  //   };
-
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
   const toggleNotification = (notification) => {
@@ -408,15 +330,66 @@ export default () => {
   const generateInvoicePDF = (invoice) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
+    doc.text("HRCloudX", 20, 10);
     doc.text("Invoice", 20, 20);
 
     doc.setFontSize(12);
     doc.text(`Invoice #: ${invoice.invoiceNumber}`, 20, 40);
     doc.text(`Date: ${invoice.date}`, 20, 50);
     doc.text(`Amount: $${invoice.amount}`, 20, 60);
+    doc.text(
+      `This invoice is generated automatically and will not be signed
+    `,
+      20,
+      120
+    );
 
     doc.save(`${invoice.invoiceNumber}.pdf`);
   };
+
+  const [transactions, setTransactions] = useState([]);
+
+  const fetchTransactions = async () => {
+    const q = query(collection(db, "Transactions"), orderBy("date", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      date: doc.data().date.toDate(), // Convert Firestore Timestamp to JS Date
+    }));
+  };
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchTransactions();
+        setTransactions(data);
+      } catch (error) {
+        console.error("Error loading transactions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const formatDateGroup = (date) => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) return "Today";
+    if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+    return format(date, "dd MMMM yyyy");
+  };
+
+  const grouped = transactions.reduce((acc, txn) => {
+    const label = formatDateGroup(txn.date);
+    acc[label] = acc[label] || [];
+    acc[label].push(txn);
+    return acc;
+  }, {});
 
   return (
     <div className="app-container-b">
@@ -436,429 +409,56 @@ export default () => {
         />
 
         {/* Payment Cards */}
-
-        <div className="card-row">
-          <PaymentCard
-            logo="https://img.icons8.com/?size=100&id=106942&format=png&color=FFFFFFD4"
-            number={cardData.number}
-            expiry={cardData.expiry}
-            cvv={cardData.cvv}
-          />
-          <PaymentMethod
-            icon="https://img.icons8.com/?size=100&id=106586&format=png&color=FFFFFF"
-            title="Balance"
-            amount={`+${cardData.salary || "$0.00"}`}
-            color="#4318FF"
-          />
-          <PaymentMethod
-            icon="https://img.icons8.com/?size=100&id=106945&format=png&color=FFFFFF"
-            title="Paypal"
-            amount={cardData.paypal || "$0.00"}
-            color="#2D3748"
-          />
-        </div>
+        <PaymentCardsSection cardData={cardData} />
 
         {/* Combined Content Area */}
         <div className="combined-content">
           {/* Left Column */}
           <div className="content-column">
             {/* Payment Methods Section */}
-            <section className="payment-methods">
-              <div className="section-header">
-                <h3>Payment Method</h3>
-                <button
-                  className="add-card-btn"
-                  onClick={() =>
-                    document.getElementById("billing-card-modal").showModal()
-                  }
-                >
-                  ADD A NEW CARD
-                </button>
-              </div>
-
-              <div className="cards-list">
-                <SavedCard
-                  icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
-                  number={cardData.number}
-                  active
-                />
-                <SavedCard
-                  icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/8rtvtp5o_expires_30_days.png"
-                  number={cardData.number}
-                />
-              </div>
-            </section>
-            {/* ADD NEW CARD MODAL */}
-            <dialog id="billing-card-modal" className="billing-modal">
-              <div className="billing-modal-content">
-                <div className="billing-modal-header">
-                  <h3>Add Payment Method</h3>
-                  <button
-                    className="billing-modal-close"
-                    onClick={() =>
-                      document.getElementById("billing-card-modal").close()
-                    }
-                  >
-                    &times;
-                  </button>
-                </div>
-
-                {/* Card Preview */}
-                <div className="billing-card-preview">
-                  <div className="billing-card-preview-header">
-                    <span className="billing-card-company">HRCloudX</span>
-                    <div className="billing-card-type-logo">
-                      <img
-                        src="https://img.icons8.com/?size=100&id=106942&format=png&color=FFFFFFD4"
-                        alt="Mastercard"
-                        width="40"
-                      />
-                    </div>
-                  </div>
-                  <div className="billing-card-number">
-                    {cardForm.number
-                      ? cardForm.number.replace(/(\d{4})/g, "$1 ").trim()
-                      : "•••• •••• •••• ••••"}
-                  </div>
-                  <div className="billing-card-footer">
-                    <div className="billing-card-detail">
-                      <span className="billing-detail-label">Expires</span>
-                      <span className="billing-detail-value">
-                        {cardForm.expiry || "••/••"}
-                      </span>
-                    </div>
-                    <div className="billing-card-detail">
-                      <span className="billing-detail-label">CVV</span>
-                      <span className="billing-detail-value">
-                        {cardForm.cvv ? "•••" : "•••"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <form onSubmit={handleSaveCard} className="billing-card-form">
-                  <div className="billing-form-group floating">
-                    <input
-                      type="text"
-                      id="cardNumber"
-                      placeholder=" "
-                      value={cardForm.number}
-                      onChange={(e) => {
-                        const value = e.target.value
-                          .replace(/\D/g, "")
-                          .substring(0, 16);
-                        setCardForm({ ...cardForm, number: value });
-                      }}
-                      maxLength="19"
-                      required
-                    />
-                    <label htmlFor="cardNumber">Card Number</label>
-                    <div className="billing-card-icons">
-                      <img
-                        src="https://img.icons8.com/?size=100&id=106942&format=png&color=000000A6"
-                        alt="Mastercard"
-                        width="40"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="billing-form-row">
-                    <div className="billing-form-group floating">
-                      <input
-                        type="text"
-                        id="expiry"
-                        placeholder="MM/YY"
-                        value={cardForm.expiry}
-                        onChange={(e) => {
-                          let value = e.target.value.replace(/\D/g, "");
-
-                          // Auto-insert slash after 2 digits
-                          if (value.length > 2) {
-                            value =
-                              value.substring(0, 2) +
-                              "/" +
-                              value.substring(2, 4);
-                          }
-
-                          // Validate month (01-12)
-                          if (value.length >= 2) {
-                            const month = parseInt(value.substring(0, 2), 10);
-                            if (month < 1 || month > 12) {
-                              // Invalid month - don't update
-                              return;
-                            }
-                          }
-
-                          // Limit to MM/YY format (5 chars max)
-                          setCardForm({
-                            ...cardForm,
-                            expiry: value.substring(0, 5),
-                          });
-                        }}
-                        maxLength="5"
-                        pattern="(0[1-9]|1[0-2])\/\d{2}"
-                        required
-                      />
-                      <label htmlFor="expiry">Expiry Date</label>
-                    </div>
-
-                    <div className="billing-form-group floating">
-                      <div className="billing-input-with-icon">
-                        <input
-                          type="password"
-                          id="cvv"
-                          placeholder=" "
-                          value={cardForm.cvv}
-                          onChange={(e) => {
-                            const value = e.target.value
-                              .replace(/\D/g, "")
-                              .substring(0, 3);
-                            setCardForm({ ...cardForm, cvv: value });
-                          }}
-                          maxLength="3"
-                          required
-                        />
-                        <label htmlFor="cvv">Security Code</label>
-                        <button
-                          type="button"
-                          className="billing-info-icon"
-                          aria-label="What is CVV?"
-                          title="3-digit code on back of card"
-                        >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                            <line x1="12" y1="17" x2="12" y2="17" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {message && (
-                    <div className={`billing-form-message ${messageType}`}>
-                      <svg width="20" height="20" viewBox="0 0 24 24">
-                        {messageType === "success" ? (
-                          <path
-                            fill="currentColor"
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                          />
-                        ) : (
-                          <path
-                            fill="currentColor"
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
-                          />
-                        )}
-                      </svg>
-                      <span>{message}</span>
-                    </div>
-                  )}
-
-                  <div className="billing-form-actions">
-                    <button
-                      type="button"
-                      className="billing-secondary-btn"
-                      onClick={() =>
-                        document.getElementById("billing-card-modal").close()
-                      }
-                    >
-                      Cancel
-                    </button>
-                    <button type="submit" className="billing-primary-btn">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path d="M20 6L9 17l-5-5" />
-                      </svg>
-                      Save Card
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </dialog>
-
+            <PaymentMethodsSection
+              cardData={cardData}
+              setShowModal={setShowModal}
+              cardForm={cardForm}
+              setCardForm={setCardForm}
+              handleSaveCard={handleSaveCard}
+              message={message}
+              messageType={messageType}
+            />
+            <AddCardModal
+              showModal={showModal}
+              setShowModal={setShowModal}
+              cardForm={cardForm}
+              setCardForm={setCardForm}
+              handleSaveCard={handleSaveCard}
+              message={message}
+              messageType={messageType}
+            />
             {/* Billing Information */}
-            <section className="billing-info">
-              <h3>Billing Information</h3>
-
-              <div className="info-cards">
-                {loading ? (
-                  <p>Loading billing info...</p>
-                ) : billingData.length === 0 ? (
-                  <p>No billing information found.</p>
-                ) : (
-                  billingData.slice(0, 3).map((emp) => (
-                    <div key={emp.id} className="info-card">
-                      <InfoCard
-                        name={`${emp.name} ${emp.surname}`}
-                        company={emp.department}
-                        email={emp.email}
-                        vat={
-                          editingId === emp.id ? (
-                            <input
-                              type="text"
-                              value={editAccNo}
-                              onChange={(e) => setEditAccNo(e.target.value)}
-                              className="border p-1 rounded w-full"
-                            />
-                          ) : (
-                            emp.accNo
-                          )
-                        }
-                        deleteIcon="https://img.icons8.com/?size=100&id=99961&format=png&color=e53e3e"
-                        editIcon="https://img.icons8.com/?size=100&id=85962&format=png&color=000000"
-                        onEdit={() => {
-                          setEditingId(emp.id);
-                          setEditAccNo(emp.accNo || "");
-                        }}
-                        onSave={() => handleSave(emp.id)}
-                      />
-
-                      {editingId === emp.id && (
-                        <button
-                          onClick={() => handleSave(emp.id)}
-                          className="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
-                        >
-                          Save
-                        </button>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-            </section>
+            <BillingInfoSection
+              billingData={billingData}
+              loading={loading}
+              editingId={editingId}
+              editAccNo={editAccNo}
+              handleEdit={handleEdit}
+              handleSave={handleSave}
+              setEditAccNo={setEditAccNo}
+            />
           </div>
 
           {/* Right Column (former sidebar content) */}
           <div className="content-column">
             {/* Invoices Section */}
-            <section className="invoices">
-              <div className="section-header">
-                <h4>Invoices</h4>
-                <button className="view-all">VIEW ALL</button>
-              </div>
-              <h2>Invoices</h2>
-              {invoices.length === 0 ? (
-                <p>No invoices found.</p>
-              ) : (
-                invoices.map((invoice) => (
-                  <InvoiceItem
-                    key={invoice.id}
-                    date={invoice.date}
-                    invoiceNumber={invoice.invoiceNumber}
-                    amount={invoice.amount}
-                    currency={invoice.currency}
-                    pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
-                    //onDownload={() => console.log("Generate PDF for", invoice)}
-                    onGeneratePDF={() =>
-                      generateInvoicePDF({
-                        invoiceNumber: invoice.invoiceNumber,
-                        date: invoice.date,
-                        amount: invoice.amount,
-                      })
-                    }
-                  />
-                ))
-              )}
-              <InvoiceItem
-                date="March, 01, 2020"
-                id="#MS-415646"
-                amount="$180"
-                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
-              />
-              <InvoiceItem
-                date="February, 10, 2021"
-                id="#RV-126749"
-                amount="$250"
-                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
-              />
-              <InvoiceItem
-                date="April, 05, 2020"
-                id="#FB-212562"
-                amount="$560"
-                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
-              />
-              <InvoiceItem
-                date="June, 25, 2019"
-                id="#QW-103578"
-                amount="$120"
-                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
-              />
-              <InvoiceItem
-                date="March, 01, 2019"
-                id="#AR-803481"
-                amount="$300"
-                pdfIcon="https://img.icons8.com/?size=100&id=86868&format=png&color=000000"
-              />
-            </section>
+            <InvoicesSection
+              invoices={invoices}
+              generateInvoicePDF={generateInvoicePDF}
+            />
 
             {/* Transactions Section */}
-            <section className="transactions">
-              <div className="section-header">
-                <h4>Your Transactions</h4>
-                <img
-                  src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/dkw918rr_expires_30_days.png"
-                  alt="Calendar"
-                />
-                <span>23 - 30 March 2020</span>
-              </div>
-
-              <div className="time-label">NEWEST</div>
-              <Transaction
-                icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/pdddaden_expires_30_days.png"
-                name="Netflix"
-                date="27 March 2020, at 12:30 PM"
-                amount="-$2500"
-                type="outgoing"
-              />
-              <Transaction
-                icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/3a1pu034_expires_30_days.png"
-                name="Apple"
-                date="27 March 2020, at 12:30 PM"
-                amount="+$2500"
-                type="incoming"
-              />
-
-              <div className="time-label">YESTERDAY</div>
-              <Transaction
-                icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/3v1fock8_expires_30_days.png"
-                name="Stripe"
-                date="26 March 2020, at 13:45 PM"
-                amount="+$800"
-                type="incoming"
-              />
-              <Transaction
-                icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/8ydi38hh_expires_30_days.png"
-                name="HubSpot"
-                date="26 March 2020, at 12:30 PM"
-                amount="+$1700"
-                type="incoming"
-              />
-              <Transaction
-                icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/q1cq342g_expires_30_days.png"
-                name="Webflow"
-                date="26 March 2020, at 05:00 AM"
-                amount="Pending"
-                type="pending"
-              />
-              <Transaction
-                icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/x3lgpmba_expires_30_days.png"
-                name="Microsoft"
-                date="25 March 2020, at 16:30 PM"
-                amount="-$987"
-                type="outgoing"
-              />
-            </section>
+            <TransactionsSection
+              groupedTransactions={grouped}
+              formatDateGroup={formatDateGroup}
+            />
           </div>
         </div>
 
@@ -868,136 +468,3 @@ export default () => {
     </div>
   );
 };
-
-// Reusable Components (same as before)
-const PaymentCard = ({ logo, number, expiry, cvv }) => (
-  <div className="payment-card">
-    <div className="card-header">
-      <span>HRCloudX</span>
-      <img src={logo} alt="Card" className="card-logo" />
-    </div>
-    <div className="card-number">{number}</div>
-    <div className="card-footer">
-      <div>
-        <small>VALID THRU</small>
-        <span>{expiry}</span>
-      </div>
-      <div>
-        <small>CVV</small>
-        <span>{cvv}</span>
-      </div>
-    </div>
-  </div>
-);
-
-const PaymentMethod = ({ icon, title, amount, color }) => (
-  <div className="payment-method" style={{ borderTop: `4px solid ${color}` }}>
-    <button className="method-icon" style={{ backgroundColor: color }}>
-      <img src={icon} alt={title} />
-    </button>
-    <h4>{title}</h4>
-    <div className="divider"></div>
-    <span className="amount">{amount}</span>
-  </div>
-);
-
-const InfoCard = ({
-  name,
-  company,
-  email,
-  vat,
-  deleteIcon,
-  editIcon,
-  onEdit,
-  onSave,
-}) => (
-  <div className="info-card">
-    <div className="card-header">
-      <span>{name}</span>
-      <div className="actions">
-        <button className="delete-btn">
-          <img src={deleteIcon} alt="Delete" />
-          <span>DELETE</span>
-        </button>
-        <button className="edit-btn" onClick={onEdit}>
-          <img src={editIcon} alt="Edit" />
-          <span>EDIT</span>
-        </button>
-      </div>
-    </div>
-    <div className="card-content">
-      <p>Department: {company}</p>
-      <p>Email Address: {email}</p>
-      <p>IBAN: {vat}</p>
-    </div>
-  </div>
-);
-
-const SavedCard = ({ icon, number, active = false }) => (
-  <div className={`saved-card ${active ? "active" : ""}`}>
-    <div className="card-info">
-      <img src={icon} alt="Card" className="card-type-icon" />
-      <span>{number}</span>
-      <img
-        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/luyjsx96_expires_30_days.png"
-        alt="Options"
-        className="card-menu-icon"
-      />
-    </div>
-    <div className="card-divider"></div>
-  </div>
-);
-
-const InvoiceItem = ({
-  date,
-  id,
-  amount,
-  pdfIcon,
-  invoiceNumber,
-  currency,
-  onGeneratePDF,
-}) => (
-  <div className="invoice-item">
-    <div className="invoice-info">
-      <span className="date">{date}</span>
-      <span className="id">{invoiceNumber}</span>
-    </div>
-    <div className="divider"></div>
-    <div className="invoice-actions">
-      <span className="amount">
-        {" "}
-        {currency}
-        {amount}
-      </span>
-      <button className="pdf-btn" onClick={onGeneratePDF}>
-        <img src={pdfIcon} alt="PDF" />
-        <span>PDF</span>
-      </button>
-    </div>
-  </div>
-);
-
-// const InvoiceList = ({ invoices }) => (
-//   <div>
-//     {invoices.map((inv) => (
-//       <InvoiceItem
-//         key={inv.id}
-//         invoice={inv}
-//         pdfIcon={pdfIcon}
-//         onDownload={generateInvoicePDF}
-//       />
-//     ))}
-//   </div>
-// );
-
-const Transaction = ({ icon, name, date, amount, type }) => (
-  <div className="transaction">
-    <img src={icon} alt={name} className="transaction-icon" />
-    <div className="transaction-info">
-      <span className="name">{name}</span>
-      <span className="date">{date}</span>
-    </div>
-    <div className="divider"></div>
-    <span className={`amount ${type}`}>{amount}</span>
-  </div>
-);

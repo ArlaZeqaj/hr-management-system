@@ -62,11 +62,14 @@ const AdminDashboard = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [darkMode, setDarkMode] = useState(false);
-///tasks
+  ///tasks
   //const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: "", dueDate: "", priority: "low" });
-  const [showModal, setShowModal] = useState(false); // 👈 Add this line
+  const [showModal, setShowModal] = useState(false);
+  const [viewingTask, setViewingTask] = useState(null);
 
+
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   const [notifications, setNotifications] = useState({
     "Item updates": true,
@@ -203,7 +206,7 @@ const AdminDashboard = () => {
     return () => unsubscribe();
   }, []);
 
-// Fetch active projects count
+  // Fetch active projects count
   useEffect(() => {
     const fetchActiveProjectsCount = async () => {
       // Check localStorage first
@@ -343,8 +346,8 @@ const AdminDashboard = () => {
       if (!taskToSend.dueDate) throw new Error("Due date is required");
 
       const url = editMode
-          ? `http://localhost:8080/api/admin1/tasks/update`
-          : "http://localhost:8080/api/admin1/tasks/create";
+        ? `http://localhost:8080/api/admin1/tasks/update`
+        : "http://localhost:8080/api/admin1/tasks/create";
 
       const method = editMode ? "PUT" : "POST";
 
@@ -364,16 +367,16 @@ const AdminDashboard = () => {
 
       const contentType = response.headers.get("content-type") || "";
       const savedTask = contentType.includes("application/json")
-          ? await response.json()
-          : await response.text();
+        ? await response.json()
+        : await response.text();
 
 
       if (editMode) {
         // Update task in state
         setTasks(prevTasks =>
-            prevTasks.map(task =>
-                task.id === taskBeingEdited.id ? savedTask : task
-            )
+          prevTasks.map(task =>
+            task.id === taskBeingEdited.id ? savedTask : task
+          )
         );
       } else {
         // Add new task
@@ -408,6 +411,80 @@ const AdminDashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Task Details Modal Component
+  const TaskDetailsModal = ({ task, onClose }) => {
+    if (!task) return null;
+
+    return (
+      <div className="modal-overlay-ad">
+        <div className="modal-container-ad">
+          <h2>Task Details</h2>
+
+          <div className="task-details-content">
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Title:</span>
+              <span className="detail-value-ad">{task.title}</span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Description:</span>
+              <span className="detail-value-ad">{task.description || "No description"}</span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Status:</span>
+              <span className={`detail-value status-badge ${task.status.toLowerCase().replace(' ', '-')}`}>
+                {task.status}
+              </span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Priority:</span>
+              <span className={`detail-value priority-badge ${task.priority}`}>
+                {task.priority}
+              </span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Start Date:</span>
+              <span className="detail-value-ad">{task.startDate || "Not specified"}</span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Due Date:</span>
+              <span className="detail-value-ad">{task.dueDate}</span>
+            </div>
+
+            {task.assignees && task.assignees.length > 0 && (
+              <div className="detail-row-ad">
+                <span className="detail-label-ad">Assignees:</span>
+                <span className="detail-value-ad">
+                  {task.assignees.map(assigneeId => {
+                    const employee = employees.find(e => e.id === assigneeId);
+                    return employee ? `${employee.name} ${employee.surname}` : 'Unknown';
+                  }).join(', ')}
+                </span>
+              </div>
+            )}
+
+            {task.notes && (
+              <div className="detail-row-ad">
+                <span className="detail-label-ad">Notes:</span>
+                <span className="detail-value-ad">{task.notes}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="modal-actions-ad">
+            <button className="cancel-btn-ad" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const fetchAllTasks = async () => {
     setLoading(true);
@@ -448,7 +525,7 @@ const AdminDashboard = () => {
 
       // ✅ Deduplicate by title + dueDate
       const uniqueTasks = Array.from(
-          new Map(allTasks.map(task => [`${task.title}_${task.dueDate}`, task])).values()
+        new Map(allTasks.map(task => [`${task.title}_${task.dueDate}`, task])).values()
       );
 
       setTasks(uniqueTasks);
@@ -490,14 +567,40 @@ const AdminDashboard = () => {
         throw new Error(errText || "Failed to delete task");
       }
 
-      // Optional: refresh tasks state after deletion
+      // Refresh tasks state after deletion
       setTasks(prevTasks => prevTasks.filter(task => task.title !== taskTitle));
-
+      setTaskToDelete(null); // Close confirmation modal
       alert("Task deleted successfully!");
     } catch (error) {
       console.error("Delete error:", error);
       alert(`Error: ${error.message}`);
+      setTaskToDelete(null); // Close confirmation modal on error
     }
+  };
+
+  const DeleteConfirmationModal = ({ task, onConfirm, onCancel }) => {
+    if (!task) return null;
+
+    return (
+      <div className="modal-overlay-ad">
+        <div className="modal-container-ad">
+          <h2>Confirm Deletion</h2>
+          <div className="confirmation-content">
+            <p>Are you sure you want to delete the task:</p>
+            <p className="task-title-confirm">{task.title}</p>
+            <p>This action cannot be undone.</p>
+          </div>
+          <div className="modal-actions-ad">
+            <button className="cancel-btn-ad" onClick={onCancel}>
+              Cancel
+            </button>
+            <button className="delete-confirm-btn-ad" onClick={onConfirm}>
+              Delete Task
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   /// total Payroll
@@ -599,10 +702,10 @@ const AdminDashboard = () => {
   };
 
 
-// /////
+  // /////
   const handleTaskComplete = (taskId) => {
     setTasks(tasks.map(task =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
+      task.id === taskId ? { ...task, completed: !task.completed } : task
     ));
   };
 
@@ -636,7 +739,7 @@ const AdminDashboard = () => {
 
   const handleProcessPayroll = (id) => {
     setPayrollData(payrollData.map(item =>
-        item.id === id ? { ...item, status: 'processed' } : item
+      item.id === id ? { ...item, status: 'processed' } : item
     ));
   };
 
@@ -645,586 +748,684 @@ const AdminDashboard = () => {
   const formattedDate = currentTime.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-      <div className={`admin-dashboard ${darkMode ? "dark-theme" : ""}`}>
-        <AdminSidebar
-            activeMenuItem={activeMenuItem}
-            handleMenuItemClick={handleMenuItemClick}
+    <div className={`admin-dashboard ${darkMode ? "dark-theme" : ""}`}>
+      <AdminSidebar
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
+      />
+
+      <div className="admin-main-content">
+        <AdminHeader
+          activeMenuItem={activeMenuItem}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          notifications={notifications}
+          toggleNotification={toggleNotification}
         />
 
-        <div className="admin-main-content">
-          <AdminHeader
-              activeMenuItem={activeMenuItem}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              darkMode={darkMode}
-              toggleDarkMode={toggleDarkMode}
-              notifications={notifications}
-              toggleNotification={toggleNotification}
-          />
-
-          <div className="dashboard-content">
-            {/* Dashboard Header with Time and Quick Actions */}
-            <div className="dashboard-header">
-              <div className="dashboard-time">
-                <h1>{formattedTime}</h1>
-                <p>{formattedDate}</p>
-              </div>
-              <div className="quick-actions">
-                <button className="quick-action" onClick={() => setActiveTab('employees')}>
-                  <img src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF" alt="Add Employee" />
-                  <span>Add Employee</span>
-                </button>
-                <button className="quick-action" onClick={() => setActiveTab('payroll')}>
-                  <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Process Payroll" />
-                  <span>Process Payroll</span>
-                </button>
-                <button className="quick-action" onClick={() => setActiveTab('tasks')}>
-                  <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Create Task" />
-                  <span>Create Task</span>
-                </button>
-              </div>
+        <div className="dashboard-content">
+          {/* Dashboard Header with Time and Quick Actions */}
+          <div className="dashboard-header">
+            <div className="dashboard-time">
+              <h1>{formattedTime}</h1>
+              <p>{formattedDate}</p>
             </div>
+            <div className="quick-actions">
+              <button className="quick-action" onClick={() => setActiveTab('employees')}>
+                <img src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF" alt="Add Employee" />
+                <span>Add Employee</span>
+              </button>
+              <button className="quick-action" onClick={() => setActiveTab('payroll')}>
+                <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Process Payroll" />
+                <span>Process Payroll</span>
+              </button>
+              <button className="quick-action" onClick={() => setActiveTab('tasks')}>
+                <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Create Task" />
+                <span>Create Task</span>
+              </button>
+            </div>
+          </div>
 
-            {/* Stats Overview */}
-            <div className="stats-overview">
-              {statsData.map((stat, index) => (
-                  <div key={index} className="stat-card">
-                    <div className="stat-icon">
-                      <img src={stat.icon} alt={stat.title} />
+          {/* Stats Overview */}
+          <div className="stats-overview">
+            {statsData.map((stat, index) => (
+              <div key={index} className="stat-card">
+                <div className="stat-icon">
+                  <img src={stat.icon} alt={stat.title} />
+                </div>
+                <div className="stat-info">
+                  <h3>{stat.value}</h3>
+                  <p>{stat.title}</p>
+                </div>
+                <div className={`stat-trend ${stat.trend}`}>
+                  <span>{stat.change}</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    {stat.trend === "up" ? (
+                      <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    ) : (
+                      <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    )}
+                  </svg>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Tabs Navigation */}
+          <div className="dashboard-tabs">
+            <button
+              className={`tab-btn-ap ${activeTab === 'overview' ? 'active' : ''}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              Overview
+            </button>
+
+            <button
+              className={`tab-btn-ap ${activeTab === 'payroll' ? 'active' : ''}`}
+              onClick={() => setActiveTab('payroll')}
+            >
+              Payroll
+            </button>
+            <button
+              className={`tab-btn-ap ${activeTab === 'tasks' ? 'active' : ''}`}
+              onClick={() => setActiveTab('tasks')}
+            >
+              Tasks
+            </button>
+            <button
+              className={`tab-btn-ap ${activeTab === 'analytics' ? 'active' : ''}`}
+              onClick={() => setActiveTab('analytics')}
+            >
+              Analytics
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="tab-content">
+            {activeTab === 'overview' && (
+              <div className="overview-grid">
+                {/* Employee Distribution Chart */}
+                <div className="chart-card">
+                  <h3>Employee Distribution</h3>
+                  <div className="chart-container">
+                    <Pie
+                      data={employeeDistributionData}
+                      options={{
+                        plugins: {
+                          legend: {
+                            position: 'right',
+                          }
+                        },
+                        maintainAspectRatio: false
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Payroll Trend Chart */}
+                <div className="chart-card">
+                  <h3>Payroll Trend</h3>
+                  <div className="chart-container">
+                    <Line
+                      data={payrollTrendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            beginAtZero: false
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="recent-activity">
+                  <h3>Recent Activity</h3>
+                  <div className="activity-list">
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <img src="https://img.icons8.com/?size=100&id=87049&format=png&color=4318FF" alt="New Hire" />
+                      </div>
+                      <div className="activity-details">
+                        <h4>New hire onboarded</h4>
+                        <p>Sarah Johnson - Frontend Developer</p>
+                        <span>2 hours ago</span>
+                      </div>
                     </div>
-                    <div className="stat-info">
-                      <h3>{stat.value}</h3>
-                      <p>{stat.title}</p>
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Payroll" />
+                      </div>
+                      <div className="activity-details">
+                        <h4>Payroll processed</h4>
+                        <p>Engineering department - $85,000</p>
+                        <span>1 day ago</span>
+                      </div>
                     </div>
-                    <div className={`stat-trend ${stat.trend}`}>
-                      <span>{stat.change}</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        {stat.trend === "up" ? (
-                            <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <div className="activity-item">
+                      <div className="activity-icon">
+                        <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Task" />
+                      </div>
+                      <div className="activity-details">
+                        <h4>Task completed</h4>
+                        <p>Review Q2 Performance Reports</p>
+                        <span>2 days ago</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hiring Trend Chart */}
+                <div className="chart-card">
+                  <h3>Hiring Trend</h3>
+                  <div className="chart-container">
+                    <Bar
+                      data={hiringTrendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                          y: {
+                            beginAtZero: true
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'employees' && (
+              <div className="employees-tab">
+                <div className="section-header">
+                  <h2>Employee Management</h2>
+                  <button className="view-all" onClick={() => document.getElementById('new-hire-modal').showModal()}>
+                    Add New Employee
+                  </button>
+                </div>
+
+                {/* New Hire Modal */}
+                <dialog id="new-hire-modal" className="modal">
+                  <div className="modal-content">
+                    <h3>Add New Employee</h3>
+                    <form onSubmit={handleAddNewHire}>
+                      <div className="form-group">
+                        <label>Full Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={newHireForm.name}
+                          onChange={handleNewHireChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Position</label>
+                        <input
+                          type="text"
+                          name="position"
+                          value={newHireForm.position}
+                          onChange={handleNewHireChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>Department</label>
+                        <select
+                          name="department"
+                          value={newHireForm.department}
+                          onChange={handleNewHireChange}
+                          required
+                        >
+                          <option value="">Select Department</option>
+                          <option value="Engineering">Engineering</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Sales">Sales</option>
+                          <option value="HR">Human Resources</option>
+                          <option value="Finance">Finance</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Start Date</label>
+                        <input
+                          type="date"
+                          name="startDate"
+                          value={newHireForm.startDate}
+                          onChange={handleNewHireChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-actions">
+                        <button type="button" onClick={() => document.getElementById('new-hire-modal').close()}>
+                          Cancel
+                        </button>
+                        <button type="submit">
+                          Add Employee
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </dialog>
+              </div>
+            )}
+
+            {activeTab === 'payroll' && (
+              <div className="payroll-tab">
+                <div className="section-header">
+                  <h2>Payroll Management</h2>
+                  <button className="view-all">
+                    Process All
+                  </button>
+                </div>
+
+                <div className="payroll-cards">
+                  {payrollData.map((item, index) => (
+                    <div key={index} className="payroll-card">
+                      <div className="payroll-info">
+                        <h3>{item.department}</h3>
+                        <p>${item.amount.toLocaleString()}</p>
+                        <span>Due: {item.date}</span>
+                      </div>
+                      <div className={`payroll-status ${item.status}`}>
+                        {item.status === "processed" ? (
+                          <>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span>Processed</span>
+                          </>
                         ) : (
-                            <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <>
+                            <button
+                              className="process-btn"
+                              onClick={() => handleProcessPayroll(item.id)}
+                            >
+                              Process
+                            </button>
+                            <span>Pending</span>
+                          </>
                         )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="payroll-history">
+                  <h3>Payroll History</h3>
+                  <div className="history-chart">
+                    <Line
+                      data={payrollTrendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            display: false
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'tasks' && (
+              <div className="tasks-tab-admin">
+                <div className="section-header">
+                  <h2>Task Management</h2>
+                  <button className="view-all" onClick={() => setShowModal(true)}>
+                    Create New Task
+                  </button>
+
+                </div>
+
+                <div className="tasks-list-ad">
+                  {loading ? (
+                    <div className="tasks-loading-container-ad">
+                      <div className="loading-spinner-ad">
+                        <svg className="spinner-ad" viewBox="0 0 50 50">
+                          <circle className="path-ad" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
+                        </svg>
+                      </div>
+                      <p className="loading-text-ad">Loading your tasks...</p>
+                      <div className="loading-dots-ad">
+                        <span className="dot-ad"></span>
+                        <span className="dot-ad"></span>
+                        <span className="dot-ad"></span>
+                      </div>
+                    </div>
+                  ) : error ? (
+                    <div className="tasks-error-ad">
+                      <svg className="error-icon-ad" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                       </svg>
-                    </div>
-                  </div>
-              ))}
-            </div>
-
-            {/* Tabs Navigation */}
-            <div className="dashboard-tabs">
-              <button
-                  className={`tab-btn-ap ${activeTab === 'overview' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('overview')}
-              >
-                Overview
-              </button>
-
-              <button
-                  className={`tab-btn-ap ${activeTab === 'payroll' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('payroll')}
-              >
-                Payroll
-              </button>
-              <button
-                  className={`tab-btn-ap ${activeTab === 'tasks' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('tasks')}
-              >
-                Tasks
-              </button>
-              <button
-                  className={`tab-btn-ap ${activeTab === 'analytics' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('analytics')}
-              >
-                Analytics
-              </button>
-            </div>
-
-            {/* Tab Content */}
-            <div className="tab-content">
-              {activeTab === 'overview' && (
-                  <div className="overview-grid">
-                    {/* Employee Distribution Chart */}
-                    <div className="chart-card">
-                      <h3>Employee Distribution</h3>
-                      <div className="chart-container">
-                        <Pie
-                            data={employeeDistributionData}
-                            options={{
-                              plugins: {
-                                legend: {
-                                  position: 'right',
-                                }
-                              },
-                              maintainAspectRatio: false
-                            }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Payroll Trend Chart */}
-                    <div className="chart-card">
-                      <h3>Payroll Trend</h3>
-                      <div className="chart-container">
-                        <Line
-                            data={payrollTrendData}
-                            options={{
-                              responsive: true,
-                              maintainAspectRatio: false,
-                              scales: {
-                                y: {
-                                  beginAtZero: false
-                                }
-                              }
-                            }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Recent Activity */}
-                    <div className="recent-activity">
-                      <h3>Recent Activity</h3>
-                      <div className="activity-list">
-                        <div className="activity-item">
-                          <div className="activity-icon">
-                            <img src="https://img.icons8.com/?size=100&id=87049&format=png&color=4318FF" alt="New Hire" />
-                          </div>
-                          <div className="activity-details">
-                            <h4>New hire onboarded</h4>
-                            <p>Sarah Johnson - Frontend Developer</p>
-                            <span>2 hours ago</span>
-                          </div>
-                        </div>
-                        <div className="activity-item">
-                          <div className="activity-icon">
-                            <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Payroll" />
-                          </div>
-                          <div className="activity-details">
-                            <h4>Payroll processed</h4>
-                            <p>Engineering department - $85,000</p>
-                            <span>1 day ago</span>
-                          </div>
-                        </div>
-                        <div className="activity-item">
-                          <div className="activity-icon">
-                            <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Task" />
-                          </div>
-                          <div className="activity-details">
-                            <h4>Task completed</h4>
-                            <p>Review Q2 Performance Reports</p>
-                            <span>2 days ago</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Hiring Trend Chart */}
-                    <div className="chart-card">
-                      <h3>Hiring Trend</h3>
-                      <div className="chart-container">
-                        <Bar
-                            data={hiringTrendData}
-                            options={{
-                              responsive: true,
-                              maintainAspectRatio: false,
-                              scales: {
-                                y: {
-                                  beginAtZero: true
-                                }
-                              }
-                            }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-              )}
-
-              {activeTab === 'employees' && (
-                  <div className="employees-tab">
-                    <div className="section-header">
-                      <h2>Employee Management</h2>
-                      <button className="view-all" onClick={() => document.getElementById('new-hire-modal').showModal()}>
-                        Add New Employee
+                      <p>Error loading tasks: {error}</p>
+                      <button
+                        className="retry-button-ad"
+                        onClick={fetchAllTasks}
+                      >
+                        Retry
                       </button>
                     </div>
+                  ) : tasks.length === 0 ? (
+                    <div className="no-tasks-ad">
+                      <svg className="empty-icon-ad" viewBox="0 0 24 24">
+                        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z" />
+                      </svg>
+                      <p>No tasks found. Create your first task!</p>
+                    </div>
+                  ) : (
+                    tasks.map((task, index) => (
+                      <div key={index} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                        <div className="task-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={task.completed}
+                            onChange={() => handleTaskComplete(task.id)}
+                          />
+                        </div>
+                        <div className="task-details-ad">
+                          <h3>{task.title}</h3>
+                          <p>Due: {task.dueDate}</p>
+                          <span className={`priority-badge-ad ${task.priority}`}>
+                            {task.priority} priority
+                          </span>
+                          <span className={`status-badge-ad ${task.status}`}>
+                            {task.status}
+                          </span>
+                        </div>
+                        <div className="task-actions-ad">
+                          <button
+                            className="action-btn-ad view"
+                            onClick={() => setViewingTask(task)}
+                          >
+                            View Details
+                          </button>
+                          <button
+                            className="action-btn-ad edit"
+                            onClick={() => {
+                              setTaskBeingEdited(task);
+                              setNewTask({
+                                title: task.title || "",
+                                description: task.description || "",
+                                assignees: task.assignees || [],
+                                priority: task.priority || "low",
+                                status: task.status || "Pending",
+                                startDate: task.startDate || "",
+                                dueDate: task.dueDate || "",
+                                notes: task.notes || "",
+                              });
+                              setEditMode(true);
+                              setShowModal(true);
+                            }}
+                          >
+                            Edit
+                          </button>
 
-                    {/* New Hire Modal */}
-                    <dialog id="new-hire-modal" className="modal">
-                      <div className="modal-content">
-                        <h3>Add New Employee</h3>
-                        <form onSubmit={handleAddNewHire}>
-                          <div className="form-group">
-                            <label>Full Name</label>
+                          <button
+                            className="action-btn-ad delete"
+                            onClick={() => setTaskToDelete(task)}
+                          >
+                            Delete
+                          </button>
+
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {taskToDelete && (
+                  <DeleteConfirmationModal
+                    task={taskToDelete}
+                    onConfirm={() => handleDeleteTask(taskToDelete.title)}
+                    onCancel={() => setTaskToDelete(null)}
+                  />
+                )}
+
+                {/* create new task and edit*/}
+                {showModal && (
+                  <div className="modal-overlay-ad">
+                    <div className="modal-container-ad">
+                      <h2>{editMode ? "Edit Task" : "Create New Task"}</h2>
+                      <form onSubmit={handleTaskSubmit}>
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Title*</label>
                             <input
-                                type="text"
-                                name="name"
-                                value={newHireForm.name}
-                                onChange={handleNewHireChange}
-                                required
+                              type="text"
+                              placeholder="Enter task title"
+                              value={newTask.title}
+                              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                              required
                             />
                           </div>
-                          <div className="form-group">
-                            <label>Position</label>
-                            <input
-                                type="text"
-                                name="position"
-                                value={newHireForm.position}
-                                onChange={handleNewHireChange}
-                                required
+
+                          <div className="form-group-ad">
+                            <label>Description*</label>
+                            <textarea
+                              placeholder="Enter task description"
+                              value={newTask.description}
+                              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                              required
+                              rows="3"
                             />
                           </div>
-                          <div className="form-group">
-                            <label>Department</label>
+                        </div>
+
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Assign To*</label>
                             <select
-                                name="department"
-                                value={newHireForm.department}
-                                onChange={handleNewHireChange}
-                                required
+                              multiple
+                              size="5"
+                              value={newTask.assignees || []}
+                              onChange={(e) => {
+                                const selected = Array.from(e.target.selectedOptions, option => option.value);
+                                setNewTask(prev => ({ ...prev, assignees: selected }));
+                              }}
+                              className="multi-select-ad"
+                              required
                             >
-                              <option value="">Select Department</option>
-                              <option value="Engineering">Engineering</option>
-                              <option value="Marketing">Marketing</option>
-                              <option value="Sales">Sales</option>
-                              <option value="HR">Human Resources</option>
-                              <option value="Finance">Finance</option>
+                              {employees.map(emp => (
+                                <option key={emp.id} value={emp.id}>
+                                  {emp.name} {emp.surname} ({emp.department})
+                                </option>
+                              ))}
                             </select>
+                            <small className="select-hint-ad">
+                              Hold Ctrl/Cmd to select multiple employees
+                            </small>
                           </div>
-                          <div className="form-group">
+                        </div>
+
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
                             <label>Start Date</label>
                             <input
-                                type="date"
-                                name="startDate"
-                                value={newHireForm.startDate}
-                                onChange={handleNewHireChange}
-                                required
+                              type="date"
+                              value={newTask.startDate}
+                              onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
                             />
                           </div>
-                          <div className="form-actions">
-                            <button type="button" onClick={() => document.getElementById('new-hire-modal').close()}>
-                              Cancel
-                            </button>
-                            <button type="submit">
-                              Add Employee
-                            </button>
+
+                          <div className="form-group-ad">
+                            <label>Due Date*</label>
+                            <input
+                              type="date"
+                              value={newTask.dueDate}
+                              onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                              required
+                            />
                           </div>
-                        </form>
-                      </div>
-                    </dialog>
-                  </div>
-              )}
+                        </div>
 
-              {activeTab === 'payroll' && (
-                  <div className="payroll-tab">
-                    <div className="section-header">
-                      <h2>Payroll Management</h2>
-                      <button className="view-all">
-                        Process All
-                      </button>
-                    </div>
-
-                    <div className="payroll-cards">
-                      {payrollData.map((item, index) => (
-                          <div key={index} className="payroll-card">
-                            <div className="payroll-info">
-                              <h3>{item.department}</h3>
-                              <p>${item.amount.toLocaleString()}</p>
-                              <span>Due: {item.date}</span>
-                            </div>
-                            <div className={`payroll-status ${item.status}`}>
-                              {item.status === "processed" ? (
-                                  <>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                    <span>Processed</span>
-                                  </>
-                              ) : (
-                                  <>
-                                    <button
-                                        className="process-btn"
-                                        onClick={() => handleProcessPayroll(item.id)}
-                                    >
-                                      Process
-                                    </button>
-                                    <span>Pending</span>
-                                  </>
-                              )}
-                            </div>
-                          </div>
-                      ))}
-                    </div>
-
-                    <div className="payroll-history">
-                      <h3>Payroll History</h3>
-                      <div className="history-chart">
-                        <Line
-                            data={payrollTrendData}
-                            options={{
-                              responsive: true,
-                              maintainAspectRatio: false,
-                              plugins: {
-                                legend: {
-                                  display: false
-                                }
-                              }
-                            }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-              )}
-
-              {activeTab === 'tasks' && (
-                  <div className="tasks-tab">
-                    <div className="section-header">
-                      <h2>Task Management</h2>
-                      <button className="view-all" onClick={() => setShowModal(true)}>
-                        Create New Task
-                      </button>
-
-                    </div>
-
-                    <div className="tasks-list">
-                      {loading ? (
-                          <p>Loading tasks...</p>
-                      ) : error ? (
-                          <p style={{ color: 'red' }}>Error: {error}</p>
-                      ) : tasks.length === 0 ? (
-                          <p>No tasks found.</p>
-                      ) : (
-                          tasks.map((task, index) => (
-                              <div key={index} className={`task-item ${task.completed ? 'completed' : ''}`}>
-                                <div className="task-checkbox">
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Priority*</label>
+                            <div className="priority-options-ad">
+                              {['low', 'medium', 'high'].map(level => (
+                                <label key={level} className={`priority-option-ad ${newTask.priority === level ? 'active' : ''}`}>
                                   <input
-                                      type="checkbox"
-                                      checked={task.completed}
-                                      onChange={() => handleTaskComplete(task.id)}
+                                    type="radio"
+                                    name="priority"
+                                    style={{ display: 'none' }}
+                                    value={level}
+                                    checked={newTask.priority === level}
+                                    onChange={() => setNewTask({ ...newTask, priority: level })}
                                   />
-                                </div>
-                                <div className="task-details">
-                                  <h3>{task.title}</h3>
-                                  <p>Due: {task.dueDate}</p>
-                                  <span className={`priority-badge ${task.priority}`}>
-                        {task.priority} priority
-                      </span>
-                                </div>
-                                <div className="task-actions">
-                                  <button
-                                      onClick={() => {
-                                        setTaskBeingEdited(task);
-                                        setNewTask({
-                                          title: task.title || "",
-                                          description: task.description || "",
-                                          assignees: task.assignees || [],
-                                          priority: task.priority || "low",
-                                          status: task.status || "Pending",
-                                          startDate: task.startDate || "",
-                                          dueDate: task.dueDate || "",
-                                          notes: task.notes || "",
-                                        });
-                                        setEditMode(true);
-                                        setShowModal(true);
-                                      }}
-                                  >
-                                    Edit
-                                  </button>
+                                  <span className={`priority-dot-ad ${level}`}></span>
+                                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
 
-                                  <button
-                                      className="action-btn delete"
-                                      onClick={() => handleDeleteTask(task.title)}
-                                  >
-                                    Delete
-                                  </button>
-
-                                </div>
-                              </div>
-                          ))
-                      )}
-                    </div>
-
-
-                    // pop up for the new task
-                    // pop up for the new task
-                    {showModal && (
-                        <div className="modal-overlay">
-                          <div className="modal-container"> {/* Changed class to match CSS */}
-                            <h2>Create New Task</h2>
-                            <form onSubmit={handleTaskSubmit}>
-                              <input
-                                  type="text"
-                                  placeholder="Title"
-                                  value={newTask.title}
-                                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                                  required
-                              />
-                              <input
-                                  type="text"
-                                  placeholder="Description"
-                                  value={newTask.description}
-                                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                                  required
-                              />
-                              {/* Assign To: */}
-                              <label>Assign To:</label>
-                              <label>Assign To:</label>
-                              <select
-                                  multiple
-                                  size="5"  // Shows 5 options at once
-                                  value={newTask.assignees || []}
-                                  onChange={(e) => {
-                                    const selected = Array.from(e.target.selectedOptions, option => option.value);
-                                    setNewTask(prev => ({ ...prev, assignees: selected }));
-                                  }}
-                                  style={{
-                                    minHeight: '150px',  // Makes it obvious it's multi-select
-                                    padding: '8px',
-                                    borderRadius: '4px',
-                                    border: '1px solid #ddd'
-                                  }}
-                              >
-                                {employees.map(emp => (
-                                    <option key={emp.id} value={emp.id}>
-                                      {emp.name} ({emp.department})  {/* Add more info */}
-                                    </option>
-                                ))}
-                              </select>
-                              <small className="select-hint">
-                                Hold Ctrl/Cmd to select multiple employees
-                              </small>
-
-
-                              <input
-                                  type="date"
-                                  value={newTask.startDate}
-                                  onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
-                              />
-                              <input
-                                  type="date"
-                                  value={newTask.dueDate}
-                                  onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                                  required
-                              />
-                              <select
-                                  value={newTask.priority}
-                                  onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                              >
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                              </select>
-                              <textarea
-                                  placeholder="Additional Notes"
-                                  value={newTask.notes}
-                                  onChange={(e) => setNewTask({ ...newTask, notes: e.target.value })}
-                              />
-                              <select
-                                  value={newTask.status}
-                                  onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Completed">Completed</option>
-                              </select>
-
-                              <div className="modal-actions">
-                                <button type="submit">
-                                  {editMode ? "Update Task" : "Create Task"}
-                                </button>
-                                <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
-                              </div>
-                            </form>
+                          <div className="form-group-ad">
+                            <label>Status*</label>
+                            <div className="status-options-ad">
+                              {['Pending', 'Progress', 'Completed'].map(state => (
+                                <label key={state} className={`status-option-ad ${newTask.status === state ? 'active' : ''}`}>
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value={state}
+                                    checked={newTask.status === state}
+                                    onChange={() => setNewTask({ ...newTask, status: state })}
+                                  />
+                                  {state}
+                                </label>
+                              ))}
+                            </div>
                           </div>
                         </div>
-                    )}
-                  </div>
-              )}
 
-              {activeTab === 'analytics' && (
-                  <div className="analytics-tab">
-                    <div className="analytics-grid">
-                      <div className="analytics-card">
-                        <h3>Employee Distribution</h3>
-                        <div className="chart-container">
-                          <Pie
-                              data={employeeDistributionData}
-                              options={{
-                                plugins: {
-                                  legend: {
-                                    position: 'right',
-                                  }
-                                },
-                                maintainAspectRatio: false
-                              }}
+                        <div className="form-group-ad">
+                          <label>Additional Notes</label>
+                          <textarea
+                            placeholder="Any additional information..."
+                            value={newTask.notes}
+                            onChange={(e) => setNewTask({ ...newTask, notes: e.target.value })}
+                            rows="3"
                           />
                         </div>
-                      </div>
 
-                      <div className="analytics-card">
-                        <h3>Payroll Trend</h3>
-                        <div className="chart-container">
-                          <Line
-                              data={payrollTrendData}
-                              options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                  y: {
-                                    beginAtZero: false
-                                  }
-                                }
-                              }}
-                          />
+                        <div className="modal-actions-ad">
+                          <button type="button" className="cancel-btn-ad" onClick={() => setShowModal(false)}>
+                            Cancel
+                          </button>
+                          <button type="submit" className="submit-btn-ad">
+                            {editMode ? "Update Task" : "Create Task"}
+                          </button>
                         </div>
-                      </div>
-
-                      <div className="analytics-card">
-                        <h3>Hiring Trend</h3>
-                        <div className="chart-container">
-                          <Bar
-                              data={hiringTrendData}
-                              options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                  y: {
-                                    beginAtZero: true
-                                  }
-                                }
-                              }}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="analytics-card">
-                        <h3>Department Budget Allocation</h3>
-                        <div className="chart-container">
-                          <Bar
-                              data={{
-                                labels: Object.keys(budgetData),
-                                datasets: [{
-                                  label: 'Budget Allocation',
-                                  data: Object.values(budgetData),
-                                  backgroundColor: '#4318FF',
-                                }]
-                              }}
-                              options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                  y: {
-                                    beginAtZero: true
-                                  }
-                                }
-                              }}
-                          />
-                        </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
-              )}
-            </div>
+                )}
+
+                {viewingTask && (
+                  <TaskDetailsModal
+                    task={viewingTask}
+                    onClose={() => setViewingTask(null)}
+                  />
+                )}
+              </div>
+            )}
+
+            {activeTab === 'analytics' && (
+              <div className="analytics-tab">
+                <div className="analytics-grid">
+                  <div className="analytics-card">
+                    <h3>Employee Distribution</h3>
+                    <div className="chart-container">
+                      <Pie
+                        data={employeeDistributionData}
+                        options={{
+                          plugins: {
+                            legend: {
+                              position: 'right',
+                            }
+                          },
+                          maintainAspectRatio: false
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="analytics-card">
+                    <h3>Payroll Trend</h3>
+                    <div className="chart-container">
+                      <Line
+                        data={payrollTrendData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: false
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="analytics-card">
+                    <h3>Hiring Trend</h3>
+                    <div className="chart-container">
+                      <Bar
+                        data={hiringTrendData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: true
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="analytics-card">
+                    <h3>Department Budget Allocation</h3>
+                    <div className="chart-container">
+                      <Bar
+                        data={{
+                          labels: Object.keys(budgetData),
+                          datasets: [{
+                            label: 'Budget Allocation',
+                            data: Object.values(budgetData),
+                            backgroundColor: '#4318FF',
+                          }]
+                        }}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: {
+                              beginAtZero: true
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
