@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -42,7 +43,14 @@ public class EmployeeController {
             throw new RuntimeException(e);
         }
     }
-
+    @GetMapping("/dropdown")
+    public ResponseEntity<List<Map<String, String>>> getEmployeeDropdownList() {
+        try {
+            return ResponseEntity.ok(service.getEmployeeDropdownList());
+        } catch (ExecutionException | InterruptedException e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
     @GetMapping("/{documentId}")
     public ResponseEntity<Employee> getEmployeeByDocumentId(@PathVariable String documentId)
             throws ExecutionException, InterruptedException {
@@ -54,6 +62,7 @@ public class EmployeeController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     /*@PostMapping

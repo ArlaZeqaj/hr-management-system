@@ -5,10 +5,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -128,5 +125,55 @@ public class ProjectService {
 
         return projects;
     }
+    public Map<String, Object> createProject(Map<String, Object> request) {
+        try {
+            // Validation
+            if (!request.containsKey("assigned_id") || !request.containsKey("assigned_Employees")) {
+                throw new IllegalArgumentException("Missing 'assigned_id' or 'assigned_Employees'");
+            }
+
+            // Set payment date from backend side
+            request.put("paymentDate", new Date());
+            Firestore db = FirestoreClient.getFirestore();
+
+            // Add the document
+            DocumentReference docRef = db.collection("Project").document();
+            request.put("id", docRef.getId());
+            docRef.set(request);
+
+            return request;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create project", e);
+        }
+    }
+    public void updateProject(String id, Map<String, Object> updatedData) throws Exception {
+        Firestore firestore = FirestoreClient.getFirestore();
+        DocumentReference docRef = firestore.collection("Project").document(id);
+
+        // Optional: clean unwanted keys like id or paymentDate
+        updatedData.remove("id");
+        updatedData.remove("paymentDate");
+
+        // Convert string dates to Firestore-friendly format if needed (optional)
+
+        docRef.update(updatedData);
+    }
+    public void updateProjectStatus(String id, String status) throws Exception {
+        Firestore firestore = FirestoreClient.getFirestore();
+
+        DocumentReference docRef = firestore.collection("Project").document(id);
+        ApiFuture<WriteResult> future = docRef.update("status", status);
+        future.get(); // wait for update
+    }
+
+    public void deleteProject(String id) throws Exception {
+        Firestore firestore = FirestoreClient.getFirestore();
+
+        DocumentReference docRef = firestore.collection("Project").document(id);
+        ApiFuture<WriteResult> future = docRef.delete();
+        future.get(); // wait for deletion
+    }
 
 }
+

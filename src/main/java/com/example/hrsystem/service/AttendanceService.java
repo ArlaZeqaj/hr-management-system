@@ -9,7 +9,9 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,4 +59,52 @@ public class AttendanceService {
             System.err.println("🔥 [AttendanceService] Unexpected error: " + ex.getMessage());
             throw ex;
         }
-    }}
+    }
+
+    public String recordCheckOut(String uid) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String docId = uid + "_" + today;
+
+        DocumentReference docRef = db.collection("attendanceLogs").document(docId);
+        DocumentSnapshot docSnap = docRef.get().get();
+
+        if (!docSnap.exists()) {
+            throw new Exception("You must check in before checking out.");
+        }
+
+        String now = new SimpleDateFormat("HH:mm:ss").format(new Date());
+
+        docRef.update("checkOut", now);  // ✅ Add or update checkOut field
+
+        return now;
+    }
+
+    public Map<String, String> getAttendanceTimes(String uid) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String docId = uid + "_" + today;
+
+        DocumentSnapshot docSnap = db.collection("attendanceLogs").document(docId).get().get();
+
+        Map<String, String> result = new HashMap<>();
+        if (docSnap.exists()) {
+            result.put("checkInTime", docSnap.getString("checkIn"));
+            result.put("checkOutTime", docSnap.getString("checkOut"));
+        } else {
+            result.put("checkInTime", "Not yet");
+            result.put("checkOutTime", "Not yet");
+        }
+
+        return result;
+    }
+
+
+    private String getTodayDate() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    }
+
+    private String getCurrentTime() {
+        return new SimpleDateFormat("HH:mm:ss").format(new Date());
+    }
+}
