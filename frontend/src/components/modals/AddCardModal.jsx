@@ -44,7 +44,7 @@ const AddCardModal = ({
             <span className="billing-card-company">HRCloudX</span>
             <div className="billing-card-type-logo">
               <img
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+                src="https://img.icons8.com/?size=100&id=106942&format=png&color=FFFFFFD4"
                 alt="Mastercard"
                 width="40"
               />
@@ -90,12 +90,7 @@ const AddCardModal = ({
             <label htmlFor="cardNumber">Card Number</label>
             <div className="billing-card-icons">
               <img
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png"
-                alt="Visa"
-                width="40"
-              />
-              <img
-                src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+                src="https://img.icons8.com/?size=100&id=106942&format=png&color=000000A6"
                 alt="Mastercard"
                 width="40"
               />

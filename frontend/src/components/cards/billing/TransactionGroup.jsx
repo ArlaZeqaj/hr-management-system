@@ -1,3 +1,4 @@
+// TransactionGroup.js
 import React from "react";
 import PropTypes from "prop-types";
 import TransactionItem from "./TransactionItem";
@@ -9,7 +10,6 @@ const TransactionGroup = ({ label, transactions, formatDateGroup }) => {
       <div className="transactions-list">
         {transactions.map((txn) => (
           <TransactionItem
-            className="transaction"
             key={txn.id || txn.name}
             transaction={txn}
             formatDateGroup={formatDateGroup}

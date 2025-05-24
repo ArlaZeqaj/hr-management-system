@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { FileText, FileDigit, FileSearch } from "lucide-react";
 
 const InvoiceItem = ({
   date,
@@ -16,10 +17,10 @@ const InvoiceItem = ({
   // Determine which PDF icon to use based on amount
   const getPdfIcon = () => {
     if (amountValue > 500)
-      return "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/kl8fuv50_expires_30_days.png";
+      return "https://img.icons8.com/?size=100&id=86868&format=png&color=FA5252";
     if (amountValue > 200)
-      return "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/7i42j92c_expires_30_days.png";
-    return "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/ooymt6ca_expires_30_days.png";
+      return "https://img.icons8.com/?size=100&id=86868&format=png&color=5C7CFA";
+    return "https://img.icons8.com/?size=100&id=86868&format=png&color=74A824";
   };
 
   // Format amount display
@@ -39,7 +40,7 @@ const InvoiceItem = ({
           {formattedAmount}
         </span>
         <button
-          className="pdf-button"
+          className="pdf-btn"
           onClick={onGeneratePDF}
           aria-label="Generate PDF"
         >
