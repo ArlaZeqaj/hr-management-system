@@ -6,7 +6,6 @@ import com.google.cloud.firestore.annotation.PropertyName;
 import java.util.List;
 
 public class Employee {
-
     @DocumentId
     private String id;
 
@@ -31,8 +30,10 @@ public class Employee {
     @PropertyName("Education")
     private String education;
 
-    @PropertyName("Departament")
+    @PropertyName("Department")
     private String departament;
+    @PropertyName("grossSalary")
+    private int grossSalary;
 
     @PropertyName("Work History")
     private List<String> workHistory;
@@ -43,8 +44,6 @@ public class Employee {
 
     @PropertyName("Lanuages")
     private List<String> languages;
-
-
 
     @PropertyName("Birth Date")
     private String birthDate;
@@ -72,10 +71,6 @@ public class Employee {
 
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
-    }
-
-    public Employee() {
-
     }
 
     // Getters and setters
@@ -127,11 +122,16 @@ public class Employee {
     public String getDepartament() {
         return departament;
     }
+    public int getGrossSalary() {
+        return grossSalary;
+    }
 
     public void setDepartament(String departament) {
         this.departament = departament;
     }
-
+    public void setGrossSalary(int grossSalary) {
+        this.grossSalary = grossSalary;
+    }
     public List<String> getWorkHistory() {
         return workHistory;
     }
@@ -211,9 +211,6 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
-
-
-
 
 
 }
