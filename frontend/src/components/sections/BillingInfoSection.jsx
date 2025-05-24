@@ -8,6 +8,7 @@ const BillingInfoSection = ({
   editAccNo,
   handleEdit,
   handleSave,
+  onCancel,
   setEditAccNo,
 }) => {
   return (
@@ -29,6 +30,7 @@ const BillingInfoSection = ({
                 editAccNo={editAccNo}
                 onEdit={handleEdit}
                 onSave={handleSave}
+                onCancel={onCancel}
                 setEditAccNo={setEditAccNo}
               />
             ))
