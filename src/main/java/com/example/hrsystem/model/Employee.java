@@ -30,9 +30,8 @@ public class Employee {
     @PropertyName("Education")
     private String education;
 
-    @PropertyName("Departament")
+    @PropertyName("Department")
     private String departament;
-
     @PropertyName("grossSalary")
     private int grossSalary;
 
@@ -41,6 +40,7 @@ public class Employee {
 
     @PropertyName("Gender")
     private String gender;
+
 
     @PropertyName("Lanuages")
     private List<String> languages;
@@ -51,6 +51,7 @@ public class Employee {
     @PropertyName("Organization")
     private String organization;
 
+
     @PropertyName("Joined Date")
     private String joinedDate;
 
@@ -59,6 +60,7 @@ public class Employee {
 
     @PropertyName("Position")
     private String position;
+
 
     @PropertyName("Avatar Url")
     private String avatarURL;
@@ -69,10 +71,6 @@ public class Employee {
 
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
-    }
-
-    public Employee() {
-
     }
 
     // Getters and setters
@@ -124,7 +122,6 @@ public class Employee {
     public String getDepartament() {
         return departament;
     }
-
     public int getGrossSalary() {
         return grossSalary;
     }
@@ -132,11 +129,9 @@ public class Employee {
     public void setDepartament(String departament) {
         this.departament = departament;
     }
-
     public void setGrossSalary(int grossSalary) {
         this.grossSalary = grossSalary;
     }
-
     public List<String> getWorkHistory() {
         return workHistory;
     }
@@ -216,4 +211,8 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
+
+
 }
+
+

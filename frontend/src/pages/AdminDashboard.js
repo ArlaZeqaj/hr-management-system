@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { getIdToken } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
@@ -7,13 +7,12 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
-import { Bar, Pie, Line } from 'react-chartjs-2';
-import { Chart, registerables } from 'chart.js';
+import { Bar, Pie, Line } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
 import "../styles/Admin.css";
 import "../styles/tasks.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
-
 
 Chart.register(...registerables);
 
@@ -24,39 +23,39 @@ const AdminDashboard = () => {
   // Set active menu item based on current route
   const getActiveMenuItem = () => {
     const path = location.pathname;
-    if (path.includes('/admin/dashboard')) return 'Dashboard';
-    if (path.includes('/admin/profile')) return 'Profile';
-    if (path.includes('/new-hires')) return 'New Hires';
-    if (path.includes('/employee')) return 'Employees';
-    if (path.includes('/billing')) return 'Billing';
-    if (path.includes('/admin/projects')) return 'Projects';
-    return 'Dashboard'; // default
+    if (path.includes("/admin/dashboard")) return "Dashboard";
+    if (path.includes("/admin/profile")) return "Profile";
+    if (path.includes("/new-hires")) return "New Hires";
+    if (path.includes("/employee")) return "Employees";
+    if (path.includes("/billing")) return "Billing";
+    if (path.includes("/admin/projects")) return "Projects";
+    return "Dashboard"; // default
   };
 
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
     switch (menuItem) {
-      case 'Dashboard':
-        navigate('/admin/dashboard');
+      case "Dashboard":
+        navigate("/admin/dashboard");
         break;
-      case 'Profile':
-        navigate('/admin/profile');
+      case "Profile":
+        navigate("/admin/profile");
         break;
-      case 'New Hires':
-        navigate('/new-hires');
+      case "New Hires":
+        navigate("/new-hires");
         break;
-      case 'Employees':
-        navigate('/employee');
+      case "Employees":
+        navigate("/employee");
         break;
-      case 'Billing':
-        navigate('/billing');
+      case "Billing":
+        navigate("/billing");
         break;
-      case 'Projects':
-        navigate('/admin/projects');
+      case "Projects":
+        navigate("/admin/projects");
         break;
       default:
-        navigate('/admin/dashboard');
+        navigate("/admin/dashboard");
     }
   };
 
@@ -64,10 +63,13 @@ const AdminDashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   ///tasks
   //const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState({ title: "", dueDate: "", priority: "low" });
+  const [newTask, setNewTask] = useState({
+    title: "",
+    dueDate: "",
+    priority: "low",
+  });
   const [showModal, setShowModal] = useState(false);
   const [viewingTask, setViewingTask] = useState(null);
-
 
   const [taskToDelete, setTaskToDelete] = useState(null);
 
@@ -75,10 +77,10 @@ const AdminDashboard = () => {
     "Item updates": true,
     "New hires": true,
     "Payroll alerts": false,
-    "System updates": true
+    "System updates": true,
   });
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   // New state to store employee count
   const [employeeCount, setEmployeesCount] = useState(0);
   const [activeProjectsCount, setActiveProjectsCount] = useState(0);
@@ -87,15 +89,13 @@ const AdminDashboard = () => {
   // te task
   const [employees, setEmployees] = useState([]);
 
-
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
 
   const [newHireForm, setNewHireForm] = useState({
-    name: '',
-    position: '',
-    department: '',
-    startDate: ''
-
+    name: "",
+    position: "",
+    department: "",
+    startDate: "",
   });
   // budegt allocation
   const [budgetData, setBudgetData] = useState({});
@@ -108,9 +108,12 @@ const AdminDashboard = () => {
 
       try {
         const token = await user.getIdToken();
-        const res = await fetch("http://localhost:8080/api/admin1/budget-allocation", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          "http://localhost:8080/api/admin1/budget-allocation",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (!res.ok) throw new Error("Failed to fetch budget data");
 
@@ -125,11 +128,9 @@ const AdminDashboard = () => {
     fetchBudgetData();
   }, []);
 
-
   // per te bere edit nje task
   const [editMode, setEditMode] = useState(false);
   const [taskBeingEdited, setTaskBeingEdited] = useState(null);
-
 
   //po marrim employes te na dal te drop dow
   useEffect(() => {
@@ -144,11 +145,14 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken(); // Get Firebase ID token
 
-        const response = await fetch("http://localhost:8080/api/admin1/employees", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Send token to backend
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/admin1/employees",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Send token to backend
+            },
+          }
+        );
 
         if (!response.ok) throw new Error("Failed to fetch employees");
 
@@ -176,7 +180,7 @@ const AdminDashboard = () => {
       }
 
       try {
-        const token = await user.getIdToken();  // Firebase ID token
+        const token = await user.getIdToken(); // Firebase ID token
         const response = await fetch("http://localhost:8080/api/admin1/count", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -224,26 +228,30 @@ const AdminDashboard = () => {
 
       try {
         const token = await getIdToken(user); // Use the token after verifying the user
-        const response = await fetch("http://localhost:8080/api/admin1/active-projects/count", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,  // Attach the token in the Authorization header
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/admin1/active-projects/count",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach the token in the Authorization header
+            },
+          }
+        );
 
-        if (!response.ok) throw new Error("Failed to fetch active projects count");
+        if (!response.ok)
+          throw new Error("Failed to fetch active projects count");
 
-        const count = await response.json();  // Parse the count from the response
-        console.log("✅ Active projects count from backend:", count);  // For debugging purposes
-        setActiveProjectsCount(count);  // Update the state with the active projects count
+        const count = await response.json(); // Parse the count from the response
+        console.log("✅ Active projects count from backend:", count); // For debugging purposes
+        setActiveProjectsCount(count); // Update the state with the active projects count
         localStorage.setItem("activeProjectsCount", count); // Save to localStorage
       } catch (error) {
         console.error("Error fetching active projects count:", error);
       }
     };
 
-    fetchActiveProjectsCount();  // Call the function to fetch data when component mounts
-  }, []);  // Empty dependency array so this runs only once when the component mounts
+    fetchActiveProjectsCount(); // Call the function to fetch data when component mounts
+  }, []); // Empty dependency array so this runs only once when the component mounts
 
   useEffect(() => {
     const fetchPendingTasks = async () => {
@@ -262,13 +270,17 @@ const AdminDashboard = () => {
 
       try {
         const token = await user.getIdToken();
-        const response = await fetch("http://localhost:8080/api/admin1/tasks/pending/count", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/admin1/tasks/pending/count",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        if (!response.ok) throw new Error("Failed to fetch pending tasks count");
+        if (!response.ok)
+          throw new Error("Failed to fetch pending tasks count");
 
         const count = await response.json();
         console.log("✅ Pending tasks count:", count);
@@ -299,13 +311,17 @@ const AdminDashboard = () => {
 
       try {
         const token = await user.getIdToken();
-        const response = await fetch("http://localhost:8080/api/admin1/employees/distribution", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/admin1/employees/distribution",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        if (!response.ok) throw new Error("Failed to fetch department distribution");
+        if (!response.ok)
+          throw new Error("Failed to fetch department distribution");
 
         const data = await response.json();
         setDepartmentDistribution(data);
@@ -318,7 +334,6 @@ const AdminDashboard = () => {
 
     fetchDistribution();
   }, []);
-
 
   const handleTaskSubmit = async (e) => {
     e.preventDefault();
@@ -370,17 +385,16 @@ const AdminDashboard = () => {
         ? await response.json()
         : await response.text();
 
-
       if (editMode) {
         // Update task in state
-        setTasks(prevTasks =>
-          prevTasks.map(task =>
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
             task.id === taskBeingEdited.id ? savedTask : task
           )
         );
       } else {
         // Add new task
-        setTasks(prevTasks => [...prevTasks, savedTask]);
+        setTasks((prevTasks) => [...prevTasks, savedTask]);
       }
 
       // Reset state
@@ -399,18 +413,123 @@ const AdminDashboard = () => {
       setEditMode(false);
       setTaskBeingEdited(null);
 
-      alert(editMode ? "Task updated successfully!" : "Task created successfully!");
-
+      alert(
+        editMode ? "Task updated successfully!" : "Task created successfully!"
+      );
     } catch (error) {
       console.error("Task submit error:", error);
       alert(`Error: ${error.message}`);
     }
   };
 
-
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  //payroll data graph
+  const monthMap = {
+    "01": "Jan",
+    "02": "Feb",
+    "03": "Mar",
+    "04": "Apr",
+    "05": "May",
+    "06": "Jun",
+    "07": "Jul",
+    "08": "Aug",
+    "09": "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
+  };
+  const [payrollTrendData, setPayrollTrendData] = useState({
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    datasets: [
+      {
+        label: "Payroll Expenses",
+        data: [250000, 280000, 300000, 320000, 310000, 330000],
+        fill: false,
+        backgroundColor: "#4318FF",
+        borderColor: "#4318FF",
+        tension: 0.4,
+      },
+    ],
+  });
+
+  useEffect(() => {
+    const fetchPayrollTrend = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("❌ No authenticated user");
+        return;
+      }
+
+      try {
+        const token = await user.getIdToken();
+        const response = await fetch(
+          "http://localhost:8080/api/admin1/payroll/trend",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch payroll trend");
+        }
+
+        const data = await response.json(); // e.g. { "2025-01": 1000, "2025-02": 1200 }
+        console.log("Payroll data recieved ", data);
+
+        // Sort by date (ascending)
+        const sortedEntries = Object.entries(data).sort(([a], [b]) =>
+          a.localeCompare(b)
+        );
+
+        // Map to labels and values
+        const labels = sortedEntries.map(
+          ([key]) => monthMap[key.split("-")[1]]
+        );
+        const values = sortedEntries.map(([, value]) => value);
+
+        setPayrollTrendData({
+          labels,
+          datasets: [
+            {
+              label: "Payroll Expenses",
+              data: values,
+              fill: false,
+              backgroundColor: "#4318FF",
+              borderColor: "#4318FF",
+              tension: 0.4,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Failed to fetch payroll trend:", error);
+      }
+    };
+
+    fetchPayrollTrend(); // Call the function on component mount
+  }, []); // Empty dependency array so this runs only once
+
+  // Charts data
+  const employeeDistributionData = {
+    labels: Object.keys(departmentDistribution),
+    datasets: [
+      {
+        data: Object.values(departmentDistribution),
+        backgroundColor: [
+          "#4318FF",
+          "#6AD2FF",
+          "#EFF4FB",
+          "#05CD99",
+          "#FFB547",
+        ],
+        borderWidth: 0,
+      },
+    ],
+  };
 
   // Task Details Modal Component
   const TaskDetailsModal = ({ task, onClose }) => {
@@ -429,12 +548,18 @@ const AdminDashboard = () => {
 
             <div className="detail-row-ad">
               <span className="detail-label-ad">Description:</span>
-              <span className="detail-value-ad">{task.description || "No description"}</span>
+              <span className="detail-value-ad">
+                {task.description || "No description"}
+              </span>
             </div>
 
             <div className="detail-row-ad">
               <span className="detail-label-ad">Status:</span>
-              <span className={`detail-value status-badge ${task.status.toLowerCase().replace(' ', '-')}`}>
+              <span
+                className={`detail-value status-badge ${task.status
+                  .toLowerCase()
+                  .replace(" ", "-")}`}
+              >
                 {task.status}
               </span>
             </div>
@@ -448,7 +573,9 @@ const AdminDashboard = () => {
 
             <div className="detail-row-ad">
               <span className="detail-label-ad">Start Date:</span>
-              <span className="detail-value-ad">{task.startDate || "Not specified"}</span>
+              <span className="detail-value-ad">
+                {task.startDate || "Not specified"}
+              </span>
             </div>
 
             <div className="detail-row-ad">
@@ -460,10 +587,16 @@ const AdminDashboard = () => {
               <div className="detail-row-ad">
                 <span className="detail-label-ad">Assignees:</span>
                 <span className="detail-value-ad">
-                  {task.assignees.map(assigneeId => {
-                    const employee = employees.find(e => e.id === assigneeId);
-                    return employee ? `${employee.name} ${employee.surname}` : 'Unknown';
-                  }).join(', ')}
+                  {task.assignees
+                    .map((assigneeId) => {
+                      const employee = employees.find(
+                        (e) => e.id === assigneeId
+                      );
+                      return employee
+                        ? `${employee.name} ${employee.surname}`
+                        : "Unknown";
+                    })
+                    .join(", ")}
                 </span>
               </div>
             )}
@@ -496,12 +629,15 @@ const AdminDashboard = () => {
 
       const token = await user.getIdToken();
 
-      const response = await fetch("http://localhost:8080/api/admin1/tasks/all", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/admin1/tasks/all",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -511,12 +647,11 @@ const AdminDashboard = () => {
       const data = await response.json();
       console.log("Raw tasks data from backend:11111", data);
 
-
       // 🔄 Flatten nested tasks (task1, task2, ...) into one array
       const allTasks = [];
-      data.forEach(doc => {
+      data.forEach((doc) => {
         const { id, ...tasksInDoc } = doc;
-        Object.values(tasksInDoc).forEach(task => {
+        Object.values(tasksInDoc).forEach((task) => {
           if (task && task.title && task.dueDate) {
             allTasks.push(task);
           }
@@ -525,7 +660,9 @@ const AdminDashboard = () => {
 
       // ✅ Deduplicate by title + dueDate
       const uniqueTasks = Array.from(
-        new Map(allTasks.map(task => [`${task.title}_${task.dueDate}`, task])).values()
+        new Map(
+          allTasks.map((task) => [`${task.title}_${task.dueDate}`, task])
+        ).values()
       );
 
       setTasks(uniqueTasks);
@@ -538,12 +675,11 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    if (activeTab === 'tasks') {
+    if (activeTab === "tasks") {
       console.log("Active tab is tasks. Fetching tasks...");
       fetchAllTasks();
     }
   }, [activeTab]); // ✅ This runs every time activeTab changes
-
 
   //delete taskkk
   const handleDeleteTask = async (taskTitle) => {
@@ -553,14 +689,17 @@ const AdminDashboard = () => {
 
       const token = await user.getIdToken();
 
-      const response = await fetch("http://localhost:8080/api/admin1/tasks/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title: taskTitle }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/admin1/tasks/delete",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title: taskTitle }),
+        }
+      );
 
       if (!response.ok) {
         const errText = await response.text();
@@ -568,7 +707,9 @@ const AdminDashboard = () => {
       }
 
       // Refresh tasks state after deletion
-      setTasks(prevTasks => prevTasks.filter(task => task.title !== taskTitle));
+      setTasks((prevTasks) =>
+        prevTasks.filter((task) => task.title !== taskTitle)
+      );
       setTaskToDelete(null); // Close confirmation modal
       alert("Task deleted successfully!");
     } catch (error) {
@@ -613,49 +754,46 @@ const AdminDashboard = () => {
     return () => clearInterval(timer);
   }, []);
 
-
   const [payrollData, setPayrollData] = useState([
-    { id: 1, department: 'Engineering', amount: 85000, status: 'processed', date: '2023-05-01' },
-    { id: 2, department: 'Marketing', amount: 42500, status: 'pending', date: '2023-05-01' },
-    { id: 3, department: 'Sales', amount: 63200, status: 'processed', date: '2023-05-01' },
-    { id: 4, department: 'HR', amount: 38750, status: 'pending', date: '2023-05-01' },
+    {
+      id: 1,
+      department: "Engineering",
+      amount: 85000,
+      status: "processed",
+      date: "2023-05-01",
+    },
+    {
+      id: 2,
+      department: "Marketing",
+      amount: 42500,
+      status: "pending",
+      date: "2023-05-01",
+    },
+    {
+      id: 3,
+      department: "Sales",
+      amount: 63200,
+      status: "processed",
+      date: "2023-05-01",
+    },
+    {
+      id: 4,
+      department: "HR",
+      amount: 38750,
+      status: "pending",
+      date: "2023-05-01",
+    },
   ]);
 
-  // Charts data
-  const employeeDistributionData = {
-    labels: Object.keys(departmentDistribution),
-    datasets: [{
-      data: Object.values(departmentDistribution),
-      backgroundColor: [
-        '#4318FF',
-        '#6AD2FF',
-        '#EFF4FB',
-        '#05CD99',
-        '#FFB547'
-      ],
-      borderWidth: 0,
-    }]
-  };
-
-  const payrollTrendData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [{
-      label: 'Payroll Expenses',
-      data: [250000, 280000, 300000, 320000, 310000, 330000],
-      fill: false,
-      backgroundColor: '#4318FF',
-      borderColor: '#4318FF',
-      tension: 0.4
-    }]
-  };
-
   const hiringTrendData = {
-    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-    datasets: [{
-      label: 'New Hires',
-      data: [8, 12, 10, 15],
-      backgroundColor: '#05CD99',
-    }]
+    labels: ["Q1", "Q2", "Q3", "Q4"],
+    datasets: [
+      {
+        label: "New Hires",
+        data: [8, 12, 10, 15],
+        backgroundColor: "#05CD99",
+      },
+    ],
   };
 
   // Dynamic stats
@@ -665,35 +803,37 @@ const AdminDashboard = () => {
       value: employeeCount,
       change: "+12%",
       icon: "https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF",
-      trend: "up"
+      trend: "up",
     },
     {
       title: "Active Projects",
       value: activeProjectsCount.toString(),
       change: "+5%",
       icon: "https://img.icons8.com/?size=100&id=102889&format=png&color=4318FF",
-      trend: "up"
+      trend: "up",
     },
     {
       title: "Pending Tasks",
       value: pendingTasksCount,
       change: "-3%",
       icon: "https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF",
-      trend: "down"
+      trend: "down",
     },
     {
       title: "Total Payroll",
-      value: `$${payrollData.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}`,
+      value: `$${payrollData
+        .reduce((sum, item) => sum + item.amount, 0)
+        .toLocaleString()}`,
       change: "+8%",
       icon: "https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF",
-      trend: "up"
-    }
+      trend: "up",
+    },
   ];
 
   const toggleNotification = (notification) => {
-    setNotifications(prev => ({
+    setNotifications((prev) => ({
       ...prev,
-      [notification]: !prev[notification]
+      [notification]: !prev[notification],
     }));
   };
 
@@ -701,19 +841,20 @@ const AdminDashboard = () => {
     setDarkMode(!darkMode);
   };
 
-
   // /////
   const handleTaskComplete = (taskId) => {
-    setTasks(tasks.map(task =>
-      task.id === taskId ? { ...task, completed: !task.completed } : task
-    ));
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   const handleNewHireChange = (e) => {
     const { name, value } = e.target;
-    setNewHireForm(prev => ({
+    setNewHireForm((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -724,28 +865,38 @@ const AdminDashboard = () => {
       name: newHireForm.name,
       position: newHireForm.position,
       department: newHireForm.department,
-      status: 'active',
-      startDate: newHireForm.startDate
+      status: "active",
+      startDate: newHireForm.startDate,
     };
     //setEmployees([...employees, newEmployee]);
     setNewHireForm({
-      name: '',
-      position: '',
-      department: '',
-      startDate: ''
+      name: "",
+      position: "",
+      department: "",
+      startDate: "",
     });
-    alert('New hire added successfully!');
+    alert("New hire added successfully!");
   };
 
   const handleProcessPayroll = (id) => {
-    setPayrollData(payrollData.map(item =>
-      item.id === id ? { ...item, status: 'processed' } : item
-    ));
+    setPayrollData(
+      payrollData.map((item) =>
+        item.id === id ? { ...item, status: "processed" } : item
+      )
+    );
   };
 
   // Format time
-  const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const formattedDate = currentTime.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const formattedTime = currentTime.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const formattedDate = currentTime.toLocaleDateString([], {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
     <div className={`admin-dashboard ${darkMode ? "dark-theme" : ""}`}>
@@ -773,16 +924,34 @@ const AdminDashboard = () => {
               <p>{formattedDate}</p>
             </div>
             <div className="quick-actions">
-              <button className="quick-action" onClick={() => setActiveTab('employees')}>
-                <img src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF" alt="Add Employee" />
+              <button
+                className="quick-action"
+                onClick={() => setActiveTab("employees")}
+              >
+                <img
+                  src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF"
+                  alt="Add Employee"
+                />
                 <span>Add Employee</span>
               </button>
-              <button className="quick-action" onClick={() => setActiveTab('payroll')}>
-                <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Process Payroll" />
+              <button
+                className="quick-action"
+                onClick={() => setActiveTab("payroll")}
+              >
+                <img
+                  src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF"
+                  alt="Process Payroll"
+                />
                 <span>Process Payroll</span>
               </button>
-              <button className="quick-action" onClick={() => setActiveTab('tasks')}>
-                <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Create Task" />
+              <button
+                className="quick-action"
+                onClick={() => setActiveTab("tasks")}
+              >
+                <img
+                  src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF"
+                  alt="Create Task"
+                />
                 <span>Create Task</span>
               </button>
             </div>
@@ -801,11 +970,29 @@ const AdminDashboard = () => {
                 </div>
                 <div className={`stat-trend ${stat.trend}`}>
                   <span>{stat.change}</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     {stat.trend === "up" ? (
-                      <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M12 19V5M5 12L12 5L19 12"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     ) : (
-                      <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M12 5V19M19 12L12 19L5 12"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     )}
                   </svg>
                 </div>
@@ -816,27 +1003,33 @@ const AdminDashboard = () => {
           {/* Tabs Navigation */}
           <div className="dashboard-tabs">
             <button
-              className={`tab-btn-ap ${activeTab === 'overview' ? 'active' : ''}`}
-              onClick={() => setActiveTab('overview')}
+              className={`tab-btn-ap ${
+                activeTab === "overview" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("overview")}
             >
               Overview
             </button>
 
             <button
-              className={`tab-btn-ap ${activeTab === 'payroll' ? 'active' : ''}`}
-              onClick={() => setActiveTab('payroll')}
+              className={`tab-btn-ap ${
+                activeTab === "payroll" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("payroll")}
             >
               Payroll
             </button>
             <button
-              className={`tab-btn-ap ${activeTab === 'tasks' ? 'active' : ''}`}
-              onClick={() => setActiveTab('tasks')}
+              className={`tab-btn-ap ${activeTab === "tasks" ? "active" : ""}`}
+              onClick={() => setActiveTab("tasks")}
             >
               Tasks
             </button>
             <button
-              className={`tab-btn-ap ${activeTab === 'analytics' ? 'active' : ''}`}
-              onClick={() => setActiveTab('analytics')}
+              className={`tab-btn-ap ${
+                activeTab === "analytics" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("analytics")}
             >
               Analytics
             </button>
@@ -844,7 +1037,7 @@ const AdminDashboard = () => {
 
           {/* Tab Content */}
           <div className="tab-content">
-            {activeTab === 'overview' && (
+            {activeTab === "overview" && (
               <div className="overview-grid">
                 {/* Employee Distribution Chart */}
                 <div className="chart-card">
@@ -855,10 +1048,10 @@ const AdminDashboard = () => {
                       options={{
                         plugins: {
                           legend: {
-                            position: 'right',
-                          }
+                            position: "right",
+                          },
                         },
-                        maintainAspectRatio: false
+                        maintainAspectRatio: false,
                       }}
                     />
                   </div>
@@ -875,9 +1068,9 @@ const AdminDashboard = () => {
                         maintainAspectRatio: false,
                         scales: {
                           y: {
-                            beginAtZero: false
-                          }
-                        }
+                            beginAtZero: false,
+                          },
+                        },
                       }}
                     />
                   </div>
@@ -889,7 +1082,10 @@ const AdminDashboard = () => {
                   <div className="activity-list">
                     <div className="activity-item">
                       <div className="activity-icon">
-                        <img src="https://img.icons8.com/?size=100&id=87049&format=png&color=4318FF" alt="New Hire" />
+                        <img
+                          src="https://img.icons8.com/?size=100&id=87049&format=png&color=4318FF"
+                          alt="New Hire"
+                        />
                       </div>
                       <div className="activity-details">
                         <h4>New hire onboarded</h4>
@@ -899,7 +1095,10 @@ const AdminDashboard = () => {
                     </div>
                     <div className="activity-item">
                       <div className="activity-icon">
-                        <img src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF" alt="Payroll" />
+                        <img
+                          src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF"
+                          alt="Payroll"
+                        />
                       </div>
                       <div className="activity-details">
                         <h4>Payroll processed</h4>
@@ -909,7 +1108,10 @@ const AdminDashboard = () => {
                     </div>
                     <div className="activity-item">
                       <div className="activity-icon">
-                        <img src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF" alt="Task" />
+                        <img
+                          src="https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF"
+                          alt="Task"
+                        />
                       </div>
                       <div className="activity-details">
                         <h4>Task completed</h4>
@@ -931,9 +1133,9 @@ const AdminDashboard = () => {
                         maintainAspectRatio: false,
                         scales: {
                           y: {
-                            beginAtZero: true
-                          }
-                        }
+                            beginAtZero: true,
+                          },
+                        },
                       }}
                     />
                   </div>
@@ -941,11 +1143,16 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {activeTab === 'employees' && (
+            {activeTab === "employees" && (
               <div className="employees-tab">
                 <div className="section-header">
                   <h2>Employee Management</h2>
-                  <button className="view-all" onClick={() => document.getElementById('new-hire-modal').showModal()}>
+                  <button
+                    className="view-all"
+                    onClick={() =>
+                      document.getElementById("new-hire-modal").showModal()
+                    }
+                  >
                     Add New Employee
                   </button>
                 </div>
@@ -1002,12 +1209,15 @@ const AdminDashboard = () => {
                         />
                       </div>
                       <div className="form-actions">
-                        <button type="button" onClick={() => document.getElementById('new-hire-modal').close()}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            document.getElementById("new-hire-modal").close()
+                          }
+                        >
                           Cancel
                         </button>
-                        <button type="submit">
-                          Add Employee
-                        </button>
+                        <button type="submit">Add Employee</button>
                       </div>
                     </form>
                   </div>
@@ -1015,13 +1225,11 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {activeTab === 'payroll' && (
+            {activeTab === "payroll" && (
               <div className="payroll-tab">
                 <div className="section-header">
                   <h2>Payroll Management</h2>
-                  <button className="view-all">
-                    Process All
-                  </button>
+                  <button className="view-all">Process All</button>
                 </div>
 
                 <div className="payroll-cards">
@@ -1035,8 +1243,20 @@ const AdminDashboard = () => {
                       <div className={`payroll-status ${item.status}`}>
                         {item.status === "processed" ? (
                           <>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 6L9 17L4 12"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
                             </svg>
                             <span>Processed</span>
                           </>
@@ -1066,9 +1286,9 @@ const AdminDashboard = () => {
                         maintainAspectRatio: false,
                         plugins: {
                           legend: {
-                            display: false
-                          }
-                        }
+                            display: false,
+                          },
+                        },
                       }}
                     />
                   </div>
@@ -1076,14 +1296,16 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {activeTab === 'tasks' && (
+            {activeTab === "tasks" && (
               <div className="tasks-tab-admin">
                 <div className="section-header">
                   <h2>Task Management</h2>
-                  <button className="view-all" onClick={() => setShowModal(true)}>
+                  <button
+                    className="view-all"
+                    onClick={() => setShowModal(true)}
+                  >
                     Create New Task
                   </button>
-
                 </div>
 
                 <div className="tasks-list-ad">
@@ -1091,7 +1313,14 @@ const AdminDashboard = () => {
                     <div className="tasks-loading-container-ad">
                       <div className="loading-spinner-ad">
                         <svg className="spinner-ad" viewBox="0 0 50 50">
-                          <circle className="path-ad" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
+                          <circle
+                            className="path-ad"
+                            cx="25"
+                            cy="25"
+                            r="20"
+                            fill="none"
+                            strokeWidth="5"
+                          ></circle>
                         </svg>
                       </div>
                       <p className="loading-text-ad">Loading your tasks...</p>
@@ -1123,7 +1352,12 @@ const AdminDashboard = () => {
                     </div>
                   ) : (
                     tasks.map((task, index) => (
-                      <div key={index} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                      <div
+                        key={index}
+                        className={`task-item ${
+                          task.completed ? "completed" : ""
+                        }`}
+                      >
                         <div className="task-checkbox">
                           <input
                             type="checkbox"
@@ -1134,7 +1368,9 @@ const AdminDashboard = () => {
                         <div className="task-details-ad">
                           <h3>{task.title}</h3>
                           <p>Due: {task.dueDate}</p>
-                          <span className={`priority-badge-ad ${task.priority}`}>
+                          <span
+                            className={`priority-badge-ad ${task.priority}`}
+                          >
                             {task.priority} priority
                           </span>
                           <span className={`status-badge-ad ${task.status}`}>
@@ -1175,7 +1411,6 @@ const AdminDashboard = () => {
                           >
                             Delete
                           </button>
-
                         </div>
                       </div>
                     ))
@@ -1203,7 +1438,12 @@ const AdminDashboard = () => {
                               type="text"
                               placeholder="Enter task title"
                               value={newTask.title}
-                              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                              onChange={(e) =>
+                                setNewTask({
+                                  ...newTask,
+                                  title: e.target.value,
+                                })
+                              }
                               required
                             />
                           </div>
@@ -1213,7 +1453,12 @@ const AdminDashboard = () => {
                             <textarea
                               placeholder="Enter task description"
                               value={newTask.description}
-                              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                              onChange={(e) =>
+                                setNewTask({
+                                  ...newTask,
+                                  description: e.target.value,
+                                })
+                              }
                               required
                               rows="3"
                             />
@@ -1228,13 +1473,19 @@ const AdminDashboard = () => {
                               size="5"
                               value={newTask.assignees || []}
                               onChange={(e) => {
-                                const selected = Array.from(e.target.selectedOptions, option => option.value);
-                                setNewTask(prev => ({ ...prev, assignees: selected }));
+                                const selected = Array.from(
+                                  e.target.selectedOptions,
+                                  (option) => option.value
+                                );
+                                setNewTask((prev) => ({
+                                  ...prev,
+                                  assignees: selected,
+                                }));
                               }}
                               className="multi-select-ad"
                               required
                             >
-                              {employees.map(emp => (
+                              {employees.map((emp) => (
                                 <option key={emp.id} value={emp.id}>
                                   {emp.name} {emp.surname} ({emp.department})
                                 </option>
@@ -1252,7 +1503,12 @@ const AdminDashboard = () => {
                             <input
                               type="date"
                               value={newTask.startDate}
-                              onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
+                              onChange={(e) =>
+                                setNewTask({
+                                  ...newTask,
+                                  startDate: e.target.value,
+                                })
+                              }
                             />
                           </div>
 
@@ -1261,7 +1517,12 @@ const AdminDashboard = () => {
                             <input
                               type="date"
                               value={newTask.dueDate}
-                              onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                              onChange={(e) =>
+                                setNewTask({
+                                  ...newTask,
+                                  dueDate: e.target.value,
+                                })
+                              }
                               required
                             />
                           </div>
@@ -1271,18 +1532,31 @@ const AdminDashboard = () => {
                           <div className="form-group-ad">
                             <label>Priority*</label>
                             <div className="priority-options-ad">
-                              {['low', 'medium', 'high'].map(level => (
-                                <label key={level} className={`priority-option-ad ${newTask.priority === level ? 'active' : ''}`}>
+                              {["low", "medium", "high"].map((level) => (
+                                <label
+                                  key={level}
+                                  className={`priority-option-ad ${
+                                    newTask.priority === level ? "active" : ""
+                                  }`}
+                                >
                                   <input
                                     type="radio"
                                     name="priority"
-                                    style={{ display: 'none' }}
+                                    style={{ display: "none" }}
                                     value={level}
                                     checked={newTask.priority === level}
-                                    onChange={() => setNewTask({ ...newTask, priority: level })}
+                                    onChange={() =>
+                                      setNewTask({
+                                        ...newTask,
+                                        priority: level,
+                                      })
+                                    }
                                   />
-                                  <span className={`priority-dot-ad ${level}`}></span>
-                                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                                  <span
+                                    className={`priority-dot-ad ${level}`}
+                                  ></span>
+                                  {level.charAt(0).toUpperCase() +
+                                    level.slice(1)}
                                 </label>
                               ))}
                             </div>
@@ -1291,18 +1565,30 @@ const AdminDashboard = () => {
                           <div className="form-group-ad">
                             <label>Status*</label>
                             <div className="status-options-ad">
-                              {['Pending', 'Progress', 'Completed'].map(state => (
-                                <label key={state} className={`status-option-ad ${newTask.status === state ? 'active' : ''}`}>
-                                  <input
-                                    type="radio"
-                                    name="status"
-                                    value={state}
-                                    checked={newTask.status === state}
-                                    onChange={() => setNewTask({ ...newTask, status: state })}
-                                  />
-                                  {state}
-                                </label>
-                              ))}
+                              {["Pending", "Progress", "Completed"].map(
+                                (state) => (
+                                  <label
+                                    key={state}
+                                    className={`status-option-ad ${
+                                      newTask.status === state ? "active" : ""
+                                    }`}
+                                  >
+                                    <input
+                                      type="radio"
+                                      name="status"
+                                      value={state}
+                                      checked={newTask.status === state}
+                                      onChange={() =>
+                                        setNewTask({
+                                          ...newTask,
+                                          status: state,
+                                        })
+                                      }
+                                    />
+                                    {state}
+                                  </label>
+                                )
+                              )}
                             </div>
                           </div>
                         </div>
@@ -1312,13 +1598,19 @@ const AdminDashboard = () => {
                           <textarea
                             placeholder="Any additional information..."
                             value={newTask.notes}
-                            onChange={(e) => setNewTask({ ...newTask, notes: e.target.value })}
+                            onChange={(e) =>
+                              setNewTask({ ...newTask, notes: e.target.value })
+                            }
                             rows="3"
                           />
                         </div>
 
                         <div className="modal-actions-ad">
-                          <button type="button" className="cancel-btn-ad" onClick={() => setShowModal(false)}>
+                          <button
+                            type="button"
+                            className="cancel-btn-ad"
+                            onClick={() => setShowModal(false)}
+                          >
                             Cancel
                           </button>
                           <button type="submit" className="submit-btn-ad">
@@ -1339,7 +1631,7 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {activeTab === 'analytics' && (
+            {activeTab === "analytics" && (
               <div className="analytics-tab">
                 <div className="analytics-grid">
                   <div className="analytics-card">
@@ -1350,10 +1642,10 @@ const AdminDashboard = () => {
                         options={{
                           plugins: {
                             legend: {
-                              position: 'right',
-                            }
+                              position: "right",
+                            },
                           },
-                          maintainAspectRatio: false
+                          maintainAspectRatio: false,
                         }}
                       />
                     </div>
@@ -1369,9 +1661,9 @@ const AdminDashboard = () => {
                           maintainAspectRatio: false,
                           scales: {
                             y: {
-                              beginAtZero: false
-                            }
-                          }
+                              beginAtZero: false,
+                            },
+                          },
                         }}
                       />
                     </div>
@@ -1387,9 +1679,9 @@ const AdminDashboard = () => {
                           maintainAspectRatio: false,
                           scales: {
                             y: {
-                              beginAtZero: true
-                            }
-                          }
+                              beginAtZero: true,
+                            },
+                          },
                         }}
                       />
                     </div>
@@ -1401,20 +1693,22 @@ const AdminDashboard = () => {
                       <Bar
                         data={{
                           labels: Object.keys(budgetData),
-                          datasets: [{
-                            label: 'Budget Allocation',
-                            data: Object.values(budgetData),
-                            backgroundColor: '#4318FF',
-                          }]
+                          datasets: [
+                            {
+                              label: "Budget Allocation",
+                              data: Object.values(budgetData),
+                              backgroundColor: "#4318FF",
+                            },
+                          ],
                         }}
                         options={{
                           responsive: true,
                           maintainAspectRatio: false,
                           scales: {
                             y: {
-                              beginAtZero: true
-                            }
-                          }
+                              beginAtZero: true,
+                            },
+                          },
                         }}
                       />
                     </div>

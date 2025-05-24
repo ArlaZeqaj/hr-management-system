@@ -368,7 +368,29 @@ public class AdminDashService {
         return totalPayroll;
     }
 
+    public Map<String, Double> getPayrollTrendByMonth() throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> employeesFuture = db.collection("employees").get();
+        List<QueryDocumentSnapshot> employeeDocs = employeesFuture.get().getDocuments();
 
+        Map<String, Double> monthlyTotals = new TreeMap<>();
+
+        for (QueryDocumentSnapshot employeeDoc : employeeDocs) {
+            CollectionReference payrollRef = employeeDoc.getReference().collection("payroll");
+            List<QueryDocumentSnapshot> payrollDocs = payrollRef.get().get().getDocuments();
+
+            for (QueryDocumentSnapshot payrollDoc : payrollDocs) {
+                Double grossSalary = payrollDoc.getDouble("grossSalary");
+                String month = payrollDoc.getId();  // format "2025-04"
+
+                if (grossSalary != null) {
+                    monthlyTotals.put(month, monthlyTotals.getOrDefault(month, 0.0) + grossSalary);
+                }
+            }
+        }
+
+        return monthlyTotals;
+    }
 
 
 

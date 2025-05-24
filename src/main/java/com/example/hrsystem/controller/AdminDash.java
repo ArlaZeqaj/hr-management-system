@@ -1,6 +1,7 @@
 package com.example.hrsystem.controller;
 
 import com.example.hrsystem.service.AdminDashService;
+import com.example.hrsystem.service.PayrollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ public class AdminDash {
     public AdminDash(AdminDashService service) {
         this.service = service;
     }
+
+    @Autowired
+    private PayrollService payrollService;
 
     @GetMapping("/count")
     public ResponseEntity<?> getEmployeeCount() {
@@ -172,14 +176,31 @@ public class AdminDash {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
-
-
-
-
-
-
+    //payroll monthly trend data for the payroll graph
+    @GetMapping("/payroll/trend")
+    public ResponseEntity<?> getPayrollTrend() {
+        try {
+            Map<String, Double> payrollTrend = service.getPayrollTrendByMonth();
+            return ResponseEntity.ok(payrollTrend);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to retrieve payroll trend: " + e.getMessage());
+        }
+    }
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Double>> getPayrollSummary() {
+        return ResponseEntity.ok(payrollService.getPayrollSummaryByDepartment());
+    }
+    @PostMapping("/process/{department}")
+    public ResponseEntity<String> processPayroll(@PathVariable String department) {
+        try {
+            payrollService.processPayrollByDepartment(department);
+            return ResponseEntity.ok("Payroll processed for " + department);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error processing payroll");
+        }
+    }
 
 
 }
