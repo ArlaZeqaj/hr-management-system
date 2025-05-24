@@ -59,7 +59,11 @@ public class ProjectController {
         }
     }
 
-
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> getAllProjects() {
+        List<Map<String, Object>> projects = projectService.getAllProjects();
+        return ResponseEntity.ok(projects);
+    }
 
 }
 

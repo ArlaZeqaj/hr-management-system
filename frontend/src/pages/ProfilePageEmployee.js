@@ -6,6 +6,12 @@ import { useNavigate } from "react-router-dom";
 import "../styles/ProfilePageEmployee.css";
 import { useBirthdays } from '../services/BirthdayContext';
 import BirthdayCard from '../services/BirthdayCard';
+import EmployeeFooter from "./Employee/EmployeeFooter";
+import EmployeeSidebar from "./Employee/EmployeeSidebar";
+import EmployeeHeader from "./Employee/EmployeeHeader";
+import "./Employee/EmployeeSidebar.css";
+import "./Employee/EmployeeHeader.css";
+import "./Employee/EmployeeFooter.css";
 
 const ProfilePageEmployee = () => {
   const navigate = useNavigate();
@@ -16,7 +22,6 @@ const ProfilePageEmployee = () => {
   const [darkMode, setDarkMode] = useState(() => {
     return JSON.parse(localStorage.getItem("darkMode")) || false;
   });
-  const [showNotifications, setShowNotifications] = useState(false);
   const [userData, setUserData] = useState({
     name: "",
     surname: "",
@@ -51,8 +56,6 @@ const ProfilePageEmployee = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
-
-  const notificationRef = useRef(null);
   const { allBirthdays, loading: birthdaysLoading, error: birthdaysError, refreshEmployees } = useBirthdays();
 
   const getFileIcon = (fileType) => {
@@ -68,20 +71,6 @@ const ProfilePageEmployee = () => {
     document.body.classList.toggle("dark-theme", darkMode);
     localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
-
-  // Click outside handler
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notificationRef.current &&
-          !notificationRef.current.contains(event.target) &&
-          !event.target.closest('.profile-button')) {
-        setShowNotifications(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // File upload handler
   const handleFileUpload = useCallback((e) => {
@@ -101,8 +90,7 @@ const ProfilePageEmployee = () => {
 
   // Publish files handler
   const handlePublish = useCallback(async () => {
-
-   const user = auth.currentUser;
+    const user = auth.currentUser;
     if (!user) {
       alert('Please sign in again');
       return;
@@ -117,8 +105,6 @@ const ProfilePageEmployee = () => {
 
     setIsUploading(true);
 
-console.log('Uploading with token:', token);
-console.log('Files:', selectedFiles);
     try {
       const user = auth.currentUser;
       if (!user) throw new Error('User not authenticated');
@@ -254,8 +240,8 @@ console.log('Files:', selectedFiles);
       navigate("/employee/dashboard");
     }
     else if (menuItem === "Leave Request") {
-       navigate("/leave-request");
-        }
+      navigate("/leave-request");
+    }
   };
 
   const toggleDarkMode = useCallback(() => {
@@ -290,59 +276,40 @@ console.log('Files:', selectedFiles);
   // Render methods
   const renderProfileContent = () => {
     if (userData.loading) {
-      return <div className="loading-text">Loading user data, please wait.</div>;
+      return <div className="loading-text-ep">Loading user data, please wait.</div>;
     }
     if (userData.error) {
-      return <div className="error-message">Error loading profile: {userData.error}</div>;
+      return <div className="error-message-ep">Error loading profile: {userData.error}</div>;
     }
     return (
       <>
-        <h1 className="profile-name">
+        <h1 className="profile-name-ep">
           {userData.name} {userData.surname}
         </h1>
-        <p className="profile-title">{userData.email}</p>
-        <p className="profile-title">{userData.departament}</p>
-        <div className="profile-divider"></div>
-        <p className="profile-bio">{userData.bio}</p>
+        <p className="profile-title-ep">{userData.email}</p>
+        <p className="profile-title-ep">{userData.departament}</p>
+        <div className="profile-divider-ep"></div>
+        <p className="profile-bio-ep">{userData.bio}</p>
       </>
     );
   };
 
-  const renderNotificationSettings = () => (
-    <div className="dropdown-menu">
-      <h3>Notification Settings</h3>
-      {Object.keys(notifications).map((item) => (
-        <div key={item} className="toggle-item">
-          <span>{item}</span>
-          <label className="toggle-switch">
-            <input
-              type="checkbox"
-              checked={notifications[item]}
-              onChange={() => toggleNotification(item)}
-            />
-            <span className="toggle-slider"></span>
-          </label>
-        </div>
-      ))}
-    </div>
-  );
-
   const renderProjects = () => {
     if (projectsLoading) {
-      return <div className="loading-text">Loading projects...</div>;
+      return <div className="loading-text-ep">Loading projects...</div>;
     }
     if (projectsError) {
-      return <div className="error-message">Error loading projects: {projectsError}</div>;
+      return <div className="error-message-ep">Error loading projects: {projectsError}</div>;
     }
     if (currentProjects.length === 0) {
-      return <div className="no-projects">No current projects found</div>;
+      return <div className="no-projects-ep">No current projects found</div>;
     }
     return (
-      <div className="project-list">
+      <div className="project-list-ep">
         {currentProjects.map((project, index) => (
           <div
             key={index}
-            className="project-item"
+            className="project-item-ep"
             onClick={handleProjectClick}
           >
             <img
@@ -350,17 +317,17 @@ console.log('Files:', selectedFiles);
               alt={project.project_Name}
               loading="lazy"
             />
-            <div className="project-info">
+            <div className="project-info-ep">
               <h4>{project.project_Name}</h4>
-              <div className="project-meta">
+              <div className="project-meta-ep">
                 <span>Status: {project.status}</span>
-                <span>•</span>
+                <span className="bullet-ep">•</span>
                 <span>Role: {project.role}</span>
               </div>
-              <div className="project-dates">
+              <div className="project-dates-ep">
                 <span>{project.start_Date} to {project.end_Date}</span>
               </div>
-              <p className="project-description">
+              <p className="project-description-ep">
                 {project.description && project.description.length > 100
                   ? `${project.description.substring(0, 100)}...`
                   : project.description || "No description available"}
@@ -373,131 +340,67 @@ console.log('Files:', selectedFiles);
   };
 
   return (
-    <div className={`profile-container ${darkMode ? 'dark-theme' : ''}`}>
-      {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <span className="logo">HRCLOUDX</span>
-        </div>
+    <div className={`profile-page-container-ep ${darkMode ? 'dark-theme' : ''}`}>
+      <EmployeeSidebar
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
+        darkMode={darkMode}
+      />
 
-        <div className="sidebar-menu">
-          {['Dashboard', 'Profile', 'Leave Requests', 'Projects'].map((item) => (
-            <div
-              key={item}
-              className={`menu-item ${activeMenuItem === item ? "active" : ""}`}
-              onClick={() => handleMenuItemClick(item)}
-            >
+      <div className="profile-main-content-ep">
+        <EmployeeHeader
+          activeMenuItem={activeMenuItem}
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          notifications={notifications}
+          toggleNotification={toggleNotification}
+          userData={userData}
+        />
+
+        <div className="profile-section-ep">
+          <div className="profile-card-ep">
+            <div className="profile-header-ep">
+              <div className="cover-photo-overlay-ep"></div>
               <img
-                src={getMenuItemIcon(item)}
-                className="menu-icon"
-                alt={item}
-              />
-              <span>{item}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="sidebar-bottom">
-          <div className="upgrade-card">
-            <div className="upgrade-content">
-              <div className="pro-badge">
-                <span className="pro-icon">⭐</span>
-                <span className="pro-text">Upgrade to PRO</span>
-              </div>
-              <p className="upgrade-text">Unlock all features</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="main-content">
-        <div className="header">
-          <div className="breadcrumbs">
-            <span className="path">Pages / {activeMenuItem}</span>
-            <span className="current-page">{activeMenuItem}</span>
-          </div>
-
-          <div className="header-actions">
-            <div className="action-icons">
-              <button
-                onClick={toggleDarkMode}
-                className="theme-toggle-btn"
-                aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-              >
-                <img
-                  src={
-                    darkMode
-                    ? "https://img.icons8.com/?size=100&id=96205&format=png&color=FFFFFF"
-                    : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
-                  }
-                  alt={darkMode ? "Light Mode" : "Dark Mode"}
-                  width="24"
-                  height="24"
-                />
-              </button>
-              <div className="profile-dropdown" ref={notificationRef}>
-                <button
-                  className="profile-button"
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  aria-expanded={showNotifications}
-                >
-                  <img
-                    src={userData.avatarURL}
-                    alt="Profile"
-                    width="40"
-                    height="40"
-                  />
-                </button>
-                {showNotifications && renderNotificationSettings()}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Profile Section */}
-        <div className="profile-section">
-          <div className="profile-card">
-            <div className="profile-header">
-              <div className="cover-photo-overlay"></div>
-              <img
-                src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/57709ee9-ee37-41a1-8342-a56a90377035"
-                className="cover-photo"
+                src="https://img.freepik.com/free-vector/beige-leafy-watercolor-background-vector_53876-136491.jpg?semt=ais_hybrid&w=740"
+                className="cover-photo-ep"
                 alt="Cover"
                 loading="lazy"
               />
-              <div className="profile-photo-container">
+              <div className="profile-photo-container-ep">
                 <img
                   src={userData.avatarURL}
-                  className="profile-photo"
+                  className="profile-photo-ep"
                   alt="Profile"
                   loading="lazy"
-                  width="120"
-                  height="120"
+                  width="100"
+                  height="100"
                 />
               </div>
             </div>
 
-            <div className="profile-content">
+            <div className="profile-content-ep">
               {renderProfileContent()}
             </div>
           </div>
 
-          {memoizedBirthdayCard}
+          <div className="birthday-card-container-ep">
+            {memoizedBirthdayCard}
+          </div>
 
-          <div className="upload-card">
-            <div className="upload-area">
+          <div className="upload-card-ep">
+            <div className="upload-area-ep">
               <input
                 type="file"
                 id="file-upload"
-                className="file-input"
+                className="file-input-ep"
                 accept=".png,.jpg,.jpeg,.gif,.pdf,.doc,.docx"
                 multiple
                 onChange={handleFileUpload}
               />
-              <label htmlFor="file-upload" className="upload-button">
+              <label htmlFor="file-upload" className="upload-button-ep">
                 <img
-                  src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f81c15c3-242e-4ba1-91ed-f191592c92b7"
+                  src="https://img.icons8.com/?size=100&id=83225&format=png&color=6466f1"
                   alt="Upload"
                   width="40"
                   height="40"
@@ -507,7 +410,7 @@ console.log('Files:', selectedFiles);
               </label>
 
               {uploadedFiles.length > 0 && (
-                <div className="uploaded-files-preview">
+                <div className="uploaded-files-preview-ep">
                   <h4>Selected Files:</h4>
                   <ul>
                     {uploadedFiles.map((file, index) => (
@@ -515,7 +418,7 @@ console.log('Files:', selectedFiles);
                         {file.preview ? (
                           <img src={file.preview} alt={file.name} width="50" />
                         ) : (
-                          <div className="file-icon">{getFileIcon(file.type)}</div>
+                          <div className="file-icon-ep">{getFileIcon(file.type)}</div>
                         )}
                         <span>{file.name}</span>
                         <span>({(file.size / 1024).toFixed(2)} KB)</span>
@@ -526,20 +429,20 @@ console.log('Files:', selectedFiles);
               )}
             </div>
 
-            <div className="complete-profile">
+            <div className="complete-profile-ep">
               <h3>Complete your profile</h3>
               <p>
                 Securely store your important documents,
-                 Upload and save your essential files!
+                Upload and save your essential files!
               </p>
               <button
-                className="publish-btn"
+                className="publish-btn-ep"
                 onClick={handlePublish}
                 disabled={isUploading || selectedFiles.length === 0}
               >
                 {isUploading ? (
                   <>
-                    <span className="spinner"></span>
+                    <span className="spinner-ep"></span>
                     Publishing...
                   </>
                 ) : (
@@ -551,62 +454,41 @@ console.log('Files:', selectedFiles);
         </div>
 
         {/* Content Section */}
-        <div className="content-section">
-          <div className="projects-card">
+        <div className="content-section-ep">
+          <div className="projects-card-ep">
             <h2>Current Projects</h2>
-            <p className="subtext">
+            <p className="subtext-ep">
               Your currently active projects. Click for more details.
             </p>
             {renderProjects()}
           </div>
 
-          <div className="info-card expanded-info">
+          <div className="info-card-ep expanded-info">
             <h2>General Information</h2>
-            <p className="info-text">
+            <p className="info-text-ep">
               This profile contains official employment records and organizational details.
               Please contact HR for any discrepancies or updates.
             </p>
 
-            <div className="info-grid">
+            <div className="info-grid-ep">
               {infoItems.map((item) => (
                 <button
                   key={item.key}
-                  className="info-item"
+                  className="info-item-ep"
                   onClick={() => alert(`${item.label} clicked`)}
                 >
-                  <span className="info-label">{item.label}</span>
-                  <span className="info-value">{userData[item.key]}</span>
+                  <span className="info-label-ep">{item.label}</span>
+                  <span className="info-value-ep">{userData[item.key]}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="footer">
-          <span>
-            © 2025 HRCLOUDX UI. All Rights Reserved. Made with love!
-          </span>
-          <div className="footer-links">
-            {['Marketplace', 'License', 'Terms of Use', 'Blog'].map((link) => (
-              <a key={link} href={`/${link.toLowerCase()}`}>{link}</a>
-            ))}
-          </div>
-        </div>
+        <EmployeeFooter />
       </div>
     </div>
   );
-};
-
-// Helper functions
-const getMenuItemIcon = (menuItem) => {
-  const icons = {
-    Dashboard: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e5cdd104-7027-4111-b9b0-203ead13153a",
-    Profile: "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f83d5003-9309-4c08-b4fb-effc29fd197d",
-    "Leave Requests": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6980a5d3-86da-498c-89ac-e7776a1a050a",
-    Projects: "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/6yzmslw0_expires_30_days.png"
-  };
-  return icons[menuItem] || "";
 };
 
 const infoItems = [

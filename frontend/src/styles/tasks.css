@@ -1,0 +1,282 @@
+/* Modern Task Modal */
+.modal-overlay-ad {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+  }
+  
+  .modal-container-ad {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .modal-container-ad h2 {
+    margin-top: 0;
+    color: #2b3674;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  /* Form Layout */
+  .form-row-ad {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-group-ad {
+    flex: 1;
+    margin-bottom: 1rem;
+  }
+  
+  .form-group-ad label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2b3674;
+    font-size: 0.875rem;
+  }
+  
+  /* Input Fields */
+  .modal-container-ad input,
+  .modal-container-ad textarea,
+  .modal-container-ad select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #334155;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+  }
+  
+  .modal-container-ad input:focus,
+  .modal-container-ad textarea:focus,
+  .modal-container-ad select:focus {
+    border-color: #6366f1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
+  }
+  
+  .modal-container-ad textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Select Dropdown */
+  .modal-container-ad select {
+    appearance: none;
+    padding-right: 2.5rem;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364758b'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") 
+      no-repeat right 0.75rem center/1rem;
+  }
+  
+  /* Multi-select */
+  .modal-container-ad select[multiple] {
+    min-height: 120px;
+    padding: 0.5rem;
+    background-image: none;
+  }
+  
+  .select-hint-ad {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+    font-style: italic;
+  }
+  
+  /* Priority and Status Options */
+  .priority-options-ad,
+  .status-options-ad {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
+  .priority-option-ad,
+  .status-option-ad {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    border: 1px solid #e2e8f0;
+    background: white;
+  }
+  
+  .priority-option-ad {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .priority-option-ad.active {
+    background: #f0f2ff;
+    border-color: #6366f1;
+  }
+  
+  .status-option-ad.active {
+    background: #e6f7ff;
+    border-color: #1890ff;
+  }
+  
+  .priority-dot-ad {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  
+  .priority-dot-ad.low {
+    background: #10b981;
+  }
+  
+  .priority-dot-ad.medium {
+    background: #f59e0b;
+  }
+  
+  .priority-dot-ad.high {
+    background: #ef4444;
+  }
+  
+  /* Modal Actions */
+  .modal-actions-ad {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .modal-actions-ad button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+  }
+  
+  .submit-btn-ad {
+    background: #6366f1;
+    color: white;
+    border: none;
+  }
+  
+  .submit-btn-ad:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+  }
+  
+  .cancel-btn-ad {
+    background: white;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .cancel-btn-ad:hover {
+    background: #f8fafc;
+  }
+  
+  /* Dark Mode */
+  .admin-dashboard.dark-theme .modal-container-ad {
+    background: #2d2d42;
+    border-color: #3a3a4e;
+  }
+  
+  .admin-dashboard.dark-theme .modal-container-ad h2 {
+    color: white;
+  }
+  
+  .admin-dashboard.dark-theme .form-group-ad label {
+    color: #e0e0e0;
+  }
+  
+  .admin-dashboard.dark-theme .modal-container-ad input,
+  .admin-dashboard.dark-theme .modal-container-ad textarea,
+  .admin-dashboard.dark-theme .modal-container-ad select {
+    background: #3a3a4e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  
+  .admin-dashboard.dark-theme .priority-option-ad,
+  .admin-dashboard.dark-theme .status-option-ad {
+    background: #3a3a4e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  
+  .admin-dashboard.dark-theme .priority-option-ad.active {
+    background: #3a3a4e;
+    border-color: #6366f1;
+  }
+  
+  .admin-dashboard.dark-theme .status-option-ad.active {
+    background: #3a3a4e;
+    border-color: #1890ff;
+  }
+  
+  .admin-dashboard.dark-theme .cancel-btn-ad {
+    background: #3a3a4e;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  
+  .admin-dashboard.dark-theme .cancel-btn-ad:hover {
+    background: #444;
+  }
+  
+  /* Responsive */
+  @media (max-width: 480px) {
+    .modal-container-ad {
+      width: 95%;
+      padding: 1.5rem;
+    }
+    
+    .form-row-ad {
+      flex-direction: column;
+      gap: 0;
+    }
+    
+    .priority-options-ad,
+    .status-options-ad {
+      flex-direction: column;
+    }
+    
+    .modal-actions-ad {
+      flex-direction: column;
+    }
+    
+    .modal-actions-ad button {
+      width: 100%;
+    }
+  }

@@ -6,13 +6,12 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -56,6 +55,15 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error getting user role: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/last-signin")
+    public Map<String, String> getLastSignIn(@RequestParam String email) throws FirebaseAuthException {
+        // In a real implementation, you would query your database for this info
+        // This is a simplified version that returns dummy data
+        Map<String, String> response = new HashMap<>();
+        response.put("lastSignIn", "2025-05-16T12:34:56Z");
+        return response;
     }
 
 

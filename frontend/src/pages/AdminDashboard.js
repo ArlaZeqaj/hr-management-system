@@ -7,61 +7,70 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
-import AdminFooter from "./Admin/AdminFooter";
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import "../styles/Admin.css";
+import "../styles/tasks.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
-import "./Admin/AdminFooter.css";
+
 
 Chart.register(...registerables);
 
 const AdminDashboard = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-  
-    // Set active menu item based on current route
-    const getActiveMenuItem = () => {
-      const path = location.pathname;
-      if (path.includes('/admin/dashboard')) return 'Dashboard';
-      if (path.includes('/admin/profile')) return 'Profile';
-      if (path.includes('/new-hires')) return 'New Hires';
-      if (path.includes('/employee')) return 'Employees';
-      if (path.includes('/billing')) return 'Billing';
-      if (path.includes('/admin/projects')) return 'Projects';
-      return 'Dashboard'; // default
-    };
-  
-    const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
-    const handleMenuItemClick = (menuItem) => {
-      setActiveMenuItem(menuItem);
-      switch (menuItem) {
-        case 'Dashboard':
-          navigate('/admin/dashboard');
-          break;
-        case 'Profile':
-          navigate('/admin/profile');
-          break;
-        case 'New Hires':
-          navigate('/new-hires');
-          break;
-        case 'Employees':
-          navigate('/employee');
-          break;
-        case 'Billing':
-          navigate('/billing');
-          break;
-        case 'Projects':
-          navigate('/admin/projects');
-          break;
-        default:
-          navigate('/admin/dashboard');
-      }
-    };
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Set active menu item based on current route
+  const getActiveMenuItem = () => {
+    const path = location.pathname;
+    if (path.includes('/admin/dashboard')) return 'Dashboard';
+    if (path.includes('/admin/profile')) return 'Profile';
+    if (path.includes('/new-hires')) return 'New Hires';
+    if (path.includes('/employee')) return 'Employees';
+    if (path.includes('/billing')) return 'Billing';
+    if (path.includes('/admin/projects')) return 'Projects';
+    return 'Dashboard'; // default
+  };
+
+  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+  const handleMenuItemClick = (menuItem) => {
+    setActiveMenuItem(menuItem);
+    switch (menuItem) {
+      case 'Dashboard':
+        navigate('/admin/dashboard');
+        break;
+      case 'Profile':
+        navigate('/admin/profile');
+        break;
+      case 'New Hires':
+        navigate('/new-hires');
+        break;
+      case 'Employees':
+        navigate('/employee');
+        break;
+      case 'Billing':
+        navigate('/billing');
+        break;
+      case 'Projects':
+        navigate('/admin/projects');
+        break;
+      default:
+        navigate('/admin/dashboard');
+    }
+  };
 
   const [searchQuery, setSearchQuery] = useState("");
   const [darkMode, setDarkMode] = useState(false);
+  ///tasks
+  //const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState({ title: "", dueDate: "", priority: "low" });
+  const [showModal, setShowModal] = useState(false);
+  const [viewingTask, setViewingTask] = useState(null);
+
+
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
   const [notifications, setNotifications] = useState({
     "Item updates": true,
     "New hires": true,
@@ -70,11 +79,17 @@ const AdminDashboard = () => {
   });
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeTab, setActiveTab] = useState('overview');
-   // New state to store employee count
+  // New state to store employee count
   const [employeeCount, setEmployeesCount] = useState(0);
   const [activeProjectsCount, setActiveProjectsCount] = useState(0);
   const [pendingTasksCount, setPendingTasksCount] = useState(0);
   const [departmentDistribution, setDepartmentDistribution] = useState({});
+  // te task
+  const [employees, setEmployees] = useState([]);
+
+
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+
   const [newHireForm, setNewHireForm] = useState({
     name: '',
     position: '',
@@ -82,134 +97,513 @@ const AdminDashboard = () => {
     startDate: ''
 
   });
-    // Fetch employee count from backend
-useEffect(() => {
-  const fetchEmployeeCount = async () => {
-    const user = auth.currentUser;
+  // budegt allocation
+  const [budgetData, setBudgetData] = useState({});
 
-    if (!user) {
-      console.error("❌ No authenticated user");
-      return;
+  useEffect(() => {
+    console.log("useEffect running");
+    const fetchBudgetData = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch("http://localhost:8080/api/admin1/budget-allocation", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch budget data");
+
+        const data = await res.json();
+        console.log("🟢 Department Budget Data from backend:", data); // Debug print
+        setBudgetData(data);
+      } catch (err) {
+        console.error("❌ Budget fetch error:", err);
+      }
+    };
+
+    fetchBudgetData();
+  }, []);
+
+
+  // per te bere edit nje task
+  const [editMode, setEditMode] = useState(false);
+  const [taskBeingEdited, setTaskBeingEdited] = useState(null);
+
+
+  //po marrim employes te na dal te drop dow
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.error("❌ No authenticated user");
+        return;
+      }
+
+      try {
+        const token = await user.getIdToken(); // Get Firebase ID token
+
+        const response = await fetch("http://localhost:8080/api/admin1/employees", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token to backend
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch employees");
+
+        const employeesData = await response.json();
+        console.log("✅ Employees fetched:", employeesData);
+        setEmployees(employeesData);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    if (showModal) {
+      fetchEmployees();
     }
+  }, [showModal]);
+
+  // Fetch employee count from backend
+  useEffect(() => {
+    const fetchEmployeeCount = async () => {
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.error("❌ No authenticated user");
+        return;
+      }
+
+      try {
+        const token = await user.getIdToken();  // Firebase ID token
+        const response = await fetch("http://localhost:8080/api/admin1/count", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch employee count");
+
+        const count = await response.json();
+        console.log("✅ Employee count from backend:", count);
+        setEmployeesCount(count);
+      } catch (error) {
+        console.error("Error fetching employee count:", error);
+      }
+    };
+
+    // Listen to auth state
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is authenticated:", user);
+        fetchEmployeeCount();
+      } else {
+        console.error("❌ No authenticated user");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Fetch active projects count
+  useEffect(() => {
+    const fetchActiveProjectsCount = async () => {
+      // Check localStorage first
+      const savedCount = localStorage.getItem("activeProjectsCount");
+      if (savedCount !== null) {
+        setActiveProjectsCount(Number(savedCount));
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("❌ No authenticated user");
+        return;
+      }
+
+      try {
+        const token = await getIdToken(user); // Use the token after verifying the user
+        const response = await fetch("http://localhost:8080/api/admin1/active-projects/count", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,  // Attach the token in the Authorization header
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch active projects count");
+
+        const count = await response.json();  // Parse the count from the response
+        console.log("✅ Active projects count from backend:", count);  // For debugging purposes
+        setActiveProjectsCount(count);  // Update the state with the active projects count
+        localStorage.setItem("activeProjectsCount", count); // Save to localStorage
+      } catch (error) {
+        console.error("Error fetching active projects count:", error);
+      }
+    };
+
+    fetchActiveProjectsCount();  // Call the function to fetch data when component mounts
+  }, []);  // Empty dependency array so this runs only once when the component mounts
+
+  useEffect(() => {
+    const fetchPendingTasks = async () => {
+      // Check localStorage first
+      const savedCount = localStorage.getItem("pendingTasksCount");
+      if (savedCount !== null) {
+        setPendingTasksCount(Number(savedCount));
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("❌ No authenticated user");
+        return;
+      }
+
+      try {
+        const token = await user.getIdToken();
+        const response = await fetch("http://localhost:8080/api/admin1/tasks/pending/count", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch pending tasks count");
+
+        const count = await response.json();
+        console.log("✅ Pending tasks count:", count);
+        setPendingTasksCount(count);
+        localStorage.setItem("pendingTasksCount", count);
+      } catch (error) {
+        console.error("Error fetching pending tasks:", error);
+      }
+    };
+
+    fetchPendingTasks();
+  }, []);
+
+  useEffect(() => {
+    const fetchDistribution = async () => {
+      // Check localStorage first
+      const savedData = localStorage.getItem("departmentDistribution");
+      if (savedData) {
+        setDepartmentDistribution(JSON.parse(savedData));
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("❌ No authenticated user");
+        return;
+      }
+
+      try {
+        const token = await user.getIdToken();
+        const response = await fetch("http://localhost:8080/api/admin1/employees/distribution", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch department distribution");
+
+        const data = await response.json();
+        setDepartmentDistribution(data);
+        // Save to localStorage
+        localStorage.setItem("departmentDistribution", JSON.stringify(data));
+      } catch (error) {
+        console.error("Error fetching department distribution:", error);
+      }
+    };
+
+    fetchDistribution();
+  }, []);
+
+
+  const handleTaskSubmit = async (e) => {
+    e.preventDefault();
 
     try {
-      const token = await user.getIdToken();  // Firebase ID token
-      const response = await fetch("http://localhost:8080/api/admin1/count", {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+
+      const token = await user.getIdToken();
+
+      const taskToSend = {
+        title: newTask.title,
+        description: newTask.description,
+        assignees: Array.isArray(newTask.assignees) ? newTask.assignees : [],
+        priority: newTask.priority || "low",
+        status: newTask.status || "Pending",
+        startDate: newTask.startDate,
+        dueDate: newTask.dueDate,
+        notes: newTask.notes || "",
+        completed: false,
+      };
+
+      // Validation
+      if (!taskToSend.title) throw new Error("Title is required");
+      if (!taskToSend.dueDate) throw new Error("Due date is required");
+
+      const url = editMode
+        ? `http://localhost:8080/api/admin1/tasks/update`
+        : "http://localhost:8080/api/admin1/tasks/create";
+
+      const method = editMode ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskToSend),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(errorData.message || "Failed to save task");
+      }
+
+      const contentType = response.headers.get("content-type") || "";
+      const savedTask = contentType.includes("application/json")
+        ? await response.json()
+        : await response.text();
+
+
+      if (editMode) {
+        // Update task in state
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task.id === taskBeingEdited.id ? savedTask : task
+          )
+        );
+      } else {
+        // Add new task
+        setTasks(prevTasks => [...prevTasks, savedTask]);
+      }
+
+      // Reset state
+      setNewTask({
+        title: "",
+        description: "",
+        assignees: [],
+        priority: "low",
+        status: "Pending",
+        startDate: "",
+        dueDate: "",
+        notes: "",
+      });
+
+      setShowModal(false);
+      setEditMode(false);
+      setTaskBeingEdited(null);
+
+      alert(editMode ? "Task updated successfully!" : "Task created successfully!");
+
+    } catch (error) {
+      console.error("Task submit error:", error);
+      alert(`Error: ${error.message}`);
+    }
+  };
+
+
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Task Details Modal Component
+  const TaskDetailsModal = ({ task, onClose }) => {
+    if (!task) return null;
+
+    return (
+      <div className="modal-overlay-ad">
+        <div className="modal-container-ad">
+          <h2>Task Details</h2>
+
+          <div className="task-details-content">
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Title:</span>
+              <span className="detail-value-ad">{task.title}</span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Description:</span>
+              <span className="detail-value-ad">{task.description || "No description"}</span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Status:</span>
+              <span className={`detail-value status-badge ${task.status.toLowerCase().replace(' ', '-')}`}>
+                {task.status}
+              </span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Priority:</span>
+              <span className={`detail-value priority-badge ${task.priority}`}>
+                {task.priority}
+              </span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Start Date:</span>
+              <span className="detail-value-ad">{task.startDate || "Not specified"}</span>
+            </div>
+
+            <div className="detail-row-ad">
+              <span className="detail-label-ad">Due Date:</span>
+              <span className="detail-value-ad">{task.dueDate}</span>
+            </div>
+
+            {task.assignees && task.assignees.length > 0 && (
+              <div className="detail-row-ad">
+                <span className="detail-label-ad">Assignees:</span>
+                <span className="detail-value-ad">
+                  {task.assignees.map(assigneeId => {
+                    const employee = employees.find(e => e.id === assigneeId);
+                    return employee ? `${employee.name} ${employee.surname}` : 'Unknown';
+                  }).join(', ')}
+                </span>
+              </div>
+            )}
+
+            {task.notes && (
+              <div className="detail-row-ad">
+                <span className="detail-label-ad">Notes:</span>
+                <span className="detail-value-ad">{task.notes}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="modal-actions-ad">
+            <button className="cancel-btn-ad" onClick={onClose}>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const fetchAllTasks = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+
+      const token = await user.getIdToken();
+
+      const response = await fetch("http://localhost:8080/api/admin1/tasks/all", {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (!response.ok) throw new Error("Failed to fetch employee count");
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to fetch tasks");
+      }
+      console.log("Response status:", response.status); // ✅ ADD THIS
+      const data = await response.json();
+      console.log("Raw tasks data from backend:11111", data);
 
-      const count = await response.json();
-      console.log("✅ Employee count from backend:", count);
-      setEmployeesCount(count);
-    } catch (error) {
-      console.error("Error fetching employee count:", error);
+
+      // 🔄 Flatten nested tasks (task1, task2, ...) into one array
+      const allTasks = [];
+      data.forEach(doc => {
+        const { id, ...tasksInDoc } = doc;
+        Object.values(tasksInDoc).forEach(task => {
+          if (task && task.title && task.dueDate) {
+            allTasks.push(task);
+          }
+        });
+      });
+
+      // ✅ Deduplicate by title + dueDate
+      const uniqueTasks = Array.from(
+        new Map(allTasks.map(task => [`${task.title}_${task.dueDate}`, task])).values()
+      );
+
+      setTasks(uniqueTasks);
+    } catch (err) {
+      console.error("Fetch tasks error:", err);
+      setError(err.message || "Unexpected error");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Listen to auth state
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("User is authenticated:", user);
-      fetchEmployeeCount();
-    } else {
-      console.error("❌ No authenticated user");
+  useEffect(() => {
+    if (activeTab === 'tasks') {
+      console.log("Active tab is tasks. Fetching tasks...");
+      fetchAllTasks();
     }
-  });
+  }, [activeTab]); // ✅ This runs every time activeTab changes
 
-  return () => unsubscribe();
-}, []);
 
-// Fetch active projects count
-    useEffect(() => {
-      const fetchActiveProjectsCount = async () => {
-        const user = auth.currentUser;
-        if (!user) {
-          console.error("❌ No authenticated user");
-          return;
-        }
+  //delete taskkk
+  const handleDeleteTask = async (taskTitle) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
 
-        try {
-          const token = await getIdToken(user); // Use the token after verifying the user
-          const response = await fetch("http://localhost:8080/api/admin1/active-projects/count", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,  // Attach the token in the Authorization header
-            },
-          });
+      const token = await user.getIdToken();
 
-          if (!response.ok) throw new Error("Failed to fetch active projects count");
+      const response = await fetch("http://localhost:8080/api/admin1/tasks/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title: taskTitle }),
+      });
 
-          const count = await response.json();  // Parse the count from the response
-          console.log("✅ Active projects count from backend:", count);  // For debugging purposes
-          setActiveProjectsCount(count);  // Update the state with the active projects count
-        } catch (error) {
-          console.error("Error fetching active projects count:", error);
-        }
-      };
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || "Failed to delete task");
+      }
 
-      fetchActiveProjectsCount();  // Call the function to fetch data when component mounts
-    }, []);  // Empty dependency array so this runs only once when the component mounts
+      // Refresh tasks state after deletion
+      setTasks(prevTasks => prevTasks.filter(task => task.title !== taskTitle));
+      setTaskToDelete(null); // Close confirmation modal
+      alert("Task deleted successfully!");
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert(`Error: ${error.message}`);
+      setTaskToDelete(null); // Close confirmation modal on error
+    }
+  };
 
-    useEffect(() => {
-      const fetchPendingTasks = async () => {
-        const user = auth.currentUser;
-        if (!user) {
-          console.error("❌ No authenticated user");
-          return;
-        }
+  const DeleteConfirmationModal = ({ task, onConfirm, onCancel }) => {
+    if (!task) return null;
 
-        try {
-          const token = await user.getIdToken();
-          const response = await fetch("http://localhost:8080/api/admin1/tasks/pending/count", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+    return (
+      <div className="modal-overlay-ad">
+        <div className="modal-container-ad">
+          <h2>Confirm Deletion</h2>
+          <div className="confirmation-content">
+            <p>Are you sure you want to delete the task:</p>
+            <p className="task-title-confirm">{task.title}</p>
+            <p>This action cannot be undone.</p>
+          </div>
+          <div className="modal-actions-ad">
+            <button className="cancel-btn-ad" onClick={onCancel}>
+              Cancel
+            </button>
+            <button className="delete-confirm-btn-ad" onClick={onConfirm}>
+              Delete Task
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
-          if (!response.ok) throw new Error("Failed to fetch pending tasks count");
-
-          const count = await response.json();
-          console.log("✅ Pending tasks count:", count);
-          setPendingTasksCount(count);
-        } catch (error) {
-          console.error("Error fetching pending tasks:", error);
-        }
-      };
-
-      fetchPendingTasks();
-    }, []);
-
-    useEffect(() => {
-      const fetchDistribution = async () => {
-        const user = auth.currentUser;
-        if (!user) {
-          console.error("❌ No authenticated user");
-          return;
-        }
-
-        try {
-          const token = await user.getIdToken();
-          const response = await fetch("http://localhost:8080/api/admin1/employees/distribution", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (!response.ok) throw new Error("Failed to fetch department distribution");
-
-          const data = await response.json();
-          setDepartmentDistribution(data);
-        } catch (error) {
-          console.error("Error fetching department distribution:", error);
-        }
-      };
-
-      fetchDistribution();
-    }, []);
+  /// total Payroll
 
   // Update current time every minute
   useEffect(() => {
@@ -219,14 +613,6 @@ useEffect(() => {
     return () => clearInterval(timer);
   }, []);
 
-  // Sample data - in a real app, this would come from an API -- do e heqim
-  const [employees, setEmployees] = useState([
-    { id: 1, name: 'John Doe', position: 'Frontend Developer', department: 'Engineering', status: 'active' },
-    { id: 2, name: 'Jane Smith', position: 'HR Manager', department: 'Human Resources', status: 'active' },
-    { id: 3, name: 'Mike Johnson', position: 'Sales Executive', department: 'Sales', status: 'on leave' },
-    { id: 4, name: 'Sarah Williams', position: 'Marketing Specialist', department: 'Marketing', status: 'active' },
-    { id: 5, name: 'David Brown', position: 'Backend Developer', department: 'Engineering', status: 'active' },
-  ]);
 
   const [payrollData, setPayrollData] = useState([
     { id: 1, department: 'Engineering', amount: 85000, status: 'processed', date: '2023-05-01' },
@@ -235,28 +621,21 @@ useEffect(() => {
     { id: 4, department: 'HR', amount: 38750, status: 'pending', date: '2023-05-01' },
   ]);
 
-  const [tasks, setTasks] = useState([
-    { id: 1, title: 'Review Q2 Performance', dueDate: '2023-05-15', priority: 'high', completed: false },
-    { id: 2, title: 'Interview Candidates', dueDate: '2023-05-10', priority: 'medium', completed: false },
-    { id: 3, title: 'Team Meeting', dueDate: '2023-05-05', priority: 'high', completed: true },
-    { id: 4, title: 'Approve Leave Requests', dueDate: '2023-05-08', priority: 'low', completed: false },
-  ]);
-
   // Charts data
-const employeeDistributionData = {
-  labels: Object.keys(departmentDistribution),
-  datasets: [{
-    data: Object.values(departmentDistribution),
-    backgroundColor: [
-      '#4318FF',
-      '#6AD2FF',
-      '#EFF4FB',
-      '#05CD99',
-      '#FFB547'
-    ],
-    borderWidth: 0,
-  }]
-};
+  const employeeDistributionData = {
+    labels: Object.keys(departmentDistribution),
+    datasets: [{
+      data: Object.values(departmentDistribution),
+      backgroundColor: [
+        '#4318FF',
+        '#6AD2FF',
+        '#EFF4FB',
+        '#05CD99',
+        '#FFB547'
+      ],
+      borderWidth: 0,
+    }]
+  };
 
   const payrollTrendData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -281,31 +660,31 @@ const employeeDistributionData = {
 
   // Dynamic stats
   const statsData = [
-    { 
-      title: "Total Employees", 
+    {
+      title: "Total Employees",
       value: employeeCount,
-      change: "+12%", 
+      change: "+12%",
       icon: "https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF",
       trend: "up"
     },
-    { 
-      title: "Active Projects", 
+    {
+      title: "Active Projects",
       value: activeProjectsCount.toString(),
-      change: "+5%", 
+      change: "+5%",
       icon: "https://img.icons8.com/?size=100&id=102889&format=png&color=4318FF",
       trend: "up"
     },
-    { 
-      title: "Pending Tasks", 
+    {
+      title: "Pending Tasks",
       value: pendingTasksCount,
-      change: "-3%", 
+      change: "-3%",
       icon: "https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF",
       trend: "down"
     },
-    { 
-      title: "Total Payroll", 
-      value: `$${payrollData.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}`, 
-      change: "+8%", 
+    {
+      title: "Total Payroll",
+      value: `$${payrollData.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}`,
+      change: "+8%",
       icon: "https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF",
       trend: "up"
     }
@@ -322,8 +701,10 @@ const employeeDistributionData = {
     setDarkMode(!darkMode);
   };
 
+
+  // /////
   const handleTaskComplete = (taskId) => {
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.id === taskId ? { ...task, completed: !task.completed } : task
     ));
   };
@@ -346,7 +727,7 @@ const employeeDistributionData = {
       status: 'active',
       startDate: newHireForm.startDate
     };
-    setEmployees([...employees, newEmployee]);
+    //setEmployees([...employees, newEmployee]);
     setNewHireForm({
       name: '',
       position: '',
@@ -357,7 +738,7 @@ const employeeDistributionData = {
   };
 
   const handleProcessPayroll = (id) => {
-    setPayrollData(payrollData.map(item => 
+    setPayrollData(payrollData.map(item =>
       item.id === id ? { ...item, status: 'processed' } : item
     ));
   };
@@ -368,9 +749,9 @@ const employeeDistributionData = {
 
   return (
     <div className={`admin-dashboard ${darkMode ? "dark-theme" : ""}`}>
-      <AdminSidebar 
-        activeMenuItem={activeMenuItem} 
-        handleMenuItemClick={handleMenuItemClick} 
+      <AdminSidebar
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
       />
 
       <div className="admin-main-content">
@@ -422,9 +803,9 @@ const employeeDistributionData = {
                   <span>{stat.change}</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     {stat.trend === "up" ? (
-                      <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     ) : (
-                      <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     )}
                   </svg>
                 </div>
@@ -434,26 +815,26 @@ const employeeDistributionData = {
 
           {/* Tabs Navigation */}
           <div className="dashboard-tabs">
-            <button 
+            <button
               className={`tab-btn-ap ${activeTab === 'overview' ? 'active' : ''}`}
               onClick={() => setActiveTab('overview')}
             >
               Overview
             </button>
 
-            <button 
+            <button
               className={`tab-btn-ap ${activeTab === 'payroll' ? 'active' : ''}`}
               onClick={() => setActiveTab('payroll')}
             >
               Payroll
             </button>
-            <button 
+            <button
               className={`tab-btn-ap ${activeTab === 'tasks' ? 'active' : ''}`}
               onClick={() => setActiveTab('tasks')}
             >
               Tasks
             </button>
-            <button 
+            <button
               className={`tab-btn-ap ${activeTab === 'analytics' ? 'active' : ''}`}
               onClick={() => setActiveTab('analytics')}
             >
@@ -469,7 +850,7 @@ const employeeDistributionData = {
                 <div className="chart-card">
                   <h3>Employee Distribution</h3>
                   <div className="chart-container">
-                    <Pie 
+                    <Pie
                       data={employeeDistributionData}
                       options={{
                         plugins: {
@@ -487,7 +868,7 @@ const employeeDistributionData = {
                 <div className="chart-card">
                   <h3>Payroll Trend</h3>
                   <div className="chart-container">
-                    <Line 
+                    <Line
                       data={payrollTrendData}
                       options={{
                         responsive: true,
@@ -543,7 +924,7 @@ const employeeDistributionData = {
                 <div className="chart-card">
                   <h3>Hiring Trend</h3>
                   <div className="chart-container">
-                    <Bar 
+                    <Bar
                       data={hiringTrendData}
                       options={{
                         responsive: true,
@@ -576,28 +957,28 @@ const employeeDistributionData = {
                     <form onSubmit={handleAddNewHire}>
                       <div className="form-group">
                         <label>Full Name</label>
-                        <input 
-                          type="text" 
-                          name="name" 
+                        <input
+                          type="text"
+                          name="name"
                           value={newHireForm.name}
                           onChange={handleNewHireChange}
-                          required 
+                          required
                         />
                       </div>
                       <div className="form-group">
                         <label>Position</label>
-                        <input 
-                          type="text" 
-                          name="position" 
+                        <input
+                          type="text"
+                          name="position"
                           value={newHireForm.position}
                           onChange={handleNewHireChange}
-                          required 
+                          required
                         />
                       </div>
                       <div className="form-group">
                         <label>Department</label>
-                        <select 
-                          name="department" 
+                        <select
+                          name="department"
                           value={newHireForm.department}
                           onChange={handleNewHireChange}
                           required
@@ -612,12 +993,12 @@ const employeeDistributionData = {
                       </div>
                       <div className="form-group">
                         <label>Start Date</label>
-                        <input 
-                          type="date" 
-                          name="startDate" 
+                        <input
+                          type="date"
+                          name="startDate"
                           value={newHireForm.startDate}
                           onChange={handleNewHireChange}
-                          required 
+                          required
                         />
                       </div>
                       <div className="form-actions">
@@ -655,13 +1036,13 @@ const employeeDistributionData = {
                         {item.status === "processed" ? (
                           <>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                             <span>Processed</span>
                           </>
                         ) : (
                           <>
-                            <button 
+                            <button
                               className="process-btn"
                               onClick={() => handleProcessPayroll(item.id)}
                             >
@@ -678,7 +1059,7 @@ const employeeDistributionData = {
                 <div className="payroll-history">
                   <h3>Payroll History</h3>
                   <div className="history-chart">
-                    <Line 
+                    <Line
                       data={payrollTrendData}
                       options={{
                         responsive: true,
@@ -696,42 +1077,265 @@ const employeeDistributionData = {
             )}
 
             {activeTab === 'tasks' && (
-              <div className="tasks-tab">
+              <div className="tasks-tab-admin">
                 <div className="section-header">
                   <h2>Task Management</h2>
-                  <button className="view-all">
+                  <button className="view-all" onClick={() => setShowModal(true)}>
                     Create New Task
                   </button>
+
                 </div>
 
-                <div className="tasks-list">
-                  {tasks.map((task, index) => (
-                    <div key={index} className={`task-item ${task.completed ? 'completed' : ''}`}>
-                      <div className="task-checkbox">
-                        <input 
-                          type="checkbox" 
-                          checked={task.completed}
-                          onChange={() => handleTaskComplete(task.id)}
-                        />
+                <div className="tasks-list-ad">
+                  {loading ? (
+                    <div className="tasks-loading-container-ad">
+                      <div className="loading-spinner-ad">
+                        <svg className="spinner-ad" viewBox="0 0 50 50">
+                          <circle className="path-ad" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
+                        </svg>
                       </div>
-                      <div className="task-details">
-                        <h3>{task.title}</h3>
-                        <p>Due: {task.dueDate}</p>
-                        <span className={`priority-badge ${task.priority}`}>
-                          {task.priority} priority
-                        </span>
-                      </div>
-                      <div className="task-actions">
-                        <button className="action-btn edit">
-                          Edit
-                        </button>
-                        <button className="action-btn delete">
-                          Delete
-                        </button>
+                      <p className="loading-text-ad">Loading your tasks...</p>
+                      <div className="loading-dots-ad">
+                        <span className="dot-ad"></span>
+                        <span className="dot-ad"></span>
+                        <span className="dot-ad"></span>
                       </div>
                     </div>
-                  ))}
+                  ) : error ? (
+                    <div className="tasks-error-ad">
+                      <svg className="error-icon-ad" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                      </svg>
+                      <p>Error loading tasks: {error}</p>
+                      <button
+                        className="retry-button-ad"
+                        onClick={fetchAllTasks}
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  ) : tasks.length === 0 ? (
+                    <div className="no-tasks-ad">
+                      <svg className="empty-icon-ad" viewBox="0 0 24 24">
+                        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z" />
+                      </svg>
+                      <p>No tasks found. Create your first task!</p>
+                    </div>
+                  ) : (
+                    tasks.map((task, index) => (
+                      <div key={index} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                        <div className="task-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={task.completed}
+                            onChange={() => handleTaskComplete(task.id)}
+                          />
+                        </div>
+                        <div className="task-details-ad">
+                          <h3>{task.title}</h3>
+                          <p>Due: {task.dueDate}</p>
+                          <span className={`priority-badge-ad ${task.priority}`}>
+                            {task.priority} priority
+                          </span>
+                          <span className={`status-badge-ad ${task.status}`}>
+                            {task.status}
+                          </span>
+                        </div>
+                        <div className="task-actions-ad">
+                          <button
+                            className="action-btn-ad view"
+                            onClick={() => setViewingTask(task)}
+                          >
+                            View Details
+                          </button>
+                          <button
+                            className="action-btn-ad edit"
+                            onClick={() => {
+                              setTaskBeingEdited(task);
+                              setNewTask({
+                                title: task.title || "",
+                                description: task.description || "",
+                                assignees: task.assignees || [],
+                                priority: task.priority || "low",
+                                status: task.status || "Pending",
+                                startDate: task.startDate || "",
+                                dueDate: task.dueDate || "",
+                                notes: task.notes || "",
+                              });
+                              setEditMode(true);
+                              setShowModal(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            className="action-btn-ad delete"
+                            onClick={() => setTaskToDelete(task)}
+                          >
+                            Delete
+                          </button>
+
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
+
+                {taskToDelete && (
+                  <DeleteConfirmationModal
+                    task={taskToDelete}
+                    onConfirm={() => handleDeleteTask(taskToDelete.title)}
+                    onCancel={() => setTaskToDelete(null)}
+                  />
+                )}
+
+                {/* create new task and edit*/}
+                {showModal && (
+                  <div className="modal-overlay-ad">
+                    <div className="modal-container-ad">
+                      <h2>{editMode ? "Edit Task" : "Create New Task"}</h2>
+                      <form onSubmit={handleTaskSubmit}>
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Title*</label>
+                            <input
+                              type="text"
+                              placeholder="Enter task title"
+                              value={newTask.title}
+                              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                              required
+                            />
+                          </div>
+
+                          <div className="form-group-ad">
+                            <label>Description*</label>
+                            <textarea
+                              placeholder="Enter task description"
+                              value={newTask.description}
+                              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                              required
+                              rows="3"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Assign To*</label>
+                            <select
+                              multiple
+                              size="5"
+                              value={newTask.assignees || []}
+                              onChange={(e) => {
+                                const selected = Array.from(e.target.selectedOptions, option => option.value);
+                                setNewTask(prev => ({ ...prev, assignees: selected }));
+                              }}
+                              className="multi-select-ad"
+                              required
+                            >
+                              {employees.map(emp => (
+                                <option key={emp.id} value={emp.id}>
+                                  {emp.name} {emp.surname} ({emp.department})
+                                </option>
+                              ))}
+                            </select>
+                            <small className="select-hint-ad">
+                              Hold Ctrl/Cmd to select multiple employees
+                            </small>
+                          </div>
+                        </div>
+
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Start Date</label>
+                            <input
+                              type="date"
+                              value={newTask.startDate}
+                              onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
+                            />
+                          </div>
+
+                          <div className="form-group-ad">
+                            <label>Due Date*</label>
+                            <input
+                              type="date"
+                              value={newTask.dueDate}
+                              onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="form-row-ad">
+                          <div className="form-group-ad">
+                            <label>Priority*</label>
+                            <div className="priority-options-ad">
+                              {['low', 'medium', 'high'].map(level => (
+                                <label key={level} className={`priority-option-ad ${newTask.priority === level ? 'active' : ''}`}>
+                                  <input
+                                    type="radio"
+                                    name="priority"
+                                    style={{ display: 'none' }}
+                                    value={level}
+                                    checked={newTask.priority === level}
+                                    onChange={() => setNewTask({ ...newTask, priority: level })}
+                                  />
+                                  <span className={`priority-dot-ad ${level}`}></span>
+                                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="form-group-ad">
+                            <label>Status*</label>
+                            <div className="status-options-ad">
+                              {['Pending', 'Progress', 'Completed'].map(state => (
+                                <label key={state} className={`status-option-ad ${newTask.status === state ? 'active' : ''}`}>
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value={state}
+                                    checked={newTask.status === state}
+                                    onChange={() => setNewTask({ ...newTask, status: state })}
+                                  />
+                                  {state}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="form-group-ad">
+                          <label>Additional Notes</label>
+                          <textarea
+                            placeholder="Any additional information..."
+                            value={newTask.notes}
+                            onChange={(e) => setNewTask({ ...newTask, notes: e.target.value })}
+                            rows="3"
+                          />
+                        </div>
+
+                        <div className="modal-actions-ad">
+                          <button type="button" className="cancel-btn-ad" onClick={() => setShowModal(false)}>
+                            Cancel
+                          </button>
+                          <button type="submit" className="submit-btn-ad">
+                            {editMode ? "Update Task" : "Create Task"}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
+                {viewingTask && (
+                  <TaskDetailsModal
+                    task={viewingTask}
+                    onClose={() => setViewingTask(null)}
+                  />
+                )}
               </div>
             )}
 
@@ -741,7 +1345,7 @@ const employeeDistributionData = {
                   <div className="analytics-card">
                     <h3>Employee Distribution</h3>
                     <div className="chart-container">
-                      <Pie 
+                      <Pie
                         data={employeeDistributionData}
                         options={{
                           plugins: {
@@ -758,7 +1362,7 @@ const employeeDistributionData = {
                   <div className="analytics-card">
                     <h3>Payroll Trend</h3>
                     <div className="chart-container">
-                      <Line 
+                      <Line
                         data={payrollTrendData}
                         options={{
                           responsive: true,
@@ -776,7 +1380,7 @@ const employeeDistributionData = {
                   <div className="analytics-card">
                     <h3>Hiring Trend</h3>
                     <div className="chart-container">
-                      <Bar 
+                      <Bar
                         data={hiringTrendData}
                         options={{
                           responsive: true,
@@ -794,12 +1398,12 @@ const employeeDistributionData = {
                   <div className="analytics-card">
                     <h3>Department Budget Allocation</h3>
                     <div className="chart-container">
-                      <Bar 
+                      <Bar
                         data={{
-                          labels: ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'],
+                          labels: Object.keys(budgetData),
                           datasets: [{
                             label: 'Budget Allocation',
-                            data: [1200000, 600000, 900000, 400000, 500000],
+                            data: Object.values(budgetData),
                             backgroundColor: '#4318FF',
                           }]
                         }}
@@ -820,8 +1424,6 @@ const employeeDistributionData = {
             )}
           </div>
         </div>
-        {/* Footer */}
-        <AdminFooter />
       </div>
     </div>
   );

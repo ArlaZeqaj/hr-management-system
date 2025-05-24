@@ -59,8 +59,8 @@ const LeaveForm = ({ onSubmit }) => {
     return (
         <div className="leave-request-form">
             <h2>Request Leave</h2>
-            <div className="form-row">
-                <div className="form-group">
+            <div className="form-row-lr">
+                <div className="form-group-lr">
                     <label htmlFor="start-date">Start Date</label>
                     <input
                         type="date"
@@ -69,7 +69,7 @@ const LeaveForm = ({ onSubmit }) => {
                         onChange={e => setStartDate(e.target.value)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group-lr">
                     <label htmlFor="end-date">End Date</label>
                     <input
                         type="date"
@@ -78,7 +78,7 @@ const LeaveForm = ({ onSubmit }) => {
                         onChange={e => setEndDate(e.target.value)}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group-lr">
                     <label htmlFor="leave-type">Type of Leave</label>
                     <select
                         id="leave-type"
@@ -91,7 +91,7 @@ const LeaveForm = ({ onSubmit }) => {
                     </select>
                 </div>
                 <div className="buttonstand-vertically">
-                    <button className="submit-button" onClick={handleClick}>
+                    <button className="submit-button-lr" onClick={handleClick}>
                         Submit Request
                     </button>
                 </div>

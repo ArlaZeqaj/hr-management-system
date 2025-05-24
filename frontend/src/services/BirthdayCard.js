@@ -36,66 +36,107 @@ const BirthdayCard = ({
     onSendWish(employee);
   };
 
-  return (
-    <div className={`birthday-card ${customClassName}`}>
-      <div className="birthday-header">
-        <div className="header-content">
-          <span className="birthday-icon">🎂</span>
-          <h3>Today's Birthdays</h3>
-        </div>
-        <button
-          onClick={refreshEmployees}
-          className="refresh-btn"
-          disabled={loading}
-          aria-label="Refresh birthdays"
-        >
-          🔄
-        </button>
-      </div>
+  // Generate random balloon colors
+  const balloonColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#A37EBA', '#FFA07A'];
 
-      <div className="birthday-list">
-        {loading ? (
-          <div className="birthday-loading">
-            <div className="loading-spinner"></div>
-            <span>Loading birthdays...</span>
+  return (
+    <div className={`birthday-card-ep ${customClassName}`}>
+      {/* Decorative balloons */}
+      <div className="balloons-container-ep">
+        {[...Array(5)].map((_, i) => (
+          <div 
+            key={i}
+            className="balloon-ep"
+            style={{
+              left: `${10 + (i * 15)}%`,
+              backgroundColor: balloonColors[i % balloonColors.length],
+              animationDelay: `${i * 0.2}s`
+            }}
+          />
+        ))}
+      </div>
+      
+      <div className="birthday-content-ep">
+        <div className="birthday-header-ep">
+          <div className="header-content-ep">
+            <div className="birthday-icon-container-ep">
+              <span className="birthday-icon-ep">🎂</span>
+              <div className="sparkles-ep">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="sparkle-ep" style={{ transform: `rotate(${i * 45}deg)` }} />
+                ))}
+              </div>
+            </div>
+            <h3>Today's Celebrations</h3>
+            <p className="birthday-subtitle-ep">Wish your colleagues a happy birthday!</p>
           </div>
-        ) : error ? (
-          <div className="birthday-error">
-            <p>⚠️ Failed to load birthdays</p>
-            <button onClick={refreshEmployees}>Retry</button>
-          </div>
-        ) : todaysBirthdays.length > 0 ? (
-          <ul className="birthday-items">
-            {todaysBirthdays.map((employee) => (
-              <li key={employee.id} className="birthday-item">
-                <div className="employee-info">
-                  <div className="name-email">
-                    <span className="employee-name">{employee.name}</span>
-                    <span className="employee-email">{employee.email}</span>
+          <button
+            onClick={refreshEmployees}
+            className="refresh-btn-ep"
+            disabled={loading}
+            aria-label="Refresh birthdays"
+          >
+            🔄
+          </button>
+        </div>
+
+        <div className="birthday-list-ep">
+          {loading ? (
+            <div className="birthday-loading-ep">
+              <div className="loading-spinner-ep"></div>
+              <span>Loading birthdays...</span>
+            </div>
+          ) : error ? (
+            <div className="birthday-error-ep">
+              <p>⚠️ Failed to load birthdays</p>
+              <button onClick={refreshEmployees}>Retry</button>
+            </div>
+          ) : todaysBirthdays.length > 0 ? (
+            <ul className="birthday-items-ep">
+              {todaysBirthdays.map((employee) => (
+                <li key={employee.id} className="birthday-item-ep">
+                  <div className="employee-avatar-ep">
+                    {employee.avatarURL ? (
+                      <img src={employee.avatarURL} alt={employee.name} />
+                    ) : (
+                      <div className="avatar-placeholder-ep">
+                        {employee.name.charAt(0)}
+                      </div>
+                    )}
+                    <div className="birthday-badge-ep">🎈</div>
                   </div>
-                  {showDepartment && employee.department && (
-                    <span className="employee-department">
-                      {employee.department}
-                    </span>
+                  <div className="employee-info-ep">
+                    <div className="name-email-ep">
+                      <span className="employee-name-ep">{employee.name}</span>
+                      <span className="employee-email-ep">{employee.email}</span>
+                    </div>
+                    {showDepartment && employee.department && (
+                      <span className="employee-department-ep">
+                        {employee.department}
+                      </span>
+                    )}
+                  </div>
+                  {showSendButton && (
+                    <button
+                      className="wish-btn-ep"
+                      onClick={() => handleSendWish(employee)}
+                      disabled={loading}
+                    >
+                      <span className="wish-icon-ep">🎉</span>
+                      <span className="wish-text-ep">Send Wish</span>
+                    </button>
                   )}
-                </div>
-                {showSendButton && (
-                  <button
-                    className="wish-btn"
-                    onClick={() => handleSendWish(employee)}
-                    disabled={loading}
-                  >
-                    🎉 Send Wish
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="no-birthdays">
-            <p>🎈 No birthdays today</p>
-          </div>
-        )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="no-birthdays-ep">
+              <div className="no-birthdays-icon-ep">🎈</div>
+              <p>No birthdays today</p>
+              <p className="no-birthdays-subtext-ep">Check back tomorrow!</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

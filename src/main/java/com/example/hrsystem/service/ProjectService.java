@@ -109,4 +109,24 @@ public class ProjectService {
         System.out.println("🚀 Returning summary: " + result);
         return result;
     }
+    public List<Map<String, Object>> getAllProjects() {
+        Firestore db = FirestoreClient.getFirestore();
+
+        List<Map<String, Object>> projects = new ArrayList<>();
+        ApiFuture<QuerySnapshot> future = db.collection("Project").get();
+
+        try {
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+            for (QueryDocumentSnapshot doc : documents) {
+                Map<String, Object> data = doc.getData();
+                data.put("id", doc.getId()); // Add doc ID if needed
+                projects.add(data);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return projects;
+    }
+
 }

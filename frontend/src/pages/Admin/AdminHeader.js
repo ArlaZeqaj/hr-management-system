@@ -41,7 +41,7 @@ const AdminHeader = ({
             <img
               src={
                 darkMode
-                  ? "https://img.icons8.com/?size=100&id=96205&format=png&color=FFFFFF"
+                  ? "https://img.icons8.com/?size=100&id=83221&format=png&color=A3AED0"
                   : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
               }
               alt={darkMode ? "Light Mode" : "Dark Mode"}

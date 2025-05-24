@@ -63,7 +63,7 @@ const AdminLeaveRequestManager = () => {
         <div className="leaves-tab">
             <div className="table-header">
                 <h3>Leave Requests Management</h3>
-                <div className="view-options">
+                <div className="view-options-lr">
                     {["All", "Submitted", "Approved", "Rejected"].map(status => (
                         <button
                             key={status}

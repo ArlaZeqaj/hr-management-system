@@ -12,8 +12,13 @@
     --gray-light: #e2e8f0;
     --gray-dark: #334155;
   }
-  
-  .admin-container {
+.admin-dashboard-main-content {
+  margin-left: 260px; /* ose sa është gjerësia e sidebar-it */
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.admin-container {
     display: flex;
     min-height: 100vh;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;

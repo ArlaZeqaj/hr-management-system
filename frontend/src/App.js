@@ -15,6 +15,7 @@ import LeaveRequest from "./pages/LeaveRequest";
 import AdminProfile from './pages/AdminProfilePage';
 import EmployeeList from './pages/EmployeeList';
 import Documents from "./pages/Documents";
+import ProjectAdmin from "./pages/ProjectAdminPage"
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/billing" element={<Billing />} />
           <Route path="/employee" element={<EmployeeList />} />
           <Route path="/new-hires" element={<NewHires />} />
+          <Route path="/admin/projects" element={<ProjectAdmin />} />
 
           {/* Testing */}
           <Route path="/firebase/test" element={<FirebaseTest />} />

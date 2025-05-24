@@ -135,8 +135,8 @@ export default () => {
           toggleNotification={toggleNotification}
         />
 
-        <div className="projects-header">
-          <div className="header-content">
+        <div className="projects-header-p">
+          <div className="header-content-p">
             <h1>Project Dashboard</h1>
             <p>Track and manage all your active projects</p>
           </div>
@@ -151,25 +151,25 @@ export default () => {
           </div>
         </div>
 
-        <div className="projects-tabs">
+        <div className="projects-tabs-p">
           <button
-            className={`tab-button ${activeTab === "current" ? "active" : ""}`}
+            className={`tab-button-p ${activeTab === "current" ? "active" : ""}`}
             onClick={() => setActiveTab("current")}
           >
             Current Projects
-            <span className="tab-badge">{currentProjects.length}</span>
+            <span className="tab-badge-p">{currentProjects.length}</span>
           </button>
           <button
-            className={`tab-button ${activeTab === "history" ? "active" : ""}`}
+            className={`tab-button-p ${activeTab === "history" ? "active" : ""}`}
             onClick={() => setActiveTab("history")}
           >
             Project History
-            <span className="tab-badge">{projectHistory.length}</span>
+            <span className="tab-badge-p">{projectHistory.length}</span>
           </button>
         </div>
 
         {filteredProjects.length > 0 ? (
-          <div className="projects-grid">
+          <div className="projects-grid-p">
             {filteredProjects.map((project, index) => (
               <ProjectCard
                 key={index}
@@ -181,8 +181,8 @@ export default () => {
             ))}
           </div>
         ) : (
-          <div className="empty-state">
-            <div className="empty-icon">📂</div>
+          <div className="empty-state-p">
+            <div className="empty-icon-p">📂</div>
             <h3>No projects found</h3>
             <p>Try adjusting your search or create a new project</p>
           </div>
@@ -190,104 +190,146 @@ export default () => {
 
         {/* Project Details Modal */}
         {showModal && selectedProject && (
-          <div className="project-modal-overlay">
-            <div className="project-modal">
-              
+          <div className="project-modal-overlay-p">
+            <div className="project-modal-p">
 
-              <div className="modal-image-container">
+              <div className="modal-image-container-p">
                 {selectedProject.image ? (
                   <img src={selectedProject.image} alt={selectedProject.project_Name} />
                 ) : (
-                  <div className="image-placeholder">
+                  <div className="image-placeholder-p">
                     {selectedProject.project_Name.split(' ').map(word => word[0]).join('')}
                   </div>
                 )}
               </div>
 
-              <div className="modal-content-container">
-                <div className="modal-header">
-                  <div className="modal-title">
-                    <h2>{selectedProject.project_Name}</h2>
-                    <span className={`status-badge ${getStatusColor(selectedProject.status)}`}>
-                      {selectedProject.status}
-                    </span>
+              <div className="modal-content-container-p">
+                <div className="modal-header-p">
+                  <div className="modal-title-p">
+                    <h2 style={{ color: darkMode ? '#e2e8f0' : '#2B3674' }}>{selectedProject.project_Name}</h2>
+                    <div className="project-meta-p">
+                      <span>{new Date(selectedProject.start_Date).toLocaleDateString()}</span>
+                      <span>•</span>
+                      <span>${selectedProject.budget.toLocaleString()}</span>
+                    </div>
                   </div>
+                  <span className={`status-badge-p1 ${getStatusColor(selectedProject.status)}`}>
+                    {selectedProject.status}
+                  </span>
                 </div>
 
-                <div className="modal-description">
+                <div className="modal-description-p">
+                  <h3>Project Description</h3>
                   <p>{selectedProject.description}</p>
                 </div>
 
-                <div className="details-grid">
-                  <div className="detail-card">
-                    <div className="detail-label">
-                      <span>📅</span> Start Date
+                <div className="details-section-p">
+                  <h3>Project Details</h3>
+                  <div className="details-grid-p">
+                    <div className="detail-card-p">
+                      <div className="detail-icon-p">
+                        <img
+                          src={darkMode
+                            ? "https://img.icons8.com/?size=100&id=116368&format=png&color=FFFFFF"
+                            : "https://img.icons8.com/?size=100&id=116368&format=png&color=000000"}
+                          alt={darkMode ? "light start date" : "dark start date"}
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </div>
+                      <div>
+                        <div className="detail-label-p">Start Date</div>
+                        <div className="detail-value-p">
+                          {new Date(selectedProject.start_Date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div className="detail-value">
-                      {new Date(selectedProject.start_Date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </div>
-                  </div>
 
-                  <div className="detail-card">
-                    <div className="detail-label">
-                      <span>📅</span> End Date
+                    <div className="detail-card-p">
+                      <div className="detail-icon-p">
+                        <img
+                          src={darkMode
+                            ? "https://img.icons8.com/?size=100&id=116369&format=png&color=FFFFFF"
+                            : "https://img.icons8.com/?size=100&id=116369&format=png&color=000000"}
+                          alt={darkMode ? "light end date" : "dark end date"}
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </div>
+                      <div>
+                        <div className="detail-label-p">End Date</div>
+                        <div className="detail-value-p">
+                          {new Date(selectedProject.end_Date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div className="detail-value">
-                      {new Date(selectedProject.end_Date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </div>
-                  </div>
 
-                  <div className="detail-card">
-                    <div className="detail-label">
-                      <span>💰</span> Budget
+                    <div className="detail-card-p">
+                      <div className="detail-icon-p">
+                        <img
+                          src={darkMode
+                            ? "https://img.icons8.com/?size=100&id=85045&format=png&color=FFFFFF"
+                            : "https://img.icons8.com/?size=100&id=85045&format=png&color=000000"}
+                          alt={darkMode ? "light budget" : "dark budget"}
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </div>
+                      <div>
+                        <div className="detail-label-p">Budget</div>
+                        <div className="detail-value-p">
+                          ${selectedProject.budget.toLocaleString()}
+                        </div>
+                      </div>
                     </div>
-                    <div className="detail-value">
-                      ${selectedProject.budget.toLocaleString()}
-                    </div>
-                  </div>
 
-                  <div className="detail-card">
-                    <div className="detail-label">
-                      <span>👤</span> Your Role
-                    </div>
-                    <div className="detail-value">
-                      {selectedProject.role}
+                    <div className="detail-card-p">
+                      <div className="detail-icon-p">
+                        <img
+                          src={darkMode
+                            ? "https://img.icons8.com/?size=100&id=98218&format=png&color=FFFFFF"
+                            : "https://img.icons8.com/?size=100&id=98218&format=png&color=000000"}
+                          alt={darkMode ? "light start date" : "dark start date"}
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </div>
+                      <div>
+                        <div className="detail-label-p">Your Role</div>
+                        <div className="detail-value-p">
+                          {selectedProject.role}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {selectedProject.assigned_Employees && selectedProject.assigned_Employees.length > 0 && (
-                  <div className="team-section">
-                    <h3>
-                      <span>👥</span> Team Members
-                    </h3>
-                    <div className="team-members">
+                  <div className="team-section-p">
+                    <h3>Team Members</h3>
+                    <div className="team-members-p">
                       {selectedProject.assigned_Employees.map((member, index) => (
-                        <div key={index} className="team-member">
-                          <div className="member-avatar">
+                        <div key={index} className="team-member-p">
+                          <div className="member-avatar-p">
                             {member.split(' ').map(n => n[0]).join('')}
                           </div>
-                          <span className="member-name">{member}</span>
+                          <div className="member-info-p">
+                            <span className="member-name-p">{member}</span>
+                            <span className="member-role-p">Team Member</span>
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                <div className="modal-actions">
-                  <button className="modal-button close" onClick={closeModal}>
-                    <span>Close</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
+                <div className="modal-actions-p">
+                  <button className="modal-button-p secondary" onClick={closeModal}>
+                    Close
                   </button>
                 </div>
               </div>
@@ -305,22 +347,22 @@ const ProjectCard = ({ project, statusColor, darkMode, onViewDetails }) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className={`project-card ${expanded ? "expanded" : ""}`}>
-      <div className="card-image-container">
+    <div className={`project-card-p ${expanded ? "expanded" : ""}`}>
+      <div className="card-image-container-p">
         {project.image ? (
-          <img src={project.image} alt={project.project_Name} className="project-image" />
+          <img src={project.image} alt={project.project_Name} className="project-image-p" />
         ) : (
-          <div className="image-placeholder">
+          <div className="image-placeholder-p">
             {project.project_Name.charAt(0).toUpperCase()}
           </div>
         )}
-        <span className={`status-badge ${statusColor}`}>
+        <span className={`status-badge-p ${statusColor}`}>
           {project.status}
         </span>
       </div>
 
-      <div className="card-content">
-        <div className="card-header">
+      <div className="card-content-p">
+        <div className="card-header-p">
           <h3>{project.project_Name}</h3>
           <div className="project-meta-p">
             <span>{new Date(project.start_Date).toLocaleDateString()}</span>
@@ -329,7 +371,7 @@ const ProjectCard = ({ project, statusColor, darkMode, onViewDetails }) => {
           </div>
         </div>
 
-        <div className="project-description">
+        <div className="project-description-p">
           {expanded ? (
             <p>{project.description}</p>
           ) : (
@@ -338,21 +380,21 @@ const ProjectCard = ({ project, statusColor, darkMode, onViewDetails }) => {
           {project.description.length > 100 && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="toggle-description"
+              className="toggle-description-p"
             >
               {expanded ? "Show Less" : "Read More"}
             </button>
           )}
         </div>
 
-        <div className="card-footer">
-          <div className="project-role">
+        <div className="projects-card-footer-p">
+          <div className="project-role-p">
             <span>Your Role</span>
             <span>{project.role}</span>
           </div>
-          <div className="project-actions">
+          <div className="project-actions-p">
             <button
-              className="action-button view"
+              className="action-button-p view"
               onClick={() => onViewDetails(project)}
             >
               <span>View Details</span>
