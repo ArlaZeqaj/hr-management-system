@@ -2,16 +2,14 @@
 
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { auth, db } from "../config/firebaseConfig"
-import { collection, getDocs } from "firebase/firestore"
-import { signOut, signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "../config/firebaseConfig"
+import { signOut, onAuthStateChanged } from "firebase/auth"
 import "../styles/EmployeeList.css"
 
-// Update the NotificationsDropdown component to ensure it's properly displayed
+// NotificationsDropdown component
 const NotificationsDropdown = ({ notifications, isOpen }) => {
   if (!isOpen) return null
 
-  // Calculate unread notifications count
   const unreadCount = notifications.filter((notification) => !notification.read).length
 
   return (
@@ -110,38 +108,14 @@ const NotificationsDropdown = ({ notifications, isOpen }) => {
           borderTop: "1px solid #e9ecef",
         }}
       >
-        <button
-          className="text-btn"
-          style={{
-            background: "none",
-            border: "none",
-            color: "#7c3aed",
-            fontSize: "12px",
-            cursor: "pointer",
-            padding: "0",
-          }}
-        >
-          View all
-        </button>
-        <button
-          className="text-btn"
-          style={{
-            background: "none",
-            border: "none",
-            color: "#7c3aed",
-            fontSize: "12px",
-            cursor: "pointer",
-            padding: "0",
-          }}
-        >
-          Settings
-        </button>
+        <button className="text-btn">View all</button>
+        <button className="text-btn">Settings</button>
       </div>
     </div>
   )
 }
 
-// Create a separate ProfileDropdown component
+// ProfileDropdown component
 const ProfileDropdown = ({ profileImage, handleProfileAction }) => {
   return (
     <div
@@ -274,7 +248,7 @@ const ProfileDropdown = ({ profileImage, handleProfileAction }) => {
   )
 }
 
-export default function EmployeeList() {
+export default function EmployeePage() {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("newest")
@@ -293,26 +267,12 @@ export default function EmployeeList() {
   const [totalEmployees, setTotalEmployees] = useState(0)
   const [connectionStatus, setConnectionStatus] = useState("Connecting to database...")
   const [showConnectionStatus, setShowConnectionStatus] = useState(true)
-
-  // Add admin authentication state
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [adminEmail, setAdminEmail] = useState("")
-  const [adminPassword, setAdminPassword] = useState("")
-  const [authLoading, setAuthLoading] = useState(false)
-  const [authError, setAuthError] = useState(null)
-
-  // 7. Add state for the sort dropdown
-  // Add this to your state declarations at the top of the component:
+  const [currentUser, setCurrentUser] = useState(null)
 
   const [showSortDropdown, setShowSortDropdown] = useState(false)
   const sortDropdownRef = useRef(null)
 
-  const profileDropdownRef = useRef(null)
-  const notificationsRef = useRef(null)
-  const notificationButtonRef = useRef(null)
-  const profileButtonRef = useRef(null)
-
-  // Mock data for fallback if Firebase fails
+  // Mock data for fallback if API fails
   const mockEmployees = [
     {
       id: "1",
@@ -321,9 +281,9 @@ export default function EmployeeList() {
       email: "john.doe@example.com",
       birthDate: "1990-01-01",
       department: "Engineering",
-      education: "Bachelor of Science",
+      education: "Bachelor of Science in Computer Science",
       languages: ["English", "Spanish"],
-      workHistory: ["Company A", "Company B"],
+      workHistory: ["Company A - Software Engineer", "Company B - Senior Developer"],
       status: "Active",
       createdAt: new Date("2023-01-15").getTime(),
     },
@@ -334,11 +294,115 @@ export default function EmployeeList() {
       email: "jane.smith@example.com",
       birthDate: "1992-05-15",
       department: "Marketing",
-      education: "Master of Business",
+      education: "Master of Business Administration",
       languages: ["English", "French"],
-      workHistory: ["Company C", "Company D"],
+      workHistory: ["Company C - Marketing Associate", "Company D - Marketing Manager"],
       status: "Active",
       createdAt: new Date("2023-02-20").getTime(),
+    },
+    {
+      id: "3",
+      name: "Michael",
+      surname: "Johnson",
+      email: "michael.johnson@example.com",
+      birthDate: "1985-08-10",
+      department: "Finance",
+      education: "Master of Finance",
+      languages: ["English", "German"],
+      workHistory: ["Company E - Financial Analyst", "Company F - Finance Manager"],
+      status: "Active",
+      createdAt: new Date("2023-03-05").getTime(),
+    },
+    {
+      id: "4",
+      name: "Emily",
+      surname: "Williams",
+      email: "emily.williams@example.com",
+      birthDate: "1988-11-22",
+      department: "Human Resources",
+      education: "Bachelor of Arts in Psychology",
+      languages: ["English", "Italian"],
+      workHistory: ["Company G - HR Assistant", "Company H - HR Manager"],
+      status: "Active",
+      createdAt: new Date("2023-04-10").getTime(),
+    },
+    {
+      id: "5",
+      name: "David",
+      surname: "Brown",
+      email: "david.brown@example.com",
+      birthDate: "1991-03-30",
+      department: "Sales",
+      education: "Bachelor of Business",
+      languages: ["English", "Portuguese"],
+      workHistory: ["Company I - Sales Representative", "Company J - Sales Manager"],
+      status: "Active",
+      createdAt: new Date("2023-05-15").getTime(),
+    },
+    {
+      id: "6",
+      name: "Sarah",
+      surname: "Miller",
+      email: "sarah.miller@example.com",
+      birthDate: "1993-07-18",
+      department: "Engineering",
+      education: "Master of Computer Science",
+      languages: ["English", "Chinese"],
+      workHistory: ["Company K - Junior Developer", "Company L - Software Architect"],
+      status: "Active",
+      createdAt: new Date("2023-06-20").getTime(),
+    },
+    {
+      id: "7",
+      name: "James",
+      surname: "Wilson",
+      email: "james.wilson@example.com",
+      birthDate: "1987-09-05",
+      department: "Product",
+      education: "Bachelor of Design",
+      languages: ["English", "Japanese"],
+      workHistory: ["Company M - Product Designer", "Company N - Product Manager"],
+      status: "Active",
+      createdAt: new Date("2023-07-25").getTime(),
+    },
+    {
+      id: "8",
+      name: "Jessica",
+      surname: "Taylor",
+      email: "jessica.taylor@example.com",
+      birthDate: "1994-12-12",
+      department: "Customer Support",
+      education: "Bachelor of Communication",
+      languages: ["English", "Russian"],
+      workHistory: ["Company O - Support Agent", "Company P - Support Team Lead"],
+      status: "Active",
+      createdAt: new Date("2023-08-30").getTime(),
+    },
+    {
+      id: "9",
+      name: "Robert",
+      surname: "Anderson",
+      email: "robert.anderson@example.com",
+      birthDate: "1986-04-25",
+      department: "Operations",
+      education: "Master of Business Operations",
+      languages: ["English", "Arabic"],
+      workHistory: ["Company Q - Operations Analyst", "Company R - Operations Director"],
+      status: "Active",
+      createdAt: new Date("2023-09-05").getTime(),
+    },
+    {
+      id: "10",
+      name: "Jennifer",
+      surname: "Thomas",
+      email: "jennifer.thomas@example.com",
+      birthDate: "1989-06-08",
+      department: "Legal",
+      education: "Juris Doctor",
+      languages: ["English", "Korean"],
+      workHistory: ["Company S - Legal Assistant", "Company T - Legal Counsel"],
+      status: "Active",
+      createdAt: new Date("2023-10-10").getTime(),
     },
   ]
 
@@ -368,56 +432,7 @@ export default function EmployeeList() {
     { path: "/billing", icon: "billing", label: "Billing" },
   ]
 
-  // Function to check if user has admin privileges
-  const checkAdminStatus = async () => {
-    try {
-      const user = auth.currentUser
-      if (!user) {
-        return false
-      }
-
-      const idTokenResult = await user.getIdTokenResult()
-      return idTokenResult.claims.admin === true
-    } catch (error) {
-      console.error("Error checking admin status:", error)
-      return false
-    }
-  }
-
-  // Admin login function
-  const handleAdminLogin = async (e) => {
-    e?.preventDefault()
-    setAuthLoading(true)
-    setAuthError(null)
-
-    try {
-      // Sign in with Firebase
-      await signInWithEmailAndPassword(auth, adminEmail, adminPassword)
-
-      // Check if user has admin privileges
-      const hasAdminRole = await checkAdminStatus()
-
-      if (hasAdminRole) {
-        setIsAdmin(true)
-        setConnectionStatus("Admin authenticated successfully")
-        setTimeout(() => setShowConnectionStatus(false), 3000)
-        // Fetch employees after successful admin login
-        fetchEmployees()
-      } else {
-        setAuthError("This account does not have admin privileges")
-        await signOut(auth)
-        setIsAdmin(false)
-      }
-    } catch (error) {
-      console.error("Admin login error:", error)
-      setAuthError(error.message || "Authentication failed")
-      setIsAdmin(false)
-    } finally {
-      setAuthLoading(false)
-    }
-  }
-
-  // Fetch employees from Firebase - updated to respect security rules
+  // Fetch employees from backend API
   const fetchEmployees = async () => {
     setLoading(true)
     setError(null)
@@ -425,93 +440,52 @@ export default function EmployeeList() {
     setShowConnectionStatus(true)
 
     try {
-      // Check admin status first
-      const hasAdminRole = await checkAdminStatus()
-
-      if (!hasAdminRole) {
-        console.log("User does not have admin privileges. Using mock data.")
-        setEmployees(mockEmployees)
-        setTotalEmployees(mockEmployees.length)
-        setConnectionStatus("Using mock data (Admin privileges required)")
-        setLoading(false)
-        setTimeout(() => setShowConnectionStatus(false), 5000)
-        return
+      const user = auth.currentUser
+      if (!user) {
+        throw new Error("No authenticated user found")
       }
 
-      // Create a query to the employees collection
-      const employeesRef = collection(db, "employees")
-      const querySnapshot = await getDocs(employeesRef)
-
-      // Process the results
-      const employeesList = []
-      querySnapshot.forEach((doc) => {
-        const data = doc.data()
-
-        // Add default values for missing fields to prevent errors
-        // Convert Firestore timestamp to milliseconds if it exists
-        const createdAt = data.createdAt
-          ? data.createdAt.toMillis
-            ? data.createdAt.toMillis()
-            : data.createdAt
-          : new Date().getTime()
-
-        employeesList.push({
-          id: doc.id,
-          name: data.name || "Unknown",
-          surname: data.surname || "",
-          email: data.email || "",
-          birthDate: data.birthDate || "",
-          department: data.department || "Unassigned",
-          education: data.education || "",
-          languages: data.languages || [],
-          workHistory: data.workHistory || [],
-          status: data.status || "Active",
-          createdAt: createdAt,
-        })
+      const token = await user.getIdToken()
+      const response = await fetch("http://localhost:8080/api/admin1/employees", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       })
 
-      // Update state with the fetched data
-      setEmployees(employeesList)
-      setTotalEmployees(employeesList.length)
-      setLoading(false)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch employees: ${response.status}`)
+      }
+
+      const employeesData = await response.json()
+      setEmployees(employeesData)
+      setTotalEmployees(employeesData.length)
       setConnectionStatus("Connected to database")
       setTimeout(() => setShowConnectionStatus(false), 3000)
     } catch (err) {
       console.error("Error fetching employees:", err)
-
-      // Fall back to mock data
-      console.log("Using mock data for development")
       setEmployees(mockEmployees)
       setTotalEmployees(mockEmployees.length)
-      setConnectionStatus("Using development data (Firebase connection failed)")
+      setConnectionStatus("Using mock data (Backend not available)")
       setError(err.message)
-      setLoading(false)
       setTimeout(() => setShowConnectionStatus(false), 5000)
+    } finally {
+      setLoading(false)
     }
   }
 
   // Apply sorting to the current employees list
   useEffect(() => {
     if (employees.length > 0) {
-      // Create a copy of the employees array to avoid mutating the original
       const sortedEmployees = [...employees]
 
       switch (sortBy) {
         case "newest":
-          sortedEmployees.sort((a, b) => {
-            // Handle missing createdAt values
-            const dateA = a.createdAt || 0
-            const dateB = b.createdAt || 0
-            return dateB - dateA // Sort in descending order (newest first)
-          })
+          sortedEmployees.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
           break
         case "oldest":
-          sortedEmployees.sort((a, b) => {
-            // Handle missing createdAt values
-            const dateA = a.createdAt || 0
-            const dateB = b.createdAt || 0
-            return dateA - dateB // Sort in ascending order (oldest first)
-          })
+          sortedEmployees.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0))
           break
         case "name":
           sortedEmployees.sort((a, b) => (a.name || "").localeCompare(b.name || ""))
@@ -545,20 +519,24 @@ export default function EmployeeList() {
             return aHistory.localeCompare(bHistory)
           })
           break
+        case "status":
+          sortedEmployees.sort((a, b) => (a.status || "").localeCompare(b.status || ""))
+          break
+        default:
+          break
       }
 
-      // Update the employees state with the sorted array
       setEmployees(sortedEmployees)
     }
   }, [sortBy])
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
-  }
-
-  const navigateTo = (path) => {
-    console.log("Navigating to:", path)
-    navigate(path)
+    if (!darkMode) {
+      document.body.classList.add("dark-theme")
+    } else {
+      document.body.classList.remove("dark-theme")
+    }
   }
 
   const handleFileChange = (e) => {
@@ -575,127 +553,15 @@ export default function EmployeeList() {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-      console.log("User signed out")
-      setIsAdmin(false)
-      navigateTo("/")
+      navigate("/login")
     } catch (error) {
       console.error("Logout error:", error)
     }
   }
 
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-theme")
-    } else {
-      document.body.classList.remove("dark-theme")
-    }
-  }, [darkMode])
-
-  // Fix the notification click handler
-  const handleNotificationClick = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log("Notification clicked, toggling dropdown")
-    setShowNotifications(!showNotifications)
-  }
-
-  // Fix the profile dropdown click handler
-  const toggleProfileDropdown = () => {
-    console.log("Profile clicked, current state:", showProfileDropdown, "toggling to:", !showProfileDropdown)
-    setShowProfileDropdown(!showProfileDropdown)
-  }
-
-  // Add a direct DOM event listener for the profile button
-  useEffect(() => {
-    const profileButton = document.querySelector(".avatar-container")
-    if (profileButton) {
-      profileButton.addEventListener("click", (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        console.log("Profile button clicked via direct DOM event")
-        setShowProfileDropdown((prevState) => !prevState)
-      })
-    }
-
-    return () => {
-      if (profileButton) {
-        profileButton.removeEventListener("click", () => {})
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      // For profile dropdown - simplified check
-      if (showProfileDropdown && !event.target.closest(".user-profile")) {
-        setShowProfileDropdown(false)
-      }
-
-      // For notifications dropdown - simplified check
-      if (
-        showNotifications &&
-        !event.target.closest(".notifications-container") &&
-        !event.target.closest(".header-action-btn")
-      ) {
-        setShowNotifications(false)
-      }
-
-      // For sort dropdown
-      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
-        setShowSortDropdown(false)
-      }
-    }
-
-    // Add the event listener
-    document.addEventListener("mousedown", handleClickOutside)
-
-    // Clean up
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [showProfileDropdown, showNotifications]) // Add dependencies to ensure it updates when these states change
-
-  useEffect(() => {
-    const handleEscKey = (event) => {
-      // 9. Update the Escape key handler to close the sort dropdown
-      // Add this to your existing useEffect for Escape key handling:
-
-      if (event.key === "Escape") {
-        setShowProfileDropdown(false)
-        setShowNotifications(false)
-        setShowSortDropdown(false)
-      }
-    }
-
-    document.addEventListener("keydown", handleEscKey)
-    return () => document.removeEventListener("keydown", handleEscKey)
-  }, [])
-
-  const filteredEmployees = employees.filter((employee) => {
-    if (!searchTerm) return true
-    const term = searchTerm.toLowerCase()
-    return (
-      employee.name?.toLowerCase().includes(term) ||
-      employee.surname?.toLowerCase().includes(term) ||
-      employee.email?.toLowerCase().includes(term) ||
-      employee.department?.toLowerCase().includes(term) ||
-      employee.organization?.toLowerCase().includes(term)
-    )
-  })
-
-  // Calculate pagination
-  const itemsPerPage = 8
-  const indexOfLastEmployee = currentPage * itemsPerPage
-  const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage
-  const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee)
-  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage)
-
-  // Update the handleProfileAction function to ensure it works
   const handleProfileAction = (action) => {
-    // Close the dropdown first
     setShowProfileDropdown(false)
 
-    // Add a small delay to ensure the UI updates before taking action
     setTimeout(() => {
       switch (action) {
         case "profile":
@@ -705,12 +571,10 @@ export default function EmployeeList() {
           navigate("/projects")
           break
         case "settings":
-          navigate("/admin/profile")
+          navigate("/admin/settings")
           break
         case "photo":
-          if (fileInputRef.current) {
-            fileInputRef.current.click()
-          }
+          fileInputRef.current?.click()
           break
         case "logout":
           handleLogout()
@@ -721,61 +585,64 @@ export default function EmployeeList() {
     }, 100)
   }
 
-  // Admin login form
-  if (!isAdmin) {
+  // Handle click outside dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showProfileDropdown && !event.target.closest(".user-profile")) {
+        setShowProfileDropdown(false)
+      }
+      if (showNotifications && !event.target.closest(".notifications-container")) {
+        setShowNotifications(false)
+      }
+      if (showSortDropdown && sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+        setShowSortDropdown(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [showProfileDropdown, showNotifications, showSortDropdown])
+
+  // Check authentication status on component mount
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user)
+        fetchEmployees()
+      } else {
+        navigate("/login")
+      }
+    })
+
+    return () => unsubscribe()
+  }, [navigate])
+
+  // Filter employees based on search term
+  const filteredEmployees = employees.filter((employee) => {
+    if (!searchTerm) return true
+    const term = searchTerm.toLowerCase()
     return (
-      <div className="admin-login-container p-6 max-w-md mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
-        {showConnectionStatus && (
-          <div className="connection-status mb-4 p-3 bg-blue-100 text-blue-800 rounded">{connectionStatus}</div>
-        )}
-
-        <form onSubmit={handleAdminLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={adminEmail}
-              onChange={(e) => setAdminEmail(e.target.value)}
-              className="w-full p-2 border rounded-md"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-              className="w-full p-2 border rounded-md"
-              required
-            />
-          </div>
-
-          {authError && <div className="text-red-500 text-sm p-2 bg-red-50 rounded">{authError}</div>}
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
-            disabled={authLoading}
-          >
-            {authLoading ? "Logging in..." : "Login as Admin"}
-          </button>
-        </form>
-      </div>
+      employee.name?.toLowerCase().includes(term) ||
+      employee.surname?.toLowerCase().includes(term) ||
+      employee.email?.toLowerCase().includes(term) ||
+      employee.department?.toLowerCase().includes(term)
     )
+  })
+
+  // Pagination logic
+  const itemsPerPage = 8
+  const indexOfLastEmployee = currentPage * itemsPerPage
+  const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage
+  const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee)
+  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage)
+
+  // Manual refresh function
+  const refreshData = () => {
+    fetchEmployees()
   }
 
   return (
     <div className={`admin-container ${darkMode ? "dark-theme" : ""}`}>
-      {/* Update the connection status banner style to be centered */}
       {showConnectionStatus && (
         <div
           className={`connection-status ${error ? "error" : "success"}`}
@@ -791,6 +658,8 @@ export default function EmployeeList() {
             boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
             maxWidth: "400px",
             width: "auto",
+            backgroundColor: error ? "#fee2e2" : "#ecfdf5",
+            color: error ? "#b91c1c" : "#047857",
           }}
         >
           {connectionStatus}
@@ -807,7 +676,7 @@ export default function EmployeeList() {
             <div
               key={item.path}
               className={`menu-item ${item.active ? "active" : ""}`}
-              onClick={() => navigateTo(item.path)}
+              onClick={() => navigate(item.path)}
             >
               <svg
                 className="menu-icon"
@@ -891,20 +760,48 @@ export default function EmployeeList() {
         </div>
       </div>
 
-      <div
-        className="main-content"
-        style={{
-          margin: "0 0 0 280px",
-          padding: "20px",
-          width: "calc(100% - 280px)",
-        }}
-      >
+      <div className="main-content">
         <div className="header-container">
           <div className="breadcrumb">
             <div className="breadcrumb-path">Pages / Employees</div>
             <h1 className="page-title">Employees</h1>
           </div>
           <div className="header-actions">
+            <button
+              className="header-action-btn"
+              onClick={refreshData}
+              style={{
+                marginRight: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+              }}
+              title="Refresh data"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M23 4v6h-6"></path>
+                <path d="M1 20v-6h6"></path>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                <path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            </button>
+
             <button className="header-action-btn" onClick={toggleDarkMode}>
               {darkMode ? (
                 <svg
@@ -945,12 +842,10 @@ export default function EmployeeList() {
               )}
             </button>
 
-            {/* Update the notifications container in the render function */}
-            <div className="notifications-container" ref={notificationsRef} style={{ position: "relative" }}>
+            <div className="notifications-container" style={{ position: "relative" }}>
               <button
-                ref={notificationButtonRef}
                 className="header-action-btn"
-                onClick={handleNotificationClick}
+                onClick={() => setShowNotifications(!showNotifications)}
                 style={{ cursor: "pointer" }}
               >
                 <svg
@@ -973,15 +868,17 @@ export default function EmployeeList() {
               {showNotifications && <NotificationsDropdown notifications={notifications} isOpen={showNotifications} />}
             </div>
 
-            {/* Update the profile container in the render function */}
-            {/* Profile dropdown - fixed version */}
             <div className="user-profile" style={{ position: "relative" }}>
-              <div className="avatar-container" onClick={toggleProfileDropdown} style={{ cursor: "pointer" }}>
+              <div
+                className="avatar-container"
+                onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                style={{ cursor: "pointer" }}
+              >
                 <div className="avatar">
                   <img src={profileImage || "/placeholder.svg"} alt="User" />
                 </div>
                 <div className="user-info">
-                  <div className="user-name">Doe, Jane</div>
+                  <div className="user-name">{currentUser?.displayName || "Admin User"}</div>
                   <div className="user-role">Administrator</div>
                 </div>
                 <svg
@@ -1011,15 +908,34 @@ export default function EmployeeList() {
           <div className="stat-card">
             <div className="stat-content">
               <div className="stat-icon purple">
-                <img
-                  src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/rVxHgVJPg0/15z50vdu_expires_30_days.png"
-                  alt="Total Employees"
-                  className="stat-icon-img"
-                />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <path
+                    d="M23 21v-2a4 4 0 0 0-3-3.87"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M16 3.13a4 4 0 0 1 0 7.75"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
               <div className="stat-info">
                 <div className="stat-label">Total Employees</div>
-                <div className="stat-value">{totalEmployees || "..."}</div>
+                <div className="stat-value">{totalEmployees}</div>
                 <div className="stat-trend up">
                   <svg
                     width="16"
@@ -1045,6 +961,125 @@ export default function EmployeeList() {
                     />
                   </svg>
                   <span>16% this month</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-content">
+              <div className="stat-icon purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" fill="none" />
+                </svg>
+              </div>
+              <div className="stat-info">
+                <div className="stat-label">Members</div>
+                <div className="stat-value">{Math.floor(totalEmployees * 0.85)}</div>
+                <div className="stat-trend up">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="trend-icon"
+                  >
+                    <path
+                      d="M8 4L12 8L8 12"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M4 8L12 8"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span>8% this month</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-content">
+              <div className="stat-icon purple">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect
+                    x="2"
+                    y="4"
+                    width="20"
+                    height="16"
+                    rx="2"
+                    ry="2"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <circle cx="8" cy="12" r="2" fill="currentColor" />
+                  <path
+                    d="M14 12h4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M14 8h4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M14 16h4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="stat-info">
+                <div className="stat-label">Active Now</div>
+                <div className="stat-value">{Math.floor(totalEmployees * 0.15)}</div>
+                <div className="stat-trend up">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="trend-icon"
+                  >
+                    <path
+                      d="M8 4L12 8L8 12"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M4 8L12 8"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span>12% this month</span>
                 </div>
               </div>
             </div>
@@ -1092,6 +1127,7 @@ export default function EmployeeList() {
                     <option value="birthDate">Birth Date</option>
                     <option value="education">Education</option>
                     <option value="workHistory">Work History</option>
+                    <option value="status">Status</option>
                   </select>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1130,6 +1166,7 @@ export default function EmployeeList() {
                     <th>Education</th>
                     <th>Languages</th>
                     <th>Work History</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1143,11 +1180,16 @@ export default function EmployeeList() {
                       <td>{employee.education}</td>
                       <td>{Array.isArray(employee.languages) ? employee.languages.join(", ") : ""}</td>
                       <td>{Array.isArray(employee.workHistory) ? employee.workHistory.join(", ") : ""}</td>
+                      <td>
+                        <span className={`status-badge ${employee.status ? employee.status.toLowerCase() : "active"}`}>
+                          {employee.status || "Active"}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                   {currentEmployees.length === 0 && !loading && (
                     <tr>
-                      <td colSpan="8" className="no-results">
+                      <td colSpan="9" className="no-results">
                         {error ? error : "No employees found matching your search."}
                       </td>
                     </tr>
@@ -1160,7 +1202,7 @@ export default function EmployeeList() {
           <div className="table-footer">
             <div className="entries-info">
               Showing data {indexOfFirstEmployee + 1} to {Math.min(indexOfLastEmployee, filteredEmployees.length)} of{" "}
-              {totalEmployees || "..."} entries
+              {totalEmployees} entries
             </div>
             <div className="pagination">
               <button
@@ -1199,3 +1241,4 @@ export default function EmployeeList() {
     </div>
   )
 }
+
