@@ -56,7 +56,7 @@ const NewHires = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("All")
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
+  const itemsPerPage = 10
 
   const toggleDarkMode = () => {
     const newMode = !darkMode
