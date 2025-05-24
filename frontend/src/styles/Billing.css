@@ -384,6 +384,59 @@ body {
   color: var(--text);
 }
 
+/* Card Actions */
+.card-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #4299e1;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.edit-btn:hover {
+  color: #3182ce;
+}
+
+.edit-btn img {
+  width: 16px;
+  height: 16px;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #e53e3e;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.delete-btn:hover {
+  color: #c53030;
+}
+
+.delete-btn img {
+  width: 16px;
+  height: 16px;
+}
+
 .delete-btn img,
 .edit-btn img {
   width: 16px;
@@ -524,6 +577,7 @@ body {
   overflow: hidden;
   animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1000;
+  overflow-y: auto;
 }
 
 .billing-modal::backdrop {
@@ -582,13 +636,17 @@ body {
 }
 
 .billing-card-preview::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   right: -50%;
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 70%
+  );
   border-radius: 50%;
 }
 
@@ -624,7 +682,7 @@ body {
   font-size: 1.25rem;
   letter-spacing: 2px;
   margin-bottom: 2rem;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   position: relative;
   z-index: 1;
   word-spacing: 8px;
@@ -679,9 +737,9 @@ body {
 .billing-form-group.floating input:not(:placeholder-shown) + label {
   transform: translateY(-22px) scale(0.85);
   color: #4318ff;
-  background: white; 
-  padding: 0 4px; 
-  left: 8px; 
+  background: white;
+  padding: 0 4px;
+  left: 8px;
 }
 
 .billing-form-group.floating input:not(:focus):placeholder-shown::placeholder {
@@ -704,16 +762,16 @@ body {
   outline: none;
   box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
   background: white;
-  padding: 12px; 
+  padding: 12px;
 }
 
 /* Specifically for the card number input to accommodate icons */
 #cardNumber {
-  padding-right: 80px; 
+  padding-right: 80px;
 }
 /* For the CVV input */
 #cvv {
-  padding-right: 40px; 
+  padding-right: 40px;
 }
 
 .billing-form-row {
@@ -906,7 +964,6 @@ body {
     flex-direction: column;
   }
 }
-
 
 @media (max-width: 768px) {
   .header {
