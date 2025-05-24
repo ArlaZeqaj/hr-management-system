@@ -217,8 +217,8 @@ body {
     border-collapse: collapse;
 }
 
-.table-header,
-.table-row {
+.tablee-header,
+.tablee-row {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.5fr 0.5fr;
     padding: 1rem 0;
@@ -226,7 +226,7 @@ body {
     align-items: center;
 }
 
-.table-row:last-child {
+.tablee-row:last-child {
     border-bottom: none;
 }
 

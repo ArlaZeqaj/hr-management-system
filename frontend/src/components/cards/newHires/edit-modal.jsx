@@ -240,21 +240,6 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 />
               </div>
             </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="documents">Documents</label>
-                <input
-                  type="text"
-                  id="documents"
-                  name="documents"
-                  className="form-input"
-                  placeholder="CV, Cover Letter, etc."
-                  value={formData.documents}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
           </div>
 
           <div className="modal-footer">

@@ -51,7 +51,7 @@ const NewHireTable = ({
                 <td>{hire.department}</td>
                 <td>{hire.roleTitle}</td>
                 <td>
-  <span className={`status-badge ${(hire.status || "unknown").replace(/\s+/g, "-").toLowerCase()}`}>
+  <span className={`statuss-badge ${(hire.status || "unknown").replace(/\s+/g, "-").toLowerCase()}`}>
     {hire.status || "Unknown"}
   </span>
 </td>
@@ -69,9 +69,6 @@ const NewHireTable = ({
                   <button className="action-button delete" onClick={(e) => handleDelete(hire, e)}>
                     <Trash2 size={16} />
                   </button>
-                  <button className="action-button download" onClick={(e) => handleDownload(hire, e)}>
-                    <Download size={16} />
-                  </button>
                   <button className="action-button approve" onClick={(e) => handleApprove(hire, e)}>
                     <CheckCircle size={16} />
                   </button>
@@ -84,10 +81,6 @@ const NewHireTable = ({
                       <div className="expanded-item">
                         <span className="expanded-label">Phone:</span>
                         <span className="expanded-value">{hire.phoneNr}</span>
-                      </div>
-                      <div className="expanded-item">
-                        <span className="expanded-label">Documents:</span>
-                        <span className="expanded-value">{hire.documents}</span>
                       </div>
                       {hire.education && (
   <div className="expanded-item">

@@ -251,21 +251,6 @@ const AddModal = ({ isOpen, onClose, onSave }) => {
                 />
               </div>
             </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="documents">Documents</label>
-                <input
-                  type="text"
-                  id="documents"
-                  name="documents"
-                  className="form-input"
-                  value={formData.documents}
-                  onChange={handleChange}
-                  placeholder="CV, Cover Letter, etc."
-                />
-              </div>
-            </div>
           </form>
         </div>
 

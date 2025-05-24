@@ -378,7 +378,7 @@ body {
 }
 
 /* Status Badge */
-.status-badge {
+.statuss-badge {
   display: inline-flex;
   align-items: center;
   padding: 4px 8px; /* Smaller padding */
@@ -393,22 +393,22 @@ body {
 }
 
 /* Specific Status Styles */
-.status-badge.initial-review {
+.statuss-badge.initial-review {
   background-color: #eef2ff;
   color: #4f46e5;
 }
 
-.status-badge.interview-scheduled {
+.statuss-badge.interview-scheduled {
   background-color: #e0f2fe;
   color: #0284c7;
 }
 
-.status-badge.hired {
+.statuss-badge.hired {
   background-color: #ecfdf5;
   color: #059669;
 }
 
-.status-badge.rejected {
+.statuss-badge.rejected {
   background-color: #fef2f2;
   color: #dc2626;
 }

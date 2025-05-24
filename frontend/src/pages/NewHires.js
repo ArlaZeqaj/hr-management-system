@@ -292,7 +292,6 @@ const NewHires = () => {
                 <option value="All">All Statuses</option>
                 <option value="Initial Review">Initial Review</option>
                 <option value="Interview Scheduled">Interview Scheduled</option>
-                <option value="Hired">Hired</option>
                 <option value="Rejected">Rejected</option>
               </select>
             </div>
