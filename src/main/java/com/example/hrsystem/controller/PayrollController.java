@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
 import com.example.hrsystem.service.PayrollService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 
@@ -29,7 +32,5 @@ public class PayrollController {
         String uid = (String) authentication.getPrincipal(); // UID from FirebaseTokenFilter
         return ResponseEntity.ok(payrollService.getPayrollForCurrentMonth(uid));
     }
-
-
 
 }
