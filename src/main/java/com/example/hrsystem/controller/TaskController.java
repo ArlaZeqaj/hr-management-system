@@ -55,4 +55,20 @@ public class TaskController {
             return ResponseEntity.status(500).body("Error fetching schedule.");
         }
     }
+
+    @GetMapping("/count/{employeeId}/{yearMonth}")
+    public ResponseEntity<Integer> getTaskCount(
+            @PathVariable String employeeId,
+            @PathVariable String yearMonth,
+            Authentication authentication) {
+        try {
+            String uid = (String) authentication.getPrincipal();
+            // Optional: Verify the requesting user has permission to view this employee's data
+            int count = taskService.countTasksForEmployee(employeeId, yearMonth);
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(0);
+        }
+    }
+
 }

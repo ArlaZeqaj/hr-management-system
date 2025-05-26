@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,25 +23,24 @@ public class ProjectController {
         this.projectService = projectSummaryService;
     }
 
+    // 🔹 Per-user: Get all projects
     @GetMapping("/all")
     public ResponseEntity<List<Map<String, Object>>> getAllProjects(@RequestHeader("Authorization") String token) {
         try {
-            // Extract the UID from Firebase authentication token
             String idToken = token.replace("Bearer ", "");
             FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
             String uid = decodedToken.getUid();
 
-            // Get all projects for the user
             List<Map<String, Object>> allProjects = projectService.getAllProjectsForUser(uid);
             return ResponseEntity.ok(allProjects);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    @GetMapping("/summary")
 
+    // 🔹 Per-user: Get status summary
+    @GetMapping("/summary")
     public ResponseEntity<Map<String, Integer>> getProjectSummary(@RequestHeader("Authorization") String token) {
         try {
             String idToken = token.replace("Bearer ", "");
@@ -48,62 +49,47 @@ public class ProjectController {
 
             Map<String, Integer> summary = projectService.getProjectStatusSummaryForUser(uid);
             return ResponseEntity.ok(summary);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Map<String, Object>>> getAllProjects() {
-        List<Map<String, Object>> projects = projectService.getAllProjects();
-        return ResponseEntity.ok(projects);
-    }
 
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> createProject(
-            @RequestBody Map<String, Object> request,
-            @RequestHeader("Authorization") String token) {
-        Map<String, Object> savedProject = projectService.createProject(request);
-        return ResponseEntity.ok(savedProject);
-    }
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateProject(@PathVariable String id, @RequestBody Map<String, Object> updatedData) {
+    @GetMapping("/ongoing")
+    public ResponseEntity<List<Map<String, Object>>> getAllOngoingProjects(@RequestHeader("Authorization") String token) {
         try {
-            projectService.updateProject(id, updatedData);
-            return ResponseEntity.ok("Project updated");
+            String idToken = token.replace("Bearer ", "");
+            FirebaseAuth.getInstance().verifyIdToken(idToken); // Validate token
+
+            List<Map<String, Object>> ongoingProjects = projectService.getAllOngoingProjects();
+            return ResponseEntity.ok(ongoingProjects);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error: " + e.getMessage());
-        }
-    }
-    @PutMapping("/{id}/status")
-    public ResponseEntity<String> updateProjectStatus(
-            @PathVariable String id,
-            @RequestBody Map<String, Object> body,
-            @RequestHeader("Authorization") String token) {
-        try {
-            String status = (String) body.get("status");
-            projectService.updateProjectStatus(id, status);
-            return ResponseEntity.ok("Status updated");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to update status: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProject(
-            @PathVariable String id,
+    @GetMapping("/count/{employeeId}/{yearMonth}")
+    public ResponseEntity<Integer> getProjectCount(
+            @PathVariable String employeeId,
+            @PathVariable String yearMonth,
             @RequestHeader("Authorization") String token) {
         try {
-            projectService.deleteProject(id);
-            return ResponseEntity.ok("Project deleted");
+
+            String idToken = token.replace("Bearer ", "");
+            FirebaseAuth.getInstance().verifyIdToken(idToken);
+
+
+            int count = projectService.countProjectsForEmployee(employeeId, yearMonth);
+            return ResponseEntity.ok(count);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to delete project: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(0);
         }
     }
+
+
 
 
 }
-
-
