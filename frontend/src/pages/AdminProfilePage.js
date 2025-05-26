@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
 import AdminFooter from "./Admin/AdminFooter";
@@ -7,14 +9,24 @@ import "../styles/AdminProfilePage.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
 import "./Admin/AdminFooter.css";
+import { Chart } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import AdminLeaveRequestManager from "../components/cards/leaveRequestAdmin/AdminLeaveRequestManager";
+
+// Register ChartJS components
+ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const AdminProfilePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const auth = getAuth();
 
-  // Set active menu item based on current route
-  const getActiveMenuItem = () => {
+  // State declarations
+  const [pendingLeavesCount, setPendingLeavesCount] = useState(0);
+  const [ongoingProjectsCount, setOngoingProjectsCount] = useState(0);
+  const [leaveChartData, setLeaveChartData] = useState(null);
+
+  const [activeMenuItem, setActiveMenuItem] = useState(() => {
     const path = location.pathname;
     if (path.includes('/admin/dashboard')) return 'AdminDashboard';
     if (path.includes('/admin/profile')) return 'Profile';
@@ -22,10 +34,48 @@ const AdminProfilePage = () => {
     if (path.includes('/employee')) return 'Employees';
     if (path.includes('/billing')) return 'Billing';
     if (path.includes('/admin/projects')) return 'Projects';
-    return 'AdminDashboard'; // default
+    return 'AdminDashboard';
+  });
+  const [activeTab, setActiveTab] = useState("overview");
+  const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [performanceData, setPerformanceData] = useState([]);
+  const [darkMode, setDarkMode] = useState(() => {
+    return JSON.parse(localStorage.getItem("darkMode")) || false;
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [adminData, setAdminData] = useState({
+    name: "",
+    email: "",
+    department: "",
+    bio: "",
+    avatarURL: "https://randomuser.me/api/portraits/men/75.jpg",
+    loading: true,
+    error: null
+  });
+  const [departmentChartData, setDepartmentChartData] = useState(null);
+  const [departmentDistribution, setDepartmentDistribution] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [editingEmployee, setEditingEmployee] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    email: "",
+    department: "",
+    position: ""
+  });
+  const employeesPerPage = 5;
+
+  const handleLeaveAction = (id, action) => {
+    setLeaveRequests(prev =>
+      prev.map(request =>
+        request.id === id ? { ...request, status: action } : request
+      )
+    );
+    alert(`Leave request ${id} has been ${action}`);
   };
 
-  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+  // Navigation handler
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
     switch (menuItem) {
@@ -52,400 +102,520 @@ const AdminProfilePage = () => {
     }
   };
 
-  const [notifications, setNotifications] = useState({
-    "New employee registrations": true,
-    "Leave request approvals": true,
-    "System alerts": true,
-    "Payroll processing": false,
-    "Performance reviews": false,
-    "Company announcements": true,
-    "Security alerts": true,
-    "Data export completions": false,
-  });
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [activeTab, setActiveTab] = useState("overview");
-  const [employees, setEmployees] = useState([]);
-  const [leaveRequests, setLeaveRequests] = useState([]);
-  const [performanceData, setPerformanceData] = useState([]);
+  // Data fetching functions
+  const fetchAdminData = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get(`/api/Admin/by-email?email=${user.email}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
 
-  const [darkMode, setDarkMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  // Initialize data and dark mode
-  useEffect(() => {
-    // Dark mode
-    const savedMode = localStorage.getItem("darkMode");
-    if (savedMode !== null) {
-      setDarkMode(savedMode === "true");
+      setAdminData({
+        name: response.data.name || "Admin User",
+        email: response.data.email || user.email,
+        position: response.data.position || "System Administrator",
+        bio: response.data.bio || "No bio available",
+        avatarURL: response.data.avatarURL || "https://randomuser.me/api/portraits/men/75.jpg",
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      console.error("Error fetching admin data:", error);
+      setAdminData(prev => ({
+        ...prev,
+        loading: false,
+        error: error.response?.data?.message || error.message
+      }));
     }
-
-    // Mock data fetch
-    const mockEmployees = [
-      {
-        id: 1,
-        name: "John Smith",
-        email: "john.smith@company.com",
-        department: "Engineering",
-        position: "Senior Developer",
-        status: "active",
-        lastActive: "2 hours ago",
-        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      },
-      {
-        id: 2,
-        name: "Sarah Johnson",
-        email: "sarah.j@company.com",
-        department: "Marketing",
-        position: "Marketing Manager",
-        status: "active",
-        lastActive: "30 minutes ago",
-        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-      },
-      {
-        id: 3,
-        name: "Michael Brown",
-        email: "michael.b@company.com",
-        department: "HR",
-        position: "HR Specialist",
-        status: "on leave",
-        lastActive: "3 days ago",
-        avatar: "https://randomuser.me/api/portraits/men/67.jpg",
-      },
-    ];
-
-    const mockLeaveRequests = [
-      {
-        id: 1,
-        employee: "John Smith",
-        type: "Vacation",
-        startDate: "2023-06-15",
-        endDate: "2023-06-22",
-        status: "pending",
-        days: 5,
-      },
-      {
-        id: 2,
-        employee: "Sarah Johnson",
-        type: "Sick Leave",
-        startDate: "2023-06-10",
-        endDate: "2023-06-12",
-        status: "approved",
-        days: 2,
-      },
-    ];
-
-    const mockPerformanceData = [
-      {
-        id: 1,
-        employee: "John Smith",
-        completion: 92,
-        quality: 4.5,
-        teamwork: 4.2,
-        deadline: 4.8,
-      },
-      {
-        id: 2,
-        employee: "Sarah Johnson",
-        completion: 88,
-        quality: 4.7,
-        teamwork: 4.5,
-        deadline: 4.3,
-      },
-    ];
-
-    setEmployees(mockEmployees);
-    setLeaveRequests(mockLeaveRequests);
-    setPerformanceData(mockPerformanceData);
   }, []);
 
-  // Apply dark mode
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
+  const fetchEmployees = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get('/api/employees', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      const employeesWithAuthData = await Promise.all(
+        response.data.map(async (employee) => {
+          try {
+            const authResponse = await axios.get(`/api/auth/last-signin?email=${employee.email}`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            return {
+              ...employee,
+              lastSignIn: authResponse.data.lastSignIn || "Never signed in",
+              department: employee.department || "Unassigned"
+            };
+          } catch (authError) {
+            console.error(`Error fetching auth data for ${employee.email}:`, authError);
+            return {
+              ...employee,
+              lastSignIn: "Error fetching data",
+              department: employee.department || "Unassigned"
+            };
+          }
+        })
+      );
+
+      setEmployees(employeesWithAuthData);
+      setFilteredEmployees(employeesWithAuthData);
+
+      const distribution = employeesWithAuthData.reduce((acc, employee) => {
+        const dept = employee.department || "Other";
+        acc[dept] = (acc[dept] || 0) + 1;
+        return acc;
+      }, {});
+
+      setDepartmentDistribution(distribution);
+
+      setDepartmentChartData({
+        labels: Object.keys(distribution),
+        datasets: [
+          {
+            label: 'Employees by Department',
+            data: Object.values(distribution),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(255, 159, 64, 0.7)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }
+        ]
+      });
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+      setAdminData(prev => ({
+        ...prev,
+        loading: false,
+        error: error.response?.data?.message || error.message
+      }));
     }
-    localStorage.setItem("darkMode", darkMode);
+  }, []);
+
+  const fetchLeaveRequests = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get('/api/leaves/all', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      console.log('API Response:', response.data);
+
+      const approvedRequests = response.data.filter(req =>
+        req.status && req.status.toLowerCase() === 'approved'
+      );
+
+      const pendingRequests = response.data.filter(req =>
+        req.status && req.status.toLowerCase() === 'approved'
+      );
+
+      setPendingLeavesCount(pendingRequests.length);
+
+      console.log('Approved requests:', approvedRequests);
+      console.log('Pending requests:', pendingRequests);
+
+      const leaveTypes = ['Vacation', 'Remote', 'MedicalLeave', 'SpecialLeave'];
+
+      const leaveCounts = leaveTypes.map(type =>
+        approvedRequests.filter(req =>
+          req.leaveType && req.leaveType.toLowerCase() === type.toLowerCase()
+        ).length
+      );
+
+      console.log('Leave counts:', leaveCounts);
+
+      const chartData = {
+        labels: leaveTypes,
+        datasets: [{
+          label: 'Approved Leave Requests',
+          data: leaveCounts,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(255, 206, 86, 0.7)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 206, 86, 1)'
+          ],
+          borderWidth: 1
+        }]
+      };
+
+      setLeaveChartData(chartData);
+
+    } catch (error) {
+      console.error("Error fetching leave requests:", error);
+
+      setLeaveChartData({
+        labels: ['Vacation', 'Remote', 'MedicalLeave', 'SpecialLeave'],
+        datasets: [{
+          label: 'Approved Leave Requests',
+          data: [0, 0, 0, 0],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(255, 206, 86, 0.7)'
+          ],
+          borderWidth: 1
+        }]
+      });
+
+      setPendingLeavesCount(0);
+    }
+  }, []);
+
+  const fetchOngoingProjectsCount = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get('/api/projects/ongoing', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      console.log('Ongoing Projects Response:', response.data);
+
+      const ongoingCount = Array.isArray(response.data) ? response.data.length : 0;
+      setOngoingProjectsCount(ongoingCount);
+
+    } catch (error) {
+      console.error("Error fetching ongoing projects:", error);
+      setOngoingProjectsCount(0);
+    }
+  }, []);
+
+  // Initialize data
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        Promise.all([
+          fetchAdminData(user),
+          fetchEmployees(user),
+          fetchLeaveRequests(user),
+          fetchOngoingProjectsCount(user)
+        ]).catch(err => console.error("Error in parallel fetching:", err));
+      } else {
+        setAdminData(prev => ({
+          ...prev,
+          loading: false,
+          error: "No admin user logged in"
+        }));
+      }
+    });
+
+    return unsubscribe;
+  }, [auth, fetchAdminData, fetchEmployees, fetchLeaveRequests, fetchOngoingProjectsCount]);
+
+  // Dark mode effect
+  useEffect(() => {
+    document.body.classList.toggle("adm-dark-theme", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+  // Employee search filter
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredEmployees(employees);
+      setCurrentPage(1);
+    } else {
+      const filtered = employees.filter(employee =>
+        employee.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        employee.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (employee.department && employee.department.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (employee.position && employee.position.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      setFilteredEmployees(filtered);
+      setCurrentPage(1);
+    }
+  }, [searchQuery, employees]);
+
+  // Employee edit handlers
+  const handleEditEmployee = (employee) => {
+    setEditingEmployee(employee);
+    setEditFormData({
+      name: employee.name || `${employee.firstName} ${employee.lastName}`,
+      email: employee.email,
+      department: employee.department || "",
+      position: employee.position || ""
+    });
   };
 
-  const toggleNotification = (notification) => {
-    setNotifications((prev) => ({
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
       ...prev,
-      [notification]: !prev[notification],
+      [name]: value
     }));
   };
 
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setSelectedFiles(files);
-    // In a real app, you would upload files to server here
-    alert(`${files.length} file(s) selected for admin processing`);
-  };
+  const saveEditedEmployee = async () => {
+    if (!editingEmployee) return;
 
-  const handleLeaveAction = (id, action) => {
-    setLeaveRequests(prev =>
-      prev.map(request =>
-        request.id === id ? { ...request, status: action } : request
-      )
-    );
-    alert(`Leave request ${id} has been ${action}`);
-  };
+    try {
+      const token = await auth.currentUser.getIdToken();
+      await axios.patch(
+        `/api/employees/${editingEmployee.id}`,
+        editFormData,
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
 
-  const handleEmployeeAction = (id, action) => {
-    if (action === "deactivate") {
       setEmployees(prev =>
-        prev.map(employee =>
-          employee.id === id ? { ...employee, status: "inactive" } : employee
+        prev.map(emp =>
+          emp.id === editingEmployee.id ? { ...emp, ...editFormData } : emp
         )
       );
-      alert(`Employee ${id} has been deactivated`);
-    } else if (action === "activate") {
-      setEmployees(prev =>
-        prev.map(employee =>
-          employee.id === id ? { ...employee, status: "active" } : employee
+
+      setFilteredEmployees(prev =>
+        prev.map(emp =>
+          emp.id === editingEmployee.id ? { ...emp, ...editFormData } : emp
         )
       );
-      alert(`Employee ${id} has been activated`);
+
+      setEditingEmployee(null);
+      alert("Employee updated successfully!");
+    } catch (error) {
+      console.error("Error updating employee:", error);
+      alert("Failed to update employee: " + (error.response?.data?.message || error.message));
     }
   };
 
-  // Admin-specific stats
-  const adminStats = [
-    { label: "Total Employees", value: "143", change: "+5%", trend: "up" },
-    { label: "Active Projects", value: "24", change: "+2", trend: "up" },
-    { label: "Pending Leaves", value: "17", change: "-3", trend: "down" },
-    { label: "Open Positions", value: "8", change: "0", trend: "neutral" },
-  ];
+  // Pagination
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+  const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+  const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
+
+  // UI handlers
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
+  }, []);
+
+  // Stats calculation
+  const adminStats = useMemo(() => [
+    { label: "Total Employees", value: employees.length, change: "", trend: "neutral" },
+    { label: "Departments", value: Object.keys(departmentDistribution).length, change: "", trend: "neutral" },
+    { label: "Approved Leaves", value: pendingLeavesCount, change: "", trend: "neutral" },
+    { label: "Ongoing Projects", value: ongoingProjectsCount, change: "", trend: "neutral" },
+  ], [employees.length, departmentDistribution, pendingLeavesCount, ongoingProjectsCount]);
+
+  if (adminData.loading) {
+    return (
+      <div className="adm-loading">
+        <div className="adm-spinner"></div>
+        <p>Loading admin dashboard...</p>
+      </div>
+    );
+  }
+
+  if (adminData.error) {
+    return (
+      <div className="adm-error">
+        <p>Error loading admin dashboard: {adminData.error}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="admin-container">
-      {/* Sidebar */}
+    <div className={`adm-root ${darkMode ? 'adm-dark-theme' : ''}`}>
       <AdminSidebar
         activeMenuItem={activeMenuItem}
         handleMenuItemClick={handleMenuItemClick}
+        darkMode={darkMode}
       />
 
-      {/* Main Content */}
-      <div className="admin-main-content">
-        {/* Header */}
+      <div className="adm-main-content">
         <AdminHeader
-          activeMenuItem={activeMenuItem}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
-          notifications={notifications}
-          toggleNotification={toggleNotification}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
 
-        {/* Admin Stats */}
-        <div className="admin-stats">
+        <div className="adm-stats">
           {adminStats.map((stat, index) => (
-            <div key={index} className="stat-card">
-              <div className="stat-info">
-                <span className="stat-label">{stat.label}</span>
-                <span className="stat-value">{stat.value}</span>
+            <div key={index} className="adm-stat-card">
+              <div>
+                <span className="adm-stat-label">{stat.label}</span>
+                <span className="adm-stat-value">{stat.value}</span>
               </div>
-              <div
-                className={`stat-change ${stat.trend === "up" ? "up" : stat.trend === "down" ? "down" : ""
-                  }`}
-              >
-                <i
-                  className={`fas ${stat.trend === "up"
-                    ? "fa-arrow-up"
-                    : stat.trend === "down"
-                      ? "fa-arrow-down"
-                      : "fa-minus"
-                    }`}
-                ></i>
-                <span>{stat.change}</span>
-              </div>
+              {stat.change && (
+                <div className={`adm-stat-change ${stat.trend}`}>
+                  <i className={`fas ${
+                    stat.trend === "up" ? "fa-arrow-up" :
+                    stat.trend === "down" ? "fa-arrow-down" : "fa-minus"
+                  }`} />
+                  <span>{stat.change}</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
 
-        {/* Profile Section */}
-        <div className="admin-profile-section">
-          {/* Admin Profile Card */}
-          <div className="admin-profile-card">
-            <div className="admin-profile-header">
-              <div className="admin-cover-photo-overlay"></div>
+        <div className="adm-profile-section">
+          <div className="adm-profile-card">
+            <div className="adm-profile-header">
+              <div className="adm-cover-photo-overlay"></div>
               <img
                 src="https://images.unsplash.com/photo-1579547945413-497e1b99dac0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                className="admin-cover-photo"
+                className="adm-cover-photo"
                 alt="Cover"
               />
-              <div className="admin-profile-photo-container">
+              <div className="adm-profile-photo-container">
                 <img
-                  src="https://randomuser.me/api/portraits/men/75.jpg"
-                  className="admin-profile-photo"
+                  src={adminData.avatarURL}
+                  className="adm-profile-photo"
                   alt="Profile"
                 />
-                <span className="admin-status-badge">
+                <span className="adm-status-badge">
                   <i className="fas fa-shield-alt"></i> Super Admin
                 </span>
               </div>
             </div>
 
-            <div className="admin-profile-content">
-              <h1 className="admin-profile-name">Admin User</h1>
-              <p className="admin-profile-title">System Administrator</p>
-              <div className="admin-profile-divider"></div>
-              <p className="admin-profile-bio">
-                Managing all HR operations, employee data, and system
-                configurations with highest privileges.
-              </p>
+            <div className="adm-profile-content">
+              <h1 className="adm-profile-name">{adminData.name}</h1>
+              <p className="adm-profile-title">{adminData.position}</p>
+              <div className="adm-profile-divider"></div>
+              <p className="adm-profile-bio">{adminData.bio}</p>
+              <p className="adm-profile-department">{adminData.department}</p>
 
-              <div className="admin-profile-stats">
-                <div className="admin-stat-item">
-                  <span className="admin-stat-number">143</span>
-                  <span className="admin-stat-label">Employees</span>
+              <div className="adm-profile-stats">
+                <div className="adm-stat-item">
+                  <span className="adm-stat-number">{employees.length}</span>
+                  <span className="adm-stat-label">Employees</span>
                 </div>
-                <div className="admin-stat-item">
-                  <span className="admin-stat-number">24</span>
-                  <span className="admin-stat-label">Projects</span>
+                <div className="adm-stat-item">
+                  <span className="adm-stat-number">{Object.keys(departmentDistribution).length}</span>
+                  <span className="adm-stat-label">Departments</span>
                 </div>
-                <div className="admin-stat-item">
-                  <span className="admin-stat-number">17</span>
-                  <span className="admin-stat-label">Pending</span>
+                <div className="adm-stat-item">
+                  <span className="adm-stat-number">{ongoingProjectsCount}</span>
+                  <span className="adm-stat-label">Ongoing</span>
                 </div>
               </div>
-            </div>
-
-            <div className="admin-profile-actions">
-              <button className="admin-action-btn primary">
-                <i className="fas fa-cog"></i> System Settings
-              </button>
-              <button className="admin-action-btn secondary">
-                <i className="fas fa-user-shield"></i> Admin Console
-              </button>
-            </div>
-          </div>
-
-          {/* Quick Actions Card */}
-          <div className="quick-actions-card">
-            <h3>
-              <i className="fas fa-bolt"></i> Quick Actions
-            </h3>
-            <div className="actions-grid">
-              <button className="action-item">
-                <i className="fas fa-user-plus"></i>
-                <span>Add Employee</span>
-              </button>
-              <button className="action-item">
-                <i className="fas fa-file-import"></i>
-                <span>Import Data</span>
-              </button>
-              <button className="action-item">
-                <i className="fas fa-file-export"></i>
-                <span>Export Reports</span>
-              </button>
-              <button className="action-item">
-                <i className="fas fa-calendar-check"></i>
-                <span>Approve Leaves</span>
-              </button>
-              <button className="action-item">
-                <i className="fas fa-money-check-alt"></i>
-                <span>Run Payroll</span>
-              </button>
-              <button className="action-item">
-                <i className="fas fa-chart-pie"></i>
-                <span>View Analytics</span>
-              </button>
-            </div>
-
-            <div className="recent-activity">
-              <h4>Recent Activity</h4>
-              <ul>
-                <li>
-                  <i className="fas fa-user-circle"></i> Approved Sarah Johnson's
-                  leave request
-                </li>
-                <li>
-                  <i className="fas fa-file-alt"></i> Generated monthly payroll
-                  report
-                </li>
-                <li>
-                  <i className="fas fa-user-plus"></i> Added new employee:
-                  Michael Brown
-                </li>
-              </ul>
             </div>
           </div>
         </div>
 
-        {/* Main Content Section */}
-        <div className="admin-content-section">
-          {/* Tabs */}
-          <div className="admin-tabs">
+        <div className="adm-content-section">
+          <div className="adm-tabs">
             <button
-              className={`tab-btn ${activeTab === "overview" ? "active" : ""}`}
+              className={`adm-tab-btn ${activeTab === "overview" ? "active" : ""}`}
               onClick={() => setActiveTab("overview")}
             >
               <i className="fas fa-chart-pie"></i> Overview
             </button>
             <button
-              className={`tab-btn ${activeTab === "employees" ? "active" : ""}`}
+              className={`adm-tab-btn ${activeTab === "employees" ? "active" : ""}`}
               onClick={() => setActiveTab("employees")}
             >
               <i className="fas fa-users"></i> Employees
             </button>
             <button
-              className={`tab-btn ${activeTab === "leaves" ? "active" : ""}`}
+              className={`adm-tab-btn ${activeTab === "leaves" ? "active" : ""}`}
               onClick={() => setActiveTab("leaves")}
             >
               <i className="fas fa-calendar-alt"></i> Leave Requests
             </button>
             <button
-              className={`tab-btn ${activeTab === "performance" ? "active" : ""}`}
+              className={`adm-tab-btn ${activeTab === "performance" ? "active" : ""}`}
               onClick={() => setActiveTab("performance")}
             >
               <i className="fas fa-chart-line"></i> Performance
             </button>
-            <button
-              className={`tab-btn ${activeTab === "settings" ? "active" : ""}`}
-              onClick={() => setActiveTab("settings")}
-            >
-              <i className="fas fa-cog"></i> System Settings
-            </button>
           </div>
 
-          {/* Tab Content */}
-          <div className="admin-tab-content">
+          <div className="adm-tab-content">
             {activeTab === "overview" && (
-              <div className="admin-overview-tab">
-                <div className="admin-chart-container">
+              <div className="adm-overview-tab">
+                <div className="adm-chart-container">
                   <h3>Employee Distribution by Department</h3>
-                  <div className="admin-chart-placeholder">
-                    <i className="fas fa-chart-bar"></i>
-                    <p>Department distribution chart would display here</p>
-                  </div>
+                  {departmentChartData ? (
+                    <div className="adm-chart-wrapper" style={{ height: '400px', width: '100%' }}>
+                      <Chart
+                        type="pie"
+                        data={departmentChartData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              position: 'right',
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="adm-chart-placeholder">
+                      <i className="fas fa-chart-bar"></i>
+                      <p>Loading department distribution...</p>
+                    </div>
+                  )}
                 </div>
-                <div className="admin-chart-container">
-                  <h3>Leave Requests Trend</h3>
-                  <div className="admin-chart-placeholder">
-                    <i className="fas fa-chart-line"></i>
-                    <p>Leave trend chart would display here</p>
-                  </div>
+                <div className="adm-chart-container">
+                  <h3>Leave Requests by Type</h3>
+                  {leaveChartData ? (
+                    <div className="adm-chart-wrapper" style={{ height: '400px', width: '100%' }}>
+                      <Chart
+                        type="bar"
+                        data={leaveChartData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              position: 'top',
+                            },
+                            title: {
+                              display: true,
+                              text: 'Leave Requests by Type'
+                            }
+                          },
+                          scales: {
+                            y: {
+                              beginAtZero: true,
+                              ticks: {
+                                stepSize: 1
+                              }
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="adm-chart-placeholder">
+                      <i className="fas fa-chart-bar"></i>
+                      <p>Loading leave request data...</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {activeTab === "employees" && (
-              <div className="employees-tab">
-                <div className="table-header">
+              <div className="adm-employees-tab">
+                <div className="adm-table-header">
                   <h3>Employee Management</h3>
-                  <div className="table-actions">
-                    <button className="btn primary">
-                      <i className="fas fa-user-plus"></i> Add Employee
-                    </button>
-                    <button className="btn secondary">
-                      <i className="fas fa-file-export"></i> Export
-                    </button>
-                    <div className="search-filter">
+                  <div className="adm-table-actions">
+                    <div className="adm-search-filter">
                       <input
                         type="text"
                         placeholder="Filter employees..."
@@ -456,100 +626,173 @@ const AdminProfilePage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="table-responsive">
-                  <table className="employees-table">
+                <div className="adm-table-responsive">
+                  <table className="adm-employees-table">
                     <thead>
                       <tr>
                         <th>Employee</th>
                         <th>Email</th>
                         <th>Department</th>
                         <th>Position</th>
-                        <th>Status</th>
                         <th>Last Active</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {employees.map((employee) => (
+                      {currentEmployees.map((employee) => (
                         <tr key={employee.id}>
                           <td>
-                            <div className="employee-info">
+                            <div className="adm-employee-info">
                               <img
-                                src={employee.avatar}
+                                src={employee.avatarURL || "https://randomuser.me/api/portraits/men/32.jpg"}
                                 alt={employee.name}
-                                className="employee-avatar"
+                                className="adm-employee-avatar"
                               />
-                              <span>{employee.name}</span>
+                              <span>{employee.name || `${employee.firstName} ${employee.lastName}`}</span>
                             </div>
                           </td>
                           <td>{employee.email}</td>
-                          <td>{employee.department}</td>
-                          <td>{employee.position}</td>
+                          <td>{employee.department || "N/A"}</td>
+                          <td>{employee.position || "N/A"}</td>
+                          <td>{employee.lastSignIn || "N/A"}</td>
                           <td>
-                            <span
-                              className={`status-badge ${employee.status === "active"
-                                ? "active"
-                                : employee.status === "on leave"
-                                  ? "warning"
-                                  : "inactive"
-                                }`}
-                            >
-                              {employee.status}
-                            </span>
-                          </td>
-                          <td>{employee.lastActive}</td>
-                          <td>
-                            <div className="action-buttons">
+                            <div className="adm-action-buttons">
                               <button
-                                className="icon-btn"
+                                className="adm-icon-btn"
                                 title="Edit Employee"
+                                onClick={() => handleEditEmployee(employee)}
                               >
-                                <img src="https://img.icons8.com/?size=100&id=89778&format=png&color=A3AED0" className="activate-icon" />
+                                <img
+                                  src="https://img.icons8.com/?size=100&id=89778&format=png&color=A3AED0"
+                                  className="activate-icon"
+                                  alt="Edit"
+                                />
                               </button>
-                              {employee.status === "active" ? (
-                                <button
-                                  className="icon-btn danger"
-                                  title="Deactivate"
-                                  onClick={() =>
-                                    handleEmployeeAction(employee.id, "deactivate")
-                                  }
-                                >
-                                  <img src="https://img.icons8.com/?size=100&id=YSq5LQKUtUA8&format=png&color=A3AED0" className="activate-icon" />
-                                </button>
-                              ) : (
-                                <button
-                                  className="icon-btn success"
-                                  title="Activate"
-                                  onClick={() =>
-                                    handleEmployeeAction(employee.id, "activate")
-                                  }
-                                >
-                                  <img src="https://img.icons8.com/?size=100&id=478ct6UMdB85&format=png&color=A3AED0" className="activate-icon" />
-                                </button>
-                              )}
                             </div>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  {totalPages > 1 && (
+                    <div className="adm-pagination">
+                      <button
+                        onClick={() => paginate(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                      >
+                        &laquo; Prev
+                      </button>
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNum;
+                        if (totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNum = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          pageNum = totalPages - 4 + i;
+                        } else {
+                          pageNum = currentPage - 2 + i;
+                        }
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => paginate(pageNum)}
+                            className={currentPage === pageNum ? 'active' : ''}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                      {totalPages > 5 && currentPage < totalPages - 2 && (
+                        <span className="adm-ellipsis">...</span>
+                      )}
+                      <button
+                        onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next &raquo;
+                      </button>
+                    </div>
+                  )}
                 </div>
+
+                {editingEmployee && (
+                  <div className="adm-modal-overlay">
+                    <div className="adm-modal-content">
+                      <h3>Edit Employee</h3>
+                      <div className="adm-form-group">
+                        <label>Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={editFormData.name}
+                          onChange={handleEditFormChange}
+                        />
+                      </div>
+                      <div className="adm-form-group">
+                        <label>Email</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={editFormData.email}
+                          onChange={handleEditFormChange}
+                          disabled
+                        />
+                      </div>
+                      <div className="adm-form-group">
+                        <label>Department</label>
+                        <select
+                          name="department"
+                          value={editFormData.department}
+                          onChange={handleEditFormChange}
+                        >
+                          <option value="">Select Department</option>
+                          {Object.keys(departmentDistribution).map(dept => (
+                            <option key={dept} value={dept}>{dept}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="adm-form-group">
+                        <label>Position</label>
+                        <input
+                          type="text"
+                          name="position"
+                          value={editFormData.position}
+                          onChange={handleEditFormChange}
+                        />
+                      </div>
+                      <div className="adm-modal-actions">
+                        <button
+                          className="adm-btn secondary"
+                          onClick={() => setEditingEmployee(null)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="adm-btn primary"
+                          onClick={saveEditedEmployee}
+                        >
+                          Save Changes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === "leaves" && <AdminLeaveRequestManager />}
 
-
             {activeTab === "performance" && (
-              <div className="performance-tab">
-                <div className="performance-header">
+              <div className="adm-performance-tab">
+                <div className="adm-performance-header">
                   <h3>Employee Performance Metrics</h3>
-                  <div className="performance-filters">
+                  <div className="adm-performance-filters">
                     <select>
                       <option>All Departments</option>
-                      <option>Engineering</option>
-                      <option>Marketing</option>
-                      <option>HR</option>
+                      {Object.keys(departmentDistribution).map(dept => (
+                        <option key={dept}>{dept}</option>
+                      ))}
                     </select>
                     <select>
                       <option>Last Quarter</option>
@@ -558,98 +801,59 @@ const AdminProfilePage = () => {
                     </select>
                   </div>
                 </div>
-                <div className="performance-grid">
+                <div className="adm-performance-grid">
                   {performanceData.map((employee) => (
-                    <div key={employee.id} className="performance-card">
-                      <div className="employee-info">
+                    <div key={employee.id} className="adm-performance-card">
+                      <div className="adm-employee-info">
                         <img
-                          src={
-                            employees.find((e) => e.name === employee.employee)
-                              ?.avatar
-                          }
+                          src={employees.find((e) => e.name === employee.employee)?.avatarURL}
                           alt={employee.employee}
-                          className="employee-avatar"
+                          className="adm-employee-avatar"
                         />
                         <div>
                           <h4>{employee.employee}</h4>
                           <p>
-                            {
-                              employees.find((e) => e.name === employee.employee)
-                                ?.department
-                            }
+                            {employees.find((e) => e.name === employee.employee)?.department}
                           </p>
                         </div>
                       </div>
-                      <div className="performance-metrics">
-                        <div className="metric">
-                          <span className="metric-label">Completion</span>
-                          <div className="progress-bar">
+                      <div className="adm-performance-metrics">
+                        <div className="adm-metric">
+                          <span className="adm-metric-label">Completion</span>
+                          <div className="adm-progress-bar">
                             <div
-                              className="progress-fill"
+                              className="adm-progress-fill"
                               style={{ width: `${employee.completion}%` }}
                             ></div>
                           </div>
-                          <span className="metric-value">
+                          <span className="adm-metric-value">
                             {employee.completion}%
                           </span>
                         </div>
-                        <div className="metric">
-                          <span className="metric-label">Quality</span>
-                          <div className="rating">
+                        <div className="adm-metric">
+                          <span className="adm-metric-label">Quality</span>
+                          <div className="adm-rating">
                             {[...Array(5)].map((_, i) => (
                               <i
                                 key={i}
-                                className={`fas fa-star ${i < Math.floor(employee.quality)
-                                  ? "filled"
-                                  : i < employee.quality
-                                    ? "half"
-                                    : ""
-                                  }`}
+                                className={`fas fa-star ${
+                                  i < Math.floor(employee.quality)
+                                    ? "filled"
+                                    : i < employee.quality
+                                      ? "half"
+                                      : ""
+                                }`}
                               ></i>
                             ))}
                             <span>({employee.quality})</span>
                           </div>
                         </div>
-                        <div className="metric">
-                          <span className="metric-label">Teamwork</span>
-                          <div className="rating">
-                            {[...Array(5)].map((_, i) => (
-                              <i
-                                key={i}
-                                className={`fas fa-star ${i < Math.floor(employee.teamwork)
-                                  ? "filled"
-                                  : i < employee.teamwork
-                                    ? "half"
-                                    : ""
-                                  }`}
-                              ></i>
-                            ))}
-                            <span>({employee.teamwork})</span>
-                          </div>
-                        </div>
-                        <div className="metric">
-                          <span className="metric-label">Deadline</span>
-                          <div className="rating">
-                            {[...Array(5)].map((_, i) => (
-                              <i
-                                key={i}
-                                className={`fas fa-star ${i < Math.floor(employee.deadline)
-                                  ? "filled"
-                                  : i < employee.deadline
-                                    ? "half"
-                                    : ""
-                                  }`}
-                              ></i>
-                            ))}
-                            <span>({employee.deadline})</span>
-                          </div>
-                        </div>
                       </div>
-                      <div className="performance-actions">
-                        <button className="btn primary sm">
+                      <div className="adm-performance-actions">
+                        <button className="adm-btn primary sm">
                           <i className="fas fa-chart-line"></i> Details
                         </button>
-                        <button className="btn secondary sm">
+                        <button className="adm-btn secondary sm">
                           <i className="fas fa-comment-alt"></i> Feedback
                         </button>
                       </div>
@@ -658,116 +862,10 @@ const AdminProfilePage = () => {
                 </div>
               </div>
             )}
-
-            {activeTab === "settings" && (
-              <div className="settings-tab">
-                <div className="settings-grid">
-                  <div className="settings-card">
-                    <h3>
-                      <i className="fas fa-user-shield"></i> Admin Settings
-                    </h3>
-                    <div className="setting-item">
-                      <label>Admin Access Level</label>
-                      <select>
-                        <option>Super Admin</option>
-                        <option>HR Admin</option>
-                        <option>Department Admin</option>
-                      </select>
-                    </div>
-                    <div className="setting-item">
-                      <label>Two-Factor Authentication</label>
-                      <label className="toggle-switch">
-                        <input type="checkbox" checked />
-                        <span className="toggle-slider"></span>
-                      </label>
-                    </div>
-                    <div className="setting-item">
-                      <label>Activity Log Retention</label>
-                      <select>
-                        <option>30 days</option>
-                        <option>90 days</option>
-                        <option>1 year</option>
-                        <option>Indefinite</option>
-                      </select>
-                    </div>
-                    <button className="btn primary">
-                      <i className="fas fa-save"></i> Save Settings
-                    </button>
-                  </div>
-
-                  <div className="settings-card">
-                    <h3>
-                      <i className="fas fa-lock"></i> Security Settings
-                    </h3>
-                    <div className="setting-item">
-                      <label>Password Policy</label>
-                      <select>
-                        <option>Medium (8 chars, 1 special)</option>
-                        <option>Strong (10 chars, 2 special)</option>
-                        <option>Very Strong (12 chars, 3 special)</option>
-                      </select>
-                    </div>
-                    <div className="setting-item">
-                      <label>Session Timeout</label>
-                      <select>
-                        <option>15 minutes</option>
-                        <option>30 minutes</option>
-                        <option>1 hour</option>
-                        <option>2 hours</option>
-                      </select>
-                    </div>
-                    <div className="setting-item">
-                      <label>IP Whitelisting</label>
-                      <textarea placeholder="Enter allowed IP addresses, one per line"></textarea>
-                    </div>
-                    <button className="btn primary">
-                      <i className="fas fa-save"></i> Save Settings
-                    </button>
-                  </div>
-
-                  <div className="settings-card">
-                    <h3>
-                      <i className="fas fa-upload"></i> Data Management
-                    </h3>
-                    <div className="setting-item">
-                      <label>Backup Schedule</label>
-                      <select>
-                        <option>Daily</option>
-                        <option>Weekly</option>
-                        <option>Monthly</option>
-                      </select>
-                    </div>
-                    <div className="setting-item">
-                      <label>Automatic Backup</label>
-                      <label className="toggle-switch">
-                        <input type="checkbox" checked />
-                        <span className="toggle-slider"></span>
-                      </label>
-                    </div>
-                    <div className="setting-item">
-                      <label>Backup Location</label>
-                      <input
-                        type="text"
-                        placeholder="Enter backup server path"
-                      />
-                    </div>
-                    <div className="backup-actions">
-                      <button className="btn secondary">
-                        <i className="fas fa-download"></i> Download Backup
-                      </button>
-                      <button className="btn primary">
-                        <i className="fas fa-upload"></i> Restore Backup
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Footer */}
-        <AdminFooter />
+        <AdminFooter darkMode={darkMode} />
       </div>
     </div>
   );
