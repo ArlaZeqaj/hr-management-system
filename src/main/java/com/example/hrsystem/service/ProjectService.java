@@ -242,5 +242,35 @@ public class ProjectService {
 
         return count;
     }
+    public List<Map<String, Object>> getAllOngoingProjects() throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+        CollectionReference projectsRef = db.collection("Project");
+
+        // Filter where status == "Ongoing"
+        Query query = projectsRef.whereEqualTo("status", "Ongoing");
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        List<Map<String, Object>> ongoingProjects = new ArrayList<>();
+
+        for (DocumentSnapshot doc : documents) {
+            Map<String, Object> projectData = new HashMap<>();
+            projectData.put("project_Name", doc.getString("project_Name"));
+            projectData.put("description", doc.getString("description"));
+            projectData.put("role", doc.getString("role"));
+            projectData.put("status", doc.getString("status"));
+            projectData.put("start_Date", doc.getString("start_Date"));
+            projectData.put("end_Date", doc.getString("end_Date"));
+            projectData.put("budget", doc.getString("budget"));
+            projectData.put("image", doc.getString("image"));
+            projectData.put("company_img", doc.getString("company_img"));
+            projectData.put("assigned_id", doc.get("assigned_id")); // optionally return assigned users
+            ongoingProjects.add(projectData);
+        }
+
+        return ongoingProjects;
+    }
+
+
 }
 
