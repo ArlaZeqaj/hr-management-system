@@ -1,7 +1,6 @@
-// Updated new-hire-table.jsx
 "use client"
 
-import React from "react"
+import React, { useState, useMemo } from "react"
 import { Download, Edit, Trash2, CheckCircle } from "lucide-react"
 
 const NewHireTable = ({
@@ -15,18 +14,38 @@ const NewHireTable = ({
   handleDownload,
   handleApprove,
 }) => {
-  console.log("📋 HIRES PASSED TO TABLE:", hires)
+  const [sortColumn, setSortColumn] = useState(null)
+  const [sortDirection, setSortDirection] = useState("asc")
 
-  if (loading) {
-    return <div className="loading">Loading...</div>
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortColumn(column)
+      setSortDirection("asc")
+    }
   }
 
-  if (error) {
-    return <div className="error">Error: {error}</div>
-  }
+  const sortedHires = useMemo(() => {
+    if (!sortColumn) return hires
 
-  if (!hires || hires.length === 0) {
-    return <div className="empty-state">No hires found.</div>
+    return [...hires].sort((a, b) => {
+      const aVal = a[sortColumn]?.toString().toLowerCase() || ""
+      const bVal = b[sortColumn]?.toString().toLowerCase() || ""
+
+      if (aVal < bVal) return sortDirection === "asc" ? -1 : 1
+      if (aVal > bVal) return sortDirection === "asc" ? 1 : -1
+      return 0
+    })
+  }, [hires, sortColumn, sortDirection])
+
+  if (loading) return <div className="loading">Loading...</div>
+  if (error) return <div className="error">Error: {error}</div>
+  if (!hires || hires.length === 0) return <div className="empty-state">No hires found.</div>
+
+  const renderSortArrow = (column) => {
+    if (sortColumn !== column) return null
+    return sortDirection === "asc" ? " ↑" : " ↓"
   }
 
   return (
@@ -34,33 +53,46 @@ const NewHireTable = ({
       <table className="table">
         <thead>
           <tr>
-            <th>Full Name</th>
-            <th>Department</th>
-            <th>Role Title</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Email</th>
+            <th onClick={() => handleSort("name")}>Full Name {renderSortArrow("name")}</th>
+            <th onClick={() => handleSort("department")}>Department {renderSortArrow("department")}</th>
+            <th onClick={() => handleSort("roleTitle")}>Role Title {renderSortArrow("roleTitle")}</th>
+            <th onClick={() => handleSort("status")}>Status {renderSortArrow("status")}</th>
+            <th onClick={() => handleSort("priority")}>Priority {renderSortArrow("priority")}</th>
+            <th onClick={() => handleSort("email")}>Email {renderSortArrow("email")}</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {hires.map((hire) => (
-            <React.Fragment key={hire.id}>
-              <tr onClick={() => toggleRowExpansion(hire.id)} className="table-row">
-                <td>{hire.fullName}</td>
+          {sortedHires.map((hire) => (
+            <React.Fragment key={hire.key || hire.id}>
+              <tr onClick={() => toggleRowExpansion(hire.key || hire.id)} className="table-row">
+                <td>{hire.name} {hire.surname}</td>
                 <td>{hire.department}</td>
                 <td>{hire.roleTitle}</td>
-                <td>{hire.status}</td>
-                <td>{hire.priority}</td>
+                <td>
+                  <span className={`statuss-badge ${(hire.status || "unknown").replace(/\s+/g, "-").toLowerCase()}`}>
+                    {hire.status || "Unknown"}
+                  </span>
+                </td>
+                <td>
+                  <span className={`priority-badge ${(hire.priority || "unknown").toLowerCase()}`}>
+                    {hire.priority || "Unknown"}
+                  </span>
+                </td>
                 <td>{hire.email}</td>
                 <td className="table-actions">
-                  <button onClick={(e) => handleEdit(hire, e)}><Edit size={16} /></button>
-                  <button onClick={(e) => handleDelete(hire, e)}><Trash2 size={16} /></button>
-                  <button onClick={(e) => handleDownload(hire, e)}><Download size={16} /></button>
-                  <button onClick={(e) => handleApprove(hire, e)}><CheckCircle size={16} /></button>
+                  <button className="action-button edit" onClick={(e) => handleEdit(hire, e)}>
+                    <Edit size={16} />
+                  </button>
+                  <button className="action-button delete" onClick={(e) => handleDelete(hire, e)}>
+                    <Trash2 size={16} />
+                  </button>
+                  <button className="action-button approve" onClick={(e) => handleApprove(hire, e)}>
+                    <CheckCircle size={16} />
+                  </button>
                 </td>
               </tr>
-              {expandedRows.includes(hire.id) && (
+              {expandedRows.includes(hire.key || hire.id) && (
                 <tr className="expanded-row">
                   <td colSpan="7">
                     <div className="expanded-content">
@@ -68,10 +100,20 @@ const NewHireTable = ({
                         <span className="expanded-label">Phone:</span>
                         <span className="expanded-value">{hire.phoneNr}</span>
                       </div>
-                      <div className="expanded-item">
-                        <span className="expanded-label">Documents:</span>
-                        <span className="expanded-value">{hire.documents}</span>
-                      </div>
+                      {hire.education && (
+                        <div className="expanded-item">
+                          <div className="expanded-label">Education</div>
+                          <div className="expanded-value">{hire.education}</div>
+                        </div>
+                      )}
+                      {hire.workHistory?.length > 0 && (
+                        <div className="expanded-item">
+                          <div className="expanded-label">Work History</div>
+                          <div className="expanded-value">
+                            {hire.workHistory.join(", ")}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </td>
                 </tr>

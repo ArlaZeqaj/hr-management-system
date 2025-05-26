@@ -5,33 +5,41 @@ import { Edit } from "lucide-react"
 
 const EditModal = ({ isOpen, onClose, hire, onSave }) => {
   const [formData, setFormData] = useState({
-    id: "",
-    fullName: "",
+    name: "",
+    surname: "",
+    email: "",
     roleTitle: "",
     department: "",
-    status: "",
-    email: "",
+    status: "Initial Review",
     phoneNr: "",
-    priority: "",
+    priority: "Medium",
     documents: "",
+    birthDate: "",
+    education: "",
+    languages: "",
+    workHistory: "",
   })
 
   useEffect(() => {
-    if (hire) {
-      // Normalize the data to ensure consistent property names
+    if (isOpen && hire) {
       setFormData({
-        id: hire.id || "",
-        fullName: hire.fullName || "",
+        name: hire.name || "",
+        surname: hire.surname || "",
+        email: hire.email || "",
         roleTitle: hire.roleTitle || "",
         department: hire.department || "",
         status: hire.status || "Initial Review",
-        email: hire.email || "",
         phoneNr: hire.phoneNr || "",
         priority: hire.priority || "Medium",
         documents: hire.documents || "",
+        birthDate: hire.birthDate || "",
+        education: hire.education || "",
+        languages: (hire.languages || []).join(", "),
+        workHistory: (hire.workHistory || []).join(", "),
+        docId: hire.docId || "",
       })
     }
-  }, [hire])
+  }, [isOpen, hire])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -43,7 +51,15 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(formData)
+
+    const dataToSend = {
+      ...formData,
+      languages: formData.languages.split(",").map((l) => l.trim()).filter(Boolean),
+      workHistory: formData.workHistory.split(",").map((w) => w.trim()).filter(Boolean),
+    }
+
+    console.log("📤 Submitting updated hire:", dataToSend)
+    onSave?.(dataToSend)
   }
 
   if (!isOpen) return null
@@ -51,35 +67,45 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <div className="modal-header">
-          <h2 className="modal-title">
-            <Edit className="mr-2" size={18} /> Edit New Hire
-          </h2>
-          <button className="modal-close" onClick={onClose}>
-            ×
-          </button>
-        </div>
-        <div className="modal-body">
-          <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+          <div className="modal-header">
+            <h2 className="modal-title">
+              <Edit className="mr-2" size={18} /> Edit New Hire
+            </h2>
+            <button className="modal-close" type="button" onClick={onClose}>×</button>
+          </div>
+
+          <div className="modal-body">
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="fullName" className="form-label">
-                  Full Name
-                </label>
+                <label htmlFor="name">First Name</label>
                 <input
                   type="text"
-                  id="fullName"
-                  name="fullName"
+                  id="name"
+                  name="name"
                   className="form-input"
-                  value={formData.fullName}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
+                <label htmlFor="surname">Surname</label>
+                <input
+                  type="text"
+                  id="surname"
+                  name="surname"
+                  className="form-input"
+                  value={formData.surname}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
@@ -90,13 +116,47 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                   required
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="birthDate">Birth Date</label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  name="birthDate"
+                  className="form-input"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="department" className="form-label">
-                  Department
-                </label>
+                <label htmlFor="education">Education</label>
+                <input
+                  type="text"
+                  id="education"
+                  name="education"
+                  className="form-input"
+                  value={formData.education}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phoneNr">Phone Number</label>
+                <input
+                  type="tel"
+                  id="phoneNr"
+                  name="phoneNr"
+                  className="form-input"
+                  value={formData.phoneNr}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="department">Department</label>
                 <input
                   type="text"
                   id="department"
@@ -108,9 +168,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="roleTitle" className="form-label">
-                  Role Title
-                </label>
+                <label htmlFor="roleTitle">Role Title</label>
                 <input
                   type="text"
                   id="roleTitle"
@@ -125,9 +183,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="status" className="form-label">
-                  Status
-                </label>
+                <label htmlFor="status">Status</label>
                 <select
                   id="status"
                   name="status"
@@ -143,9 +199,7 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="priority" className="form-label">
-                  Priority
-                </label>
+                <label htmlFor="priority">Priority</label>
                 <select
                   id="priority"
                   name="priority"
@@ -162,43 +216,41 @@ const EditModal = ({ isOpen, onClose, hire, onSave }) => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="phoneNr" className="form-label">
-                  Phone Number
-                </label>
+                <label htmlFor="languages">Languages</label>
                 <input
-                  type="tel"
-                  id="phoneNr"
-                  name="phoneNr"
+                  type="text"
+                  id="languages"
+                  name="languages"
                   className="form-input"
-                  value={formData.phoneNr}
+                  placeholder="e.g. English, Spanish"
+                  value={formData.languages}
                   onChange={handleChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="documents" className="form-label">
-                  Documents
-                </label>
+                <label htmlFor="workHistory">Work History</label>
                 <input
                   type="text"
-                  id="documents"
-                  name="documents"
+                  id="workHistory"
+                  name="workHistory"
                   className="form-input"
-                  value={formData.documents}
+                  placeholder="e.g. Google, Meta"
+                  value={formData.workHistory}
                   onChange={handleChange}
-                  placeholder="CV, Cover Letter, etc."
                 />
               </div>
             </div>
-          </form>
-        </div>
-        <div className="modal-footer">
-          <button type="button" className="button button-outline" onClick={onClose}>
-            Cancel
-          </button>
-          <button type="submit" className="button button-primary" onClick={handleSubmit}>
-            Save Changes
-          </button>
-        </div>
+          </div>
+
+          <div className="modal-footer">
+            <button type="button" className="button button-outline" onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className="button button-primary">
+              Save Changes
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )

@@ -1,10 +1,7 @@
 package com.example.hrsystem.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +33,37 @@ public class DocumentService {
         }
 
         return documents;
+    }
+
+
+
+    public void deleteDocument(String uid, String docId) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+
+        // Reference to the document
+        DocumentReference docRef = db.collection("employees")
+                .document(uid)
+                .collection("documents")
+                .document(docId);
+
+        DocumentSnapshot docSnap = docRef.get().get();
+        if (!docSnap.exists()) {
+            throw new Exception("Document not found.");
+        }
+
+        // Optionally delete the uploaded file from the filesystem
+        String fileUrl = docSnap.getString("url");
+        if (fileUrl != null && fileUrl.startsWith("/uploads/")) {
+            try {
+                Path filePath = Paths.get(fileUrl.substring(1)); // remove leading '/'
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                System.err.println("⚠️ File deletion failed: " + e.getMessage());
+            }
+        }
+
+        // Delete the Firestore document
+        docRef.delete().get();  // blocking wait
     }
 
     public List<Map<String, String>> uploadDocuments(MultipartFile[] files, String category, String userId) throws IOException {

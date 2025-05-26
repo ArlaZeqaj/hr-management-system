@@ -6,7 +6,6 @@ import com.google.cloud.firestore.annotation.PropertyName;
 import java.util.List;
 
 public class Employee {
-
     @DocumentId
     private String id;
 
@@ -31,8 +30,11 @@ public class Employee {
     @PropertyName("Education")
     private String education;
 
-    @PropertyName("Department")
-    private String department;
+    @PropertyName("Departament")
+    private String departament;
+
+    @PropertyName("grossSalary")
+    private int grossSalary;
 
     @PropertyName("Work History")
     private List<String> workHistory;
@@ -40,18 +42,14 @@ public class Employee {
     @PropertyName("Gender")
     private String gender;
 
-
-    @PropertyName("Languages")
+    @PropertyName("Lanuages")
     private List<String> languages;
-
-
 
     @PropertyName("Birth Date")
     private String birthDate;
 
     @PropertyName("Organization")
     private String organization;
-
 
     @PropertyName("Joined Date")
     private String joinedDate;
@@ -61,7 +59,6 @@ public class Employee {
 
     @PropertyName("Position")
     private String position;
-
 
     @PropertyName("Avatar Url")
     private String avatarURL;
@@ -78,7 +75,7 @@ public class Employee {
 
     }
 
-
+    // Getters and setters
 
     public String getId() {
         return id;
@@ -88,7 +85,13 @@ public class Employee {
         this.id = id;
     }
 
+    public String getEmployeeID() {
+        return employeeID;
+    }
 
+    public void setEmployeeID(String employeeID) {
+        this.employeeID = employeeID;
+    }
 
     public String getName() {
         return name;
@@ -118,12 +121,20 @@ public class Employee {
         this.education = education;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getDepartament() {
+        return departament;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public int getGrossSalary() {
+        return grossSalary;
+    }
+
+    public void setDepartament(String departament) {
+        this.departament = departament;
+    }
+
+    public void setGrossSalary(int grossSalary) {
+        this.grossSalary = grossSalary;
     }
 
     public List<String> getWorkHistory() {
@@ -205,11 +216,4 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
-
-
-
-
-
 }
-
-

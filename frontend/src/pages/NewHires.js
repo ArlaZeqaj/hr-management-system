@@ -4,35 +4,34 @@ import { useEffect, useState } from "react"
 import { auth } from "../config/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import axios from "axios"
-import { Plus, UserPlus } from "lucide-react"
+import { Plus, UserPlus, Search } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 
 import AdminSidebar from "./Admin/AdminSidebar"
 import AdminHeader from "./Admin/AdminHeader"
 import AdminFooter from "./Admin/AdminFooter"
-import NewHireTable from '../components/cards/newHires/new-hire-table'
-import FilterBar from '../components/cards/newHires/filter-bar'
-import Pagination from '../components/cards/newHires/pagination'
-import EditModal from '../components/cards/newHires/edit-modal'
-import AddModal from '../components/cards/newHires/add-modal'
+import NewHireTable from "../components/cards/newHires/new-hire-table"
+import Pagination from "../components/cards/newHires/pagination"
+import EditModal from "../components/cards/newHires/edit-modal"
+import AddModal from "../components/cards/newHires/add-modal"
 
-import '../styles/NewHires.css'
+import "../styles/NewHires.css"
 
 const NewHires = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-    // Get active menu item based on current route
-    const getActiveMenuItem = () => {
-      const path = location.pathname;
-      if (path.includes('/admin/dashboard')) return 'Dashboard';
-      if (path.includes('/admin/profile')) return 'Profile';
-      if (path.includes('/new-hires')) return 'New Hires';
-      if (path.includes('/employee')) return 'Employees';
-      if (path.includes('/billing')) return 'Billing';
-      if (path.includes('/admin/projects')) return 'Projects';
-      return 'Dashboard'; // default
-    };
+  // Get active menu item based on current route
+  const getActiveMenuItem = () => {
+    const path = location.pathname
+    if (path.includes("/admin/dashboard")) return "Dashboard"
+    if (path.includes("/admin/profile")) return "Profile"
+    if (path.includes("/new-hires")) return "New Hires"
+    if (path.includes("/employee")) return "Employees"
+    if (path.includes("/billing")) return "Billing"
+    if (path.includes("/admin/projects")) return "Projects"
+    return "Dashboard" // default
+  }
 
   const [userToken, setUserToken] = useState(null)
   const [hireList, setHireList] = useState([])
@@ -57,7 +56,7 @@ const NewHires = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("All")
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
+  const itemsPerPage = 10
 
   const toggleDarkMode = () => {
     const newMode = !darkMode
@@ -74,7 +73,7 @@ const NewHires = () => {
     }
   }, [])
 
-    const toggleNotification = (item) => {
+  const toggleNotification = (item) => {
     setNotificationSettings((prev) => ({
       ...prev,
       [item]: !prev[item],
@@ -85,15 +84,15 @@ const NewHires = () => {
     setActiveMenuItem(menuItem)
     // Define navigation routes
     const routes = {
-      'Dashboard': '/admin/dashboard',
-      'Profile': '/admin/profile',
-      'New Hires': '/new-hires',
-      'Employees': '/employee',
-      'Billing': '/billing',
-      'Projects': '/admin/projects'
+      Dashboard: "/admin/dashboard",
+      Profile: "/admin/profile",
+      "New Hires": "/new-hires",
+      Employees: "/employee",
+      Billing: "/billing",
+      Projects: "/admin/projects",
     }
     // Navigate to the corresponding route
-    navigate(routes[menuItem] || '/admin/dashboard')
+    navigate(routes[menuItem] || "/admin/dashboard")
   }
 
   const fetchNewHires = async (token) => {
@@ -201,9 +200,13 @@ const NewHires = () => {
   const handleApprove = async (hire, e) => {
     e.stopPropagation()
     try {
-      await axios.post(`http://localhost:8080/api/new-hires/${hire.docId}/approve`, {}, {
-        headers: { Authorization: `Bearer ${userToken}` },
-      })
+      await axios.post(
+        `http://localhost:8080/api/new-hires/${hire.docId}/approve`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${userToken}` },
+        },
+      )
       fetchNewHires(userToken)
     } catch (error) {
       console.error("❌ Failed to approve hire:", error)
@@ -234,7 +237,13 @@ const NewHires = () => {
     }
   }
 
-  const filteredHires = hireList
+  const filteredHires = hireList.filter((hire) => {
+  const fullName = `${hire.name || ""} ${hire.surname || ""}`.toLowerCase();
+  const matchesName = fullName.includes(searchTerm.toLowerCase());
+  const matchesStatus = statusFilter === "All" || hire.status === statusFilter;
+  return matchesName && matchesStatus;
+});
+
   const totalPages = Math.ceil(filteredHires.length / itemsPerPage)
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -246,8 +255,8 @@ const NewHires = () => {
     <div className={`app-container ${darkMode ? "dark-theme" : ""}`}>
       {showConnectionStatus && (
         <div className={`connection-status ${error ? "error" : "success"}`}>
-          <span className="status-icon">{error ? "✕" : "✓"}</span>
-          {connectionStatus}
+          <div className="status-icon">{error ? "✕" : "✓"}</div>
+          <div className="status-text">{connectionStatus}</div>
         </div>
       )}
 
@@ -264,38 +273,54 @@ const NewHires = () => {
         />
 
         <div className="card hires-card">
-          <div className="card-header">
-            <div className="card-title-wrapper">
-              <UserPlus className="card-icon" size={20} />
+          <div className="management-header">
+            <div className="management-title">
+              <UserPlus className="user-icon" size={20} />
               <h2>New Hires Management</h2>
-              <span className="badge-count">{filteredHires.length}</span>
+              <div className="badge-count">{filteredHires.length}</div>
             </div>
-            <button 
-              className="button button-primary add-button" 
-              onClick={() => setShowAddModal(true)}
-            >
+            <button className="button button-primary add-button" onClick={() => setShowAddModal(true)}>
               <Plus size={16} className="button-icon" />
               Add New Hire
             </button>
           </div>
 
-          <FilterBar
-            statusFilter={statusFilter}
-            setStatusFilter={setStatusFilter}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-          />
+          <div className="filters">
+            <div className="filter-group">
+              <label className="filter-label">Status</label>
+              <select className="filter-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                <option value="All">All Statuses</option>
+                <option value="Initial Review">Initial Review</option>
+                <option value="Interview Scheduled">Interview Scheduled</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
 
-          <div className="table-wrapper">
+            <div className="filter-group">
+              <label className="filter-label">Search</label>
+              <div className="filter-input-wrapper">
+                <input
+                  type="text"
+                  className="filter-input"
+                  placeholder="Search by name, email, department..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <div className="search-icon">
+                  <Search size={16} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="table-container">
             <NewHireTable
               hires={currentItems}
               loading={loading}
               error={error}
               expandedRows={expandedRows}
               toggleRowExpansion={(key) =>
-                setExpandedRows((prev) =>
-                  prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
-                )
+                setExpandedRows((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
               }
               handleEdit={handleEdit}
               handleDelete={handleDelete}
@@ -318,7 +343,12 @@ const NewHires = () => {
         <AdminFooter />
       </div>
 
-      <EditModal isOpen={showEditModal} onClose={() => setShowEditModal(false)} hire={currentHire} onSave={handleSaveChanges} />
+      <EditModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        hire={currentHire}
+        onSave={handleSaveChanges}
+      />
       <AddModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} onSave={handleAddNewHire} />
     </div>
   )

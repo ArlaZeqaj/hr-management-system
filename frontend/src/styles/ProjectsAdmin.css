@@ -1,0 +1,546 @@
+/* -------------------- 🌐 GLOBAL VARIABLES -------------------- */
+:root {
+    --primary: #4318ff;
+    --primary-light: rgba(67, 24, 255, 0.1);
+    --secondary: #4fd1c5;
+    --success: #05cd99;
+    --danger: #ff5b5b;
+    --warning: #ffb547;
+    --dark: #2b3674;
+    --text: #2d3748;
+    --text-light: #a3aed0;
+    --text-lighter: #a0aec0;
+    --border: #e2e8f0;
+    --bg: #f4f7fe;
+    --white: #ffffff;
+    --shadow: 0px 3.5px 5px rgba(0, 0, 0, 0.03);
+    --card-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* -------------------- 🌍 GLOBAL RESET & BASE -------------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+/* -------------------- 🧩 PROJECTS SECTION CONTAINER -------------------- */
+.projects-section,
+.projects-table-section {
+    background: var(--white);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    margin: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+/* Header area in Projects section */
+.projects-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    color: var(--dark);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.section-subtitle {
+    color: var(--text-lighter);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+
+/* -------------------- 🖼️ PROJECT CARD GRID & STYLES -------------------- */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* “Create New Project” card */
+.create-project-card {
+    background: var(--white);
+    border-radius: 1rem;
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.create-project-card:hover {
+    border-color: var(--primary);
+    background-color: var(--primary-light);
+}
+.create-project-content {
+    text-align: center;
+    color: var(--text-light);
+}
+.plus-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.project-card {
+    background: var(--white);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border);
+    transition: transform 0.3s ease;
+}
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.project-content {
+    padding: 1.25rem;
+}
+.project-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+.project-description {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    height: 2.625rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Progress indicator in card footer */
+.project-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.project-footer .progress-bar {
+    width: 50%;
+    height: 4px;
+    background-color: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-right: 8px;
+}
+.project-footer .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+}
+
+/* -------------------- 🪟 PROJECT MODAL POPUP -------------------- */
+.project-modal-overlay-z {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.project-modal-z {
+    background-color: var(--white);
+    color: var(--text);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+.project-modal-z.dark-mode {
+    background-color: var(--dark);
+    color: var(--white);
+}
+
+.project-modal-z .modal-content-z {
+    display: flex;
+    flex-direction: row;
+    padding: 1.5rem;
+    gap: 2rem;
+    overflow-y: auto;
+    flex: 1;
+    width: 100%;
+}
+
+.project-modal-z .modal-left-z,
+.project-modal-z .modal-right-z {
+    flex: 1;
+    min-width: 40%;
+}
+
+.project-modal-z img {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.project-modal-z input,
+.project-modal-z textarea,
+.project-modal-z select {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+}
+.project-modal-z label {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    display: block;
+    color: var(--text);
+}
+
+.project-modal-z .modal-actions-z {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background: var(--bg);
+}
+.project-modal-z button {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+.project-modal-z button:hover {
+    background-color: #2e0dd1;
+}
+
+/* -------------------- 📋 PROJECTS TABLE -------------------- */
+.projects-table {
+    width: 100%;
+}
+
+.tablee-header,
+.tablee-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr 0.5fr;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+}
+.tablee-row:last-child {
+    border-bottom: none;
+}
+
+.header-companies,
+.header-budget,
+.header-status,
+.header-completion,
+.header-actions {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    padding: 0 0.5rem;
+}
+
+.cell-company {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    padding: 0 0.5rem;
+}
+.company-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.cell-budget,
+.cell-status,
+.cell-completion,
+.cell-actions {
+    padding: 0 0.5rem;
+}
+
+.completion-text {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    border-radius: 2px;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: capitalize;
+    width: 120px; /* Match width with dropdown */
+    text-align: center;
+    min-height: 32px; /* Match select height */
+}
+
+.status-badge.status-ongoing {
+    background-color: rgba(67, 24, 255, 0.1);
+    color: var(--primary);
+}
+
+.status-badge.status-done {
+    background-color: rgba(5, 205, 153, 0.1);
+    color: var(--success);
+}
+
+.status-badge.status-canceled {
+    background-color: rgba(255, 91, 91, 0.1);
+    color: var(--danger);
+}
+
+
+/* Status dropdown */
+.status-dropdown {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background-color: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+}
+.status-dropdown.status-done {
+    background-color: rgba(5, 205, 153, 0.1);
+    color: var(--success);
+}
+.status-dropdown.status-canceled {
+    background-color: rgba(255, 91, 91, 0.1);
+    color: var(--danger);
+}
+.status-dropdown.status-ongoing {
+    background-color: rgba(67, 24, 255, 0.1);
+    color: var(--primary);
+}
+
+/* Action Buttons (View/Delete) */
+.cell-actions .action-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    border-radius: 0.4rem;
+    transition: background 0.2s ease;
+}
+
+.cell-actions .action-button[title="View Project"] {
+    color: var(--primary);
+}
+
+.cell-actions .action-button[title="Delete Project"] {
+    color: var(--danger);
+}
+
+.cell-actions .action-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+
+/* -------------------- create project -------------------- */
+
+/* Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(43, 54, 116, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Modal container */
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Inputs and textarea */
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+    padding: 10px 14px;
+    font-size: 15px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: border 0.2s;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus,
+.modal-content select:focus {
+    border-color: #4318ff;
+    outline: none;
+}
+
+/* Labels */
+.modal-content label {
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* Buttons */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.modal-actions button {
+    padding: 10px 18px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-actions button:first-child {
+    background-color: #4318ff;
+    color: white;
+}
+
+.modal-actions button:first-child:hover {
+    background-color: #3413cc;
+}
+
+.modal-actions button:last-child {
+    background-color: #eee;
+}
+
+.modal-actions button:last-child:hover {
+    background-color: #ddd;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+@media (max-width: 1024px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    .admin-dashboard-main-content {
+        margin-left: 0;
+        padding: 1rem;
+        max-width: 100%;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+    /* Simplify table columns on small screens */
+    .tablee-header,
+    .tablee-row {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+    .header-completion,
+    .cell-completion,
+    .header-actions,
+    .cell-actions {
+        display: none;
+    }
+}

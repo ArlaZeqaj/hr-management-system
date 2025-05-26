@@ -6,9 +6,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -49,28 +47,4 @@ public class RetrieveProfile {
         Firestore db = FirestoreClient.getFirestore();
         return db.collection(COLLECTION_NAME).get().get().toObjects(Employee.class);
     }
-
-    public boolean updateEmployeeFields(String id, Employee updatedFields) throws ExecutionException, InterruptedException {
-        Firestore db = FirestoreClient.getFirestore();
-        DocumentReference docRef = db.collection(COLLECTION_NAME).document(id);
-
-        Map<String, Object> updates = new HashMap<>();
-
-        if (updatedFields.getName() != null) updates.put("Name", updatedFields.getName());
-        if (updatedFields.getSurname() != null) updates.put("Surname", updatedFields.getSurname());
-        if (updatedFields.getDepartment() != null) updates.put("Department", updatedFields.getDepartment());
-        if (updatedFields.getPosition() != null) updates.put("Position", updatedFields.getPosition());
-        if (updatedFields.getBio() != null) updates.put("Bio", updatedFields.getBio());
-        if (updatedFields.getPhoneNumber() != null) updates.put("Phone Number", updatedFields.getPhoneNumber());
-        if (updatedFields.getAddress() != null) updates.put("Address", updatedFields.getAddress());
-
-        if (updates.isEmpty()) return false;
-
-        ApiFuture<WriteResult> writeResult = docRef.update(updates);
-        writeResult.get();
-
-        return true;
-    }
-
-
 }

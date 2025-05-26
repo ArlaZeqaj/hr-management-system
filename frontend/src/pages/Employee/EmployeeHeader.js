@@ -165,15 +165,15 @@ const EmployeeHeader = ({
               <div className="employee-dropdown-menu">
                 <h3>Notification Settings</h3>
                 {Object.keys(notifications).map((item) => (
-                  <div key={item} className="toggle-item">
+                  <div key={item} className="employee-toggle-item">
                     <span>{item}</span>
-                    <label className="toggle-switch">
+                    <label className="employee-toggle-switch">
                       <input
                         type="checkbox"
                         checked={notifications[item]}
                         onChange={() => toggleNotification(item)}
                       />
-                      <span className="toggle-slider"></span>
+                      <span className="employee-toggle-slider"></span>
                     </label>
                   </div>
                 ))}
