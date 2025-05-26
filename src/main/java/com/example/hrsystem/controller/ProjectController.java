@@ -70,4 +70,26 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/count/{employeeId}/{yearMonth}")
+    public ResponseEntity<Integer> getProjectCount(
+            @PathVariable String employeeId,
+            @PathVariable String yearMonth,
+            @RequestHeader("Authorization") String token) {
+        try {
+
+            String idToken = token.replace("Bearer ", "");
+            FirebaseAuth.getInstance().verifyIdToken(idToken);
+
+
+            int count = projectService.countProjectsForEmployee(employeeId, yearMonth);
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(0);
+        }
+    }
+
+
+
+
 }

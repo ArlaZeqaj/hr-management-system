@@ -1,0 +1,101 @@
+:root {
+  --primary-color: #4361ee;
+  --primary-dark: #364fc7;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --border-color: #e2e8f0;
+  --card-bg: #ffffff;
+  --input-bg: #f8fafc;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme adjustments */
+.adm-dark-theme {
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
+  --border-color: #2d3748;
+  --card-bg: #1a202c;
+  --input-bg: #2d3748;
+}
+
+/* Cleaner container */
+.performance-dashboard {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border: 1px solid var(--border-color);
+}
+
+/* Improved input fields */
+.date-selectors select,
+.date-selectors input,
+.performance-table input[type="number"],
+.performance-table textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+
+.date-selectors select:focus,
+.date-selectors input:focus,
+.performance-table input[type="number"]:focus,
+.performance-table textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+/* Better table styling */
+.performance-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+.performance-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.performance-table td {
+  padding: 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* Cleaner buttons */
+.save-btn {
+  padding: 0.6rem 1.2rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.save-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .performance-dashboard {
+    padding: 1rem;
+  }
+
+  .date-selectors {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

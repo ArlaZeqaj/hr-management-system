@@ -19,44 +19,43 @@ public class EmployeeController {
         this.service = service;
     }
 
-    //e merr nga authentikimi
+    // Get employee by email (used in authentication)
     @GetMapping("/by-email")
     public ResponseEntity<Employee> getEmployeeByEmail(@RequestParam String email) {
         try {
             Employee employee = service.getEmployeeByEmail(email);
-            if (employee != null) {
-                return ResponseEntity.ok(employee);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return employee != null
+                    ? ResponseEntity.ok(employee)
+                    : ResponseEntity.notFound().build();
         } catch (ExecutionException | InterruptedException e) {
             return ResponseEntity.status(500).build();
         }
     }
 
+    // Get all employees
     @GetMapping
-    public List<Employee> getAllEmployees() {
+    public ResponseEntity<List<Employee>> getAllEmployees() {
         try {
-            return service.getAllEmployees();
+            return ResponseEntity.ok(service.getAllEmployees());
         } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.status(500).build();
         }
     }
 
+    // Get employee by document ID
     @GetMapping("/{documentId}")
-    public ResponseEntity<Employee> getEmployeeByDocumentId(@PathVariable String documentId)
-            throws ExecutionException, InterruptedException {
-
-        Employee employee = service.getEmployeeById(documentId);
-
-        if (employee != null) {
-            return ResponseEntity.ok(employee);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Employee> getEmployeeByDocumentId(@PathVariable String documentId) {
+        try {
+            Employee employee = service.getEmployeeById(documentId);
+            return employee != null
+                    ? ResponseEntity.ok(employee)
+                    : ResponseEntity.notFound().build();
+        } catch (ExecutionException | InterruptedException e) {
+            return ResponseEntity.status(500).build();
         }
     }
 
-
+    // Update specific fields of an employee
     @PatchMapping("/{id}")
     public ResponseEntity<String> updateEmployee(@PathVariable String id, @RequestBody Employee updatedFields) {
         try {
@@ -71,14 +70,18 @@ public class EmployeeController {
     }
 
 
-    /*@PostMapping
+    // Add a new employee
+    /*
+    @PostMapping
     public ResponseEntity<String> addEmployee(@RequestBody Employee employee) {
         try {
-        {/*service.saveEmployee(employee);*/}/*
+            service.saveEmployee(employee);
             return ResponseEntity.ok("Employee added successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
-    }*/
+    }
+    */
 
 
+}

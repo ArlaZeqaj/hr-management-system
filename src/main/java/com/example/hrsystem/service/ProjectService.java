@@ -3,8 +3,13 @@ package com.example.hrsystem.service;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -126,4 +131,66 @@ public class ProjectService {
         return ongoingProjects;
     }
 
+
+    public int countProjectsForEmployee(String employeeId, String yearMonth) throws Exception {
+        Firestore db = FirestoreClient.getFirestore();
+
+        // First get all projects assigned to this employee
+        Query query = db.collection("Project").whereArrayContains("assigned_id", employeeId);
+        ApiFuture<QuerySnapshot> future = query.get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        // If no projects, return 0
+        if (documents.isEmpty()) {
+            return 0;
+        }
+
+        // Parse year and month from input (format: "YYYY-MM")
+        String[] parts = yearMonth.split("-");
+        int targetYear = Integer.parseInt(parts[0]);
+        int targetMonth = Integer.parseInt(parts[1]);
+
+        // Count projects that were active during the requested month
+        int count = 0;
+        for (DocumentSnapshot doc : documents) {
+            // Note: Using the exact field names from your database
+            String startDateStr = doc.getString("start_Date"); // or whatever your start date field is
+            String endDateStr = doc.getString("end_Date"); // matches your database field
+
+            // Skip if dates are missing
+            if (startDateStr == null || endDateStr == null) {
+                continue;
+            }
+
+            try {
+                // Parse dates in the format they're stored in your database
+                SimpleDateFormat dbDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                Date startDate = dbDateFormat.parse(startDateStr);
+                Date endDate = dbDateFormat.parse(endDateStr);
+
+                // Create calendar instances for comparison
+                Calendar startCal = Calendar.getInstance();
+                startCal.setTime(startDate);
+                Calendar endCal = Calendar.getInstance();
+                endCal.setTime(endDate);
+
+                // Get year and month components
+                int startYear = startCal.get(Calendar.YEAR);
+                int startMonth = startCal.get(Calendar.MONTH) + 1; // Months are 0-based
+                int endYear = endCal.get(Calendar.YEAR);
+                int endMonth = endCal.get(Calendar.MONTH) + 1;
+
+                // Check if project was active during the requested month
+                if ((targetYear > startYear || (targetYear == startYear && targetMonth >= startMonth)) &&
+                        (targetYear < endYear || (targetYear == endYear && targetMonth <= endMonth))) {
+                    count++;
+                }
+            } catch (ParseException e) {
+                System.err.println("Error parsing date for project " + doc.getId() + ": " + e.getMessage());
+                continue;
+            }
+        }
+
+        return count;
+    }
 }
