@@ -1,58 +1,119 @@
 package com.example.hrsystem.service;
 
-import com.example.hrsystem.dto.WeeklyPerformanceDTO;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.example.hrsystem.model.Performance;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
 @Service
 public class PerformanceService {
-    private final Firestore db = FirestoreClient.getFirestore();
 
-    public List<WeeklyPerformanceDTO> getMonthlyPerformance(String uid) throws Exception {
-        // Determine start/end of current month
-        LocalDate now = LocalDate.now();
-        LocalDate start = now.withDayOfMonth(1);
-        LocalDate end = now.with(TemporalAdjusters.lastDayOfMonth());
+    private static final String PERFORMANCE_COLLECTION = "Performance";
+    private static final String EMPLOYEE_COLLECTION = "employees";
 
-        ApiFuture<QuerySnapshot> future = db
-                .collection("employees")
-                .document(uid)
-                .collection("performance")
-                .whereGreaterThanOrEqualTo("date", Timestamp.ofTimeSecondsAndNanos(
-                        start.atStartOfDay(ZoneOffset.UTC).toEpochSecond(), 0))
-                .whereLessThanOrEqualTo("date", Timestamp.ofTimeSecondsAndNanos(
-                        end.atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toEpochSecond(), 0))
-                .get();
+    public Performance getEmployeePerformanceReview(String employeeId, String yearMonth)
+            throws ExecutionException, InterruptedException {
+        String[] parts = yearMonth.split("-");
+        Query query = FirestoreClient.getFirestore().collection(PERFORMANCE_COLLECTION)
+                .whereEqualTo("employeeId", employeeId)
+                .whereEqualTo("year", Integer.parseInt(parts[0]))
+                .whereEqualTo("month", Integer.parseInt(parts[1]))
+                .limit(1);
 
-        Map<Integer, Integer> weeklyTotals = new HashMap<>();
-        for (DocumentSnapshot doc : future.get().getDocuments()) {
-            Timestamp ts = doc.getTimestamp("date");
-            int tasks = doc.getLong("tasks").intValue();
-            // calculate week-of-month (1–5)
-            LocalDate date = ts.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            int week = ((date.getDayOfMonth() + date.withDayOfMonth(1).getDayOfWeek().getValue() - 1) / 7) + 1;
-            weeklyTotals.merge(week, tasks, Integer::sum);
-        }
+        QuerySnapshot snapshot = query.get().get();
+        if (snapshot.isEmpty()) return null;
 
-        // Build list for weeks 1–5
-        List<WeeklyPerformanceDTO> result = new ArrayList<>();
-        for (int w = 1; w <= 5; w++) {
-            result.add(new WeeklyPerformanceDTO(w, weeklyTotals.getOrDefault(w, 0)));
-        }
-        return result;
+        DocumentSnapshot doc = snapshot.getDocuments().get(0);
+        Performance review = doc.toObject(Performance.class);
+        review.setId(doc.getId());
+        return review;
+    }
+
+    public void savePerformanceReview(Performance review)
+            throws ExecutionException, InterruptedException {
+        DocumentReference docRef = FirestoreClient.getFirestore()
+                .collection(PERFORMANCE_COLLECTION)
+                .document();
+        review.setId(docRef.getId());
+        docRef.set(review).get();
+    }
+
+    public boolean updatePerformanceReview(String reviewId, Performance updatedFields)
+            throws ExecutionException, InterruptedException {
+        DocumentReference docRef = FirestoreClient.getFirestore()
+                .collection(PERFORMANCE_COLLECTION)
+                .document(reviewId);
+
+        if (!docRef.get().get().exists()) return false;
+
+        Map<String, Object> updates = new HashMap<>();
+        if (updatedFields.getPerformanceScore() != 0)
+            updates.put("performanceScore", updatedFields.getPerformanceScore());
+        if (updatedFields.getStrengths() != null)
+            updates.put("strengths", updatedFields.getStrengths());
+        if (updatedFields.getAreasForImprovement() != null)
+            updates.put("areasForImprovement", updatedFields.getAreasForImprovement());
+
+        if (!updates.isEmpty()) docRef.update(updates).get();
+        return true;
+    }
+
+    public List<Map<String, Object>> getAllEmployeesWithPerformance(String yearMonth)
+            throws ExecutionException, InterruptedException {
+        String[] parts = yearMonth.split("-");
+        int year = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+
+        // Get all employees
+        List<QueryDocumentSnapshot> employeeDocs = FirestoreClient.getFirestore()
+                .collection(EMPLOYEE_COLLECTION)
+                .get().get().getDocuments();
+
+        // Get all performance reviews for the month
+        List<QueryDocumentSnapshot> reviewDocs = FirestoreClient.getFirestore()
+                .collection(PERFORMANCE_COLLECTION)
+                .whereEqualTo("year", year)
+                .whereEqualTo("month", month)
+                .get().get().getDocuments();
+
+        // Create map for quick lookup
+        Map<String, Performance> reviewMap = reviewDocs.stream()
+                .collect(Collectors.toMap(
+                        doc -> doc.getString("employeeId"),
+                        doc -> {
+                            Performance p = doc.toObject(Performance.class);
+                            p.setId(doc.getId());
+                            return p;
+                        }
+                ));
+
+        // Combine data
+        return employeeDocs.stream()
+                .map(emp -> {
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("id", emp.getId());
+                    result.put("name", emp.getString("Name"));
+
+                    Performance review = reviewMap.get(emp.getId());
+                    if (review != null) {
+                        result.put("performanceScore", review.getPerformanceScore());
+                        result.put("strengths", review.getStrengths() != null ?
+                                review.getStrengths() : new ArrayList<>());
+                        result.put("areasForImprovement", review.getAreasForImprovement() != null ?
+                                review.getAreasForImprovement() : new ArrayList<>());
+                        result.put("reviewId", review.getId());
+                    } else {
+                        result.put("performanceScore", 0);
+                        result.put("strengths", new ArrayList<>());
+                        result.put("areasForImprovement", new ArrayList<>());
+                        result.put("reviewId", null);
+                    }
+                    return result;
+                })
+                .collect(Collectors.toList());
     }
 }

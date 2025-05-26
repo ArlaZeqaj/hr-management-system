@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios";
 import { auth } from "../../config/firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import {getAuth, onAuthStateChanged} from "firebase/auth";
 
 import EmployeeSidebar from "../../pages/Employee/EmployeeSidebar";
 import EmployeeHeader from "../../pages/Employee/EmployeeHeader";
@@ -153,18 +153,35 @@ const Documents = ({ darkMode, toggleDarkMode }) => {
             alert("Download failed: URL not found.");
         }
     };
-    const handlePreview = (id) => {
+    const handlePreview = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this document?");
+        if (!confirmDelete) return;
+
         const doc = documents.find(d => d.id === id);
-        if (!doc?.url) {
-            alert("No preview URL available.");
+        if (!doc) {
+            alert("Document not found.");
             return;
         }
 
-        const fullUrl = `http://localhost:8080${decodeURIComponent(doc.url)}`;
+        try {
+            const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
 
-        // Open in new tab
-        window.open(fullUrl, "_blank");
+            await axios.delete(`http://localhost:8080/api/documents/${doc.uploadedBy}/${doc.id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+
+            // Optionally remove the document from local state
+            setDocuments(prev => prev.filter(d => d.id !== id));
+
+            alert("✅ Document deleted successfully.");
+        } catch (error) {
+            console.error("❌ Error deleting document:", error);
+            alert("Failed to delete document.");
+        }
     };
+
     const allCategories = [
         "All Documents",
         "Company Policies",

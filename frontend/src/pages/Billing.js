@@ -296,7 +296,25 @@ export default () => {
     }
   };
 
-  const toggleDarkMode = () => setDarkMode(!darkMode);
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    if (newMode) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+  };
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedMode);
+    if (savedMode) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+  }, []);
 
   const toggleNotification = (notification) => {
     setNotifications((prev) => ({
@@ -442,6 +460,7 @@ export default () => {
               editAccNo={editAccNo}
               handleEdit={handleEdit}
               handleSave={handleSave}
+              onCancel={() => setEditingId(null)}
               setEditAccNo={setEditAccNo}
             />
           </div>
