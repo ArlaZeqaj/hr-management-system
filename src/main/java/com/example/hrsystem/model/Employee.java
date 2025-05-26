@@ -30,8 +30,8 @@ public class Employee {
     @PropertyName("Education")
     private String education;
 
-    @PropertyName("Departament")
-    private String departament;
+    @PropertyName("Department")
+    private String department;
 
     @PropertyName("grossSalary")
     private int grossSalary;
@@ -121,16 +121,16 @@ public class Employee {
         this.education = education;
     }
 
-    public String getDepartament() {
-        return departament;
+    public String getDepartment() {
+        return department;
     }
 
     public int getGrossSalary() {
         return grossSalary;
     }
 
-    public void setDepartament(String departament) {
-        this.departament = departament;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public void setGrossSalary(int grossSalary) {
@@ -216,4 +216,5 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
+
 }
