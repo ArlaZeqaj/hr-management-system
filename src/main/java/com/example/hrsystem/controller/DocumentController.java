@@ -22,6 +22,18 @@ public class DocumentController {
     public List<Map<String, Object>> getUserDocuments(@PathVariable String uid) throws Exception {
         return documentService.getDocumentsForUser(uid);
     }
+    @DeleteMapping("/{uid}/{docId}")
+    public ResponseEntity<Map<String, String>> deleteDocument(
+            @PathVariable String uid,
+            @PathVariable String docId
+    ) {
+        try {
+            documentService.deleteDocument(uid, docId);
+            return ResponseEntity.ok(Map.of("message", "Document deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));
+        }
+    }
 
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> uploadDocument(

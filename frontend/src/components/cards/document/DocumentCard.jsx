@@ -35,7 +35,7 @@ const DocumentCard = ({ doc, onToggleStar, onDownload, onPreview }) => (
         </div>
         <div className="document-actions">
             <button onClick={() => onDownload(doc.id)} className="download-button">Download</button>
-            <button onClick={() => onPreview(doc.id)} className="preview-button">Preview</button>
+            <button onClick={() => onPreview(doc.id)} className="preview-button">Delete</button>
         </div>
     </div>
 );

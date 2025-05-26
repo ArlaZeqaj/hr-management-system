@@ -25,8 +25,11 @@ const LayoutWrapper = () => {
     // Add dark mode state here to share between components
     const [darkMode, setDarkMode] = useState(() => {
         const savedMode = localStorage.getItem("darkMode");
-        return savedMode ? JSON.parse(savedMode) : false;
-    });
+        try {
+            return savedMode ? JSON.parse(savedMode) : false;
+        } catch {
+            return false;
+        }    });
     const toggleDarkMode = () => {
         setDarkMode(!darkMode);
     };
@@ -153,6 +156,7 @@ const LayoutWrapper = () => {
                 <EmployeeFooter />
             </main>
         </div>
+
     );
 };
 

@@ -29,6 +29,36 @@ public class TaskService {
         docRef.update(flatUpdates); // ✅ Now it updates nested fields, not overwrites the whole object
     }
 
+    public int countTasksForEmployee(String uid, String yearMonth) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        DocumentReference docRef = db.collection("employees")
+                .document(uid)
+                .collection("tasks")
+                .document("task_" + yearMonth);
+
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot doc = future.get();
+
+        if (!doc.exists()) {
+            return 0;
+        }
+
+        Map<String, Object> data = doc.getData();
+        if (data == null) {
+            return 0;
+        }
+
+
+        int count = 0;
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
     public Map<String, Object> getScheduleForMonth(String uid, String yearMonth) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         System.out.println("[DEBUG] Fetching schedule for UID: " + uid + ", YearMonth: " + yearMonth);
