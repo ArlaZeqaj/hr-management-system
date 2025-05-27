@@ -4,13 +4,13 @@ import { useState, useRef, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { auth } from "../config/firebaseConfig"
 import { signOut, onAuthStateChanged } from "firebase/auth"
-import AdminSidebar from "./Admin/AdminSidebar";
-import AdminHeader from "./Admin/AdminHeader";
-import AdminFooter from "./Admin/AdminFooter";
-import "./Admin/AdminSidebar.css";
-import "./Admin/AdminHeader.css";
-import "./Admin/AdminFooter.css";
+import AdminSidebar from "./Admin/AdminSidebar"
+import AdminFooter from "./Admin/AdminFooter"
+import "./Admin/AdminSidebar.css"
+import "./Admin/AdminHeader.css"
+import "./Admin/AdminFooter.css"
 import "../styles/EmployeeList.css"
+import axios from "axios"
 
 // NotificationsDropdown component
 const NotificationsDropdown = ({ notifications, isOpen }) => {
@@ -256,9 +256,9 @@ const ProfileDropdown = ({ profileImage, handleProfileAction }) => {
 
 export default function EmployeePage() {
   const navigate = useNavigate()
-  const location = useLocation();
+  const location = useLocation()
 
-  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
+  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem())
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [currentPage, setCurrentPage] = useState(1)
@@ -277,6 +277,7 @@ export default function EmployeePage() {
   const [connectionStatus, setConnectionStatus] = useState("Connecting to database...")
   const [showConnectionStatus, setShowConnectionStatus] = useState(true)
   const [currentUser, setCurrentUser] = useState(null)
+  const [recentHiresCount, setRecentHiresCount] = useState(0)
 
   const [showSortDropdown, setShowSortDropdown] = useState(false)
   const sortDropdownRef = useRef(null)
@@ -433,18 +434,18 @@ export default function EmployeePage() {
   ]
 
   function getActiveMenuItem() {
-    const path = location.pathname;
-    if (path.includes("/admin/dashboard")) return "Dashboard";
-    if (path.includes("/admin/profile")) return "Profile";
-    if (path.includes("/new-hires")) return "New Hires";
-    if (path.includes("/employee")) return "Employees";
-    if (path.includes("/billing")) return "Billing";
-    if (path.includes("/admin/projects")) return "Projects";
-    return "Dashboard"; // default
+    const path = location.pathname
+    if (path.includes("/admin/dashboard")) return "Dashboard"
+    if (path.includes("/admin/profile")) return "Profile"
+    if (path.includes("/new-hires")) return "New Hires"
+    if (path.includes("/employee")) return "Employees"
+    if (path.includes("/billing")) return "Billing"
+    if (path.includes("/admin/projects")) return "Projects"
+    return "Dashboard" // default
   }
 
   const handleMenuItemClick = (menuItem) => {
-    setActiveMenuItem(menuItem);
+    setActiveMenuItem(menuItem)
     const routes = {
       Dashboard: "/admin/dashboard",
       Profile: "/admin/profile",
@@ -452,9 +453,9 @@ export default function EmployeePage() {
       Employees: "/employee",
       Billing: "/billing",
       Projects: "/admin/projects",
-    };
-    navigate(routes[menuItem] || "/admin/dashboard");
-  };
+    }
+    navigate(routes[menuItem] || "/admin/dashboard")
+  }
 
   // Fetch employees from backend API
   const fetchEmployees = async () => {
@@ -496,6 +497,39 @@ export default function EmployeePage() {
       setTimeout(() => setShowConnectionStatus(false), 5000)
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Fetch recent hires from backend API
+  const fetchRecentHires = async () => {
+    try {
+      const user = auth.currentUser
+      if (!user) {
+        console.warn("No authenticated user for recent hires")
+        return
+      }
+
+      const token = await user.getIdToken()
+      const response = await axios.get("http://localhost:8080/api/new-hires", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      // Filter hires from the last 30 days
+      const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000
+      const recentHires = response.data.filter((hire) => {
+        const hireDate = new Date(hire.createdAt || hire.dateAdded || Date.now()).getTime()
+        return hireDate > thirtyDaysAgo
+      })
+
+      setRecentHiresCount(recentHires.length)
+    } catch (error) {
+      console.error("Error fetching recent hires:", error)
+      // Fallback to calculating from employees data
+      const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000
+      const recentFromEmployees = employees.filter((emp) => {
+        return emp.createdAt && emp.createdAt > thirtyDaysAgo
+      }).length
+      setRecentHiresCount(recentFromEmployees)
     }
   }
 
@@ -542,9 +576,6 @@ export default function EmployeePage() {
             if (!bHistory) return -1
             return aHistory.localeCompare(bHistory)
           })
-          break
-        case "status":
-          sortedEmployees.sort((a, b) => (a.status || "").localeCompare(b.status || ""))
           break
         default:
           break
@@ -633,6 +664,7 @@ export default function EmployeePage() {
       if (user) {
         setCurrentUser(user)
         fetchEmployees()
+        fetchRecentHires() // Add this line
       } else {
         navigate("/login")
       }
@@ -663,6 +695,7 @@ export default function EmployeePage() {
   // Manual refresh function
   const refreshData = () => {
     fetchEmployees()
+    fetchRecentHires() // Add this line
   }
 
   return (
@@ -692,10 +725,7 @@ export default function EmployeePage() {
 
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: "none" }} />
 
-      <AdminSidebar
-        activeMenuItem={activeMenuItem}
-        handleMenuItemClick={handleMenuItemClick}
-      />
+      <AdminSidebar activeMenuItem={activeMenuItem} handleMenuItemClick={handleMenuItemClick} />
 
       <div className="main-content">
         <div className="header-container">
@@ -882,18 +912,24 @@ export default function EmployeePage() {
               <div className="stat-icon purple">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
-                    d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                    d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <polyline
+                    points="9,22 9,12 15,12 15,22"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </div>
               <div className="stat-info">
-                <div className="stat-label">Members</div>
-                <div className="stat-value">{Math.floor(totalEmployees * 0.85)}</div>
+                <div className="stat-label">Departments</div>
+                <div className="stat-value">{new Set(employees.map((emp) => emp.department).filter(Boolean)).size}</div>
               </div>
             </div>
           </div>
@@ -902,34 +938,30 @@ export default function EmployeePage() {
             <div className="stat-content">
               <div className="stat-icon purple">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect
-                    x="2"
-                    y="4"
-                    width="20"
-                    height="16"
-                    rx="2"
-                    ry="2"
+                  <path
+                    d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
                     stroke="currentColor"
                     strokeWidth="2"
-                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                  <circle cx="8" cy="12" r="2" fill="currentColor" />
+                  <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" fill="none" />
                   <path
-                    d="M14 12h4"
+                    d="M22 21v-2a4 4 0 0 0-3-3.87"
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                   <path
-                    d="M14 8h4"
+                    d="M16 3.13a4 4 0 0 1 0 7.75"
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                   <path
-                    d="M14 16h4"
+                    d="M12 2l3 3-3 3"
                     stroke="currentColor"
                     strokeWidth="2"
                     strokeLinecap="round"
@@ -938,8 +970,8 @@ export default function EmployeePage() {
                 </svg>
               </div>
               <div className="stat-info">
-                <div className="stat-label">Active Now</div>
-                <div className="stat-value">{Math.floor(totalEmployees * 0.15)}</div>
+                <div className="stat-label">Recent Hires</div>
+                <div className="stat-value">{recentHiresCount}</div>
               </div>
             </div>
           </div>
@@ -986,7 +1018,6 @@ export default function EmployeePage() {
                     <option value="birthDate">Birth Date</option>
                     <option value="education">Education</option>
                     <option value="workHistory">Work History</option>
-                    <option value="status">Status</option>
                   </select>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1025,7 +1056,6 @@ export default function EmployeePage() {
                     <th>Education</th>
                     <th>Languages</th>
                     <th>Work History</th>
-                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1039,16 +1069,11 @@ export default function EmployeePage() {
                       <td>{employee.education}</td>
                       <td>{Array.isArray(employee.languages) ? employee.languages.join(", ") : ""}</td>
                       <td>{Array.isArray(employee.workHistory) ? employee.workHistory.join(", ") : ""}</td>
-                      <td>
-                        <span className={`status-badge ${employee.status ? employee.status.toLowerCase() : "active"}`}>
-                          {employee.status || "Active"}
-                        </span>
-                      </td>
                     </tr>
                   ))}
                   {currentEmployees.length === 0 && !loading && (
                     <tr>
-                      <td colSpan="9" className="no-results">
+                      <td colSpan="8" className="no-results">
                         {error ? error : "No employees found matching your search."}
                       </td>
                     </tr>
@@ -1102,4 +1127,3 @@ export default function EmployeePage() {
     </div>
   )
 }
-
