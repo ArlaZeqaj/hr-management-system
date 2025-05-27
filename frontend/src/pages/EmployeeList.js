@@ -873,32 +873,6 @@ export default function EmployeePage() {
               <div className="stat-info">
                 <div className="stat-label">Total Employees</div>
                 <div className="stat-value">{totalEmployees}</div>
-                <div className="stat-trend up">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="trend-icon"
-                  >
-                    <path
-                      d="M8 4L12 8L8 12"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4 8L12 8"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>16% this month</span>
-                </div>
               </div>
             </div>
           </div>
@@ -920,32 +894,6 @@ export default function EmployeePage() {
               <div className="stat-info">
                 <div className="stat-label">Members</div>
                 <div className="stat-value">{Math.floor(totalEmployees * 0.85)}</div>
-                <div className="stat-trend up">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="trend-icon"
-                  >
-                    <path
-                      d="M8 4L12 8L8 12"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4 8L12 8"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>8% this month</span>
-                </div>
               </div>
             </div>
           </div>
@@ -992,32 +940,6 @@ export default function EmployeePage() {
               <div className="stat-info">
                 <div className="stat-label">Active Now</div>
                 <div className="stat-value">{Math.floor(totalEmployees * 0.15)}</div>
-                <div className="stat-trend up">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="trend-icon"
-                  >
-                    <path
-                      d="M8 4L12 8L8 12"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4 8L12 8"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>12% this month</span>
-                </div>
               </div>
             </div>
           </div>
@@ -1174,6 +1096,8 @@ export default function EmployeePage() {
             </div>
           </div>
         </div>
+        {/* Footer */}
+        <AdminFooter />
       </div>
     </div>
   )

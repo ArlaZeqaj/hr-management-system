@@ -7,12 +7,15 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
+import AdminFooter from "./Admin/AdminFooter";
 import { Bar, Pie, Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import "../styles/Admin.css";
 import "../styles/tasks.css";
 import "./Admin/AdminSidebar.css";
 import "./Admin/AdminHeader.css";
+import "./Admin/AdminFooter.css";
+import TaskFilters from "../components/cards/adminDashboard/TasksFilters";
 
 Chart.register(...registerables);
 
@@ -72,6 +75,31 @@ const AdminDashboard = () => {
   const [viewingTask, setViewingTask] = useState(null);
 
   const [taskToDelete, setTaskToDelete] = useState(null);
+
+  // tasks filter
+  const [filters, setFilters] = useState({});
+  const filterTasks = (tasks) => {
+    if (!tasks) return [];
+
+    return tasks.filter(task => {
+      // Filter by assignee
+      if (filters.assignee && (!task.assignees || !task.assignees.includes(filters.assignee))) {
+        return false;
+      }
+
+      // Filter by status
+      if (filters.status && task.status !== filters.status) {
+        return false;
+      }
+
+      // Filter by priority
+      if (filters.priority && task.priority !== filters.priority) {
+        return false;
+      }
+
+      return true;
+    });
+  };
 
   const [notifications, setNotifications] = useState({
     "Item updates": true,
@@ -808,32 +836,24 @@ const AdminDashboard = () => {
     {
       title: "Total Employees",
       value: employeeCount,
-      change: "+12%",
       icon: "https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF",
-      trend: "up",
     },
     {
       title: "Active Projects",
       value: activeProjectsCount.toString(),
-      change: "+5%",
       icon: "https://img.icons8.com/?size=100&id=102889&format=png&color=4318FF",
-      trend: "up",
     },
     {
       title: "Pending Tasks",
       value: pendingTasksCount,
-      change: "-3%",
       icon: "https://img.icons8.com/?size=100&id=83208&format=png&color=4318FF",
-      trend: "down",
     },
     {
       title: "Total Payroll",
       value: `$${payrollData
         .reduce((sum, item) => sum + item.amount, 0)
         .toLocaleString()}`,
-      change: "+8%",
       icon: "https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF",
-      trend: "up",
     },
   ];
 
@@ -981,34 +1001,6 @@ const AdminDashboard = () => {
                 <div className="stat-info">
                   <h3>{stat.value}</h3>
                   <p>{stat.title}</p>
-                </div>
-                <div className={`stat-trend ${stat.trend}`}>
-                  <span>{stat.change}</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    {stat.trend === "up" ? (
-                      <path
-                        d="M12 19V5M5 12L12 5L19 12"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    ) : (
-                      <path
-                        d="M12 5V19M19 12L12 19L5 12"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    )}
-                  </svg>
                 </div>
               </div>
             ))}
@@ -1327,6 +1319,12 @@ const AdminDashboard = () => {
                   </button>
                 </div>
 
+                <TaskFilters
+                  employees={employees}
+                  filters={filters}
+                  setFilters={setFilters}
+                />
+
                 <div className="tasks-list-ad">
                   {loading ? (
                     <div className="tasks-loading-container-ad">
@@ -1370,7 +1368,7 @@ const AdminDashboard = () => {
                       <p>No tasks found. Create your first task!</p>
                     </div>
                   ) : (
-                    tasks.map((task, index) => (
+                    filterTasks(tasks).map((task, index) => (
                       <div
                         key={index}
                         className={`task-item ${
@@ -1584,7 +1582,7 @@ const AdminDashboard = () => {
                           <div className="form-group-ad">
                             <label>Status*</label>
                             <div className="status-options-ad">
-                              {["Pending", "Progress", "Completed"].map(
+                              {["Pending", "In Progress", "Completed"].map(
                                 (state) => (
                                   <label
                                     key={state}
@@ -1737,6 +1735,8 @@ const AdminDashboard = () => {
             )}
           </div>
         </div>
+         {/* Footer */}
+         <AdminFooter />
       </div>
     </div>
   );
