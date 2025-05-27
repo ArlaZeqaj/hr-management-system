@@ -138,87 +138,96 @@ const ProjectCard = ({ project, darkMode }) => {
             </div>
 
             {showModal && (
-                <div className="project-modal-overlay-z">
-                    <div className={`project-modal-z ${darkMode ? 'dark-mode' : ''}`}>
-                        <div className="modal-content-z">
+  <div className="projmodal-overlay">
+    <div className={`projmodal-container ${darkMode ? 'projmodal-dark' : ''}`}>
+      <div className="projmodal-content">
 
-                            {/* LEFT: Image section */}
-                            <div className="modal-left-z">
-                                <label>Project Image URL</label>
-                                <input
-                                    type="text"
-                                    value={editableProject.image || ''}
-                                    onChange={e => handleChange('image', e.target.value)}
-                                    placeholder="Project Image URL"
-                                />
-                                {editableProject.image ? (
-                                    <img src={editableProject.image} alt="Preview" />
-                                ) : (
-                                    <div className="img-placeholder">Image preview unavailable</div>
-                                )}
+        {/* LEFT: Image section */}
+        <div className="projmodal-left">
+          <label className="projmodal-label">Project Image URL</label>
+          <input
+            type="text"
+            className="projmodal-input"
+            value={editableProject.image || ''}
+            onChange={e => handleChange('image', e.target.value)}
+            placeholder="Project Image URL"
+          />
+          {editableProject.image ? (
+            <img src={editableProject.image} alt="Preview" className="projmodal-img" />
+          ) : (
+            <div className="projmodal-img-placeholder">Image preview unavailable</div>
+          )}
 
-                                <label>Description</label>
-                                <textarea
-                                    value={editableProject.description || ''}
-                                    onChange={e => handleChange('description', e.target.value)}
-                                />
-                            </div>
+          <label className="projmodal-label">Description</label>
+          <textarea
+            className="projmodal-textarea"
+            value={editableProject.description || ''}
+            onChange={e => handleChange('description', e.target.value)}
+          />
+        </div>
 
-                            {/* RIGHT: Details section */}
-                            <div className="modal-right-z">
-                                <label>Budget</label>
-                                <input
-                                    type="text"
-                                    value={editableProject.budget || ''}
-                                    onChange={e => handleChange('budget', e.target.value)}
-                                />
+        {/* RIGHT: Details section */}
+        <div className="projmodal-right">
+          <label className="projmodal-label">Budget</label>
+          <input
+            type="text"
+            className="projmodal-input"
+            value={editableProject.budget || ''}
+            onChange={e => handleChange('budget', e.target.value)}
+          />
 
-                                <label>Role</label>
-                                <input
-                                    type="text"
-                                    value={editableProject.role || ''}
-                                    onChange={e => handleChange('role', e.target.value)}
-                                />
+          <label className="projmodal-label">Role</label>
+          <input
+            type="text"
+            className="projmodal-input"
+            value={editableProject.role || ''}
+            onChange={e => handleChange('role', e.target.value)}
+          />
 
-                                <label>Start Date</label>
-                                <input
-                                    type="date"
-                                    value={convertToInputFormat(editableProject.start_Date)}
-                                    onChange={e => handleChange('start_Date', convertToDisplayFormat(e.target.value))}
-                                />
+          <label className="projmodal-label">Start Date</label>
+          <input
+            type="date"
+            className="projmodal-input"
+            value={convertToInputFormat(editableProject.start_Date)}
+            onChange={e => handleChange('start_Date', convertToDisplayFormat(e.target.value))}
+          />
 
-                                <label>End Date</label>
-                                <input
-                                    type="date"
-                                    value={convertToInputFormat(editableProject.end_Date)}
-                                    onChange={e => handleChange('end_Date', convertToDisplayFormat(e.target.value))}
-                                />
+          <label className="projmodal-label">End Date</label>
+          <input
+            type="date"
+            className="projmodal-input"
+            value={convertToInputFormat(editableProject.end_Date)}
+            onChange={e => handleChange('end_Date', convertToDisplayFormat(e.target.value))}
+          />
 
+          <label className="projmodal-label">Assigned Employees</label>
+          <select 
+            multiple 
+            onChange={handleEmployeeSelection}
+            className="projmodal-select"
+          >
+            {employeeOptions.map((emp, index) => (
+              <option
+                key={emp.uid}
+                value={index}
+                selected={editableProject.assigned_id?.includes(emp.uid)}
+                className="projmodal-option"
+              >
+                {emp.fullName}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-
-                                <label>Assigned Employees</label>
-                                <select multiple onChange={handleEmployeeSelection}>
-                                    {employeeOptions.map((emp, index) => (
-                                        <option
-                                            key={emp.uid}
-                                            value={index}
-                                            selected={editableProject.assigned_id?.includes(emp.uid)}
-                                        >
-                                            {emp.fullName}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* Sticky bottom buttons */}
-                        <div className="modal-actions-z">
-                            <button onClick={handleSave}>Save Changes</button>
-                            <button onClick={() => setShowModal(false)}>Close</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+      {/* Sticky bottom buttons */}
+      <div className="projmodal-actions">
+        <button className="projmodal-save" onClick={handleSave}>Save Changes</button>
+        <button className="projmodal-close" onClick={() => setShowModal(false)}>Close</button>
+      </div>
+    </div>
+  </div>
+)}
 
         </>
     );

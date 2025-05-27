@@ -46,60 +46,158 @@ const CreateProjectModal = ({ newProject, setNewProject, handleCreateProject, se
         }));
     };
 
-    // 🔁 Conversion: "DD/MM/YYYY" <=> "YYYY-MM-DD"
-    // Convert "MM/DD/YYYY" → "YYYY-MM-DD" for input type="date"
     const convertToInputFormat = (dateStr) => {
         if (!dateStr) return '';
         const [month, day, year] = dateStr.split('/');
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     };
 
-// Convert "YYYY-MM-DD" from input → "MM/DD/YYYY" for saving
     const convertToDisplayFormat = (inputDate) => {
         if (!inputDate) return '';
         const [year, month, day] = inputDate.split('-');
         return `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year}`;
     };
 
-
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
-                <h2>Create New Project</h2>
+        <div className="modal-overlay-aproject">
+            <div className="modal-content-aproject">
+                <div className="modal-header-aproject">
+                    <h2>Create New Project</h2>
+                    <button 
+                        className="close-btn-aproject" 
+                        onClick={() => setShowCreateModal(false)}
+                    >
+                        &times;
+                    </button>
+                </div>
 
-                <input type="text" placeholder="Project Name" value={newProject.project_Name || ''} onChange={e => updateField('project_Name', e.target.value)} />
-                <input type="text" placeholder="Company" value={newProject.company || ''} onChange={e => updateField('company', e.target.value)} />
-                <input type="text" placeholder="Budget" value={newProject.budget || ''} onChange={e => updateField('budget', e.target.value)} />
-                <input type="text" placeholder="Role" value={newProject.role || ''} onChange={e => updateField('role', e.target.value)} />
+                <div className="form-grid-aproject">
+                    {/* Basic Info Column */}
+                    <div className="form-column-aproject">
+                        <div className="form-group-aproject">
+                            <label>Project Name*</label>
+                            <input 
+                                type="text" 
+                                placeholder="Enter project name" 
+                                value={newProject.project_Name || ''} 
+                                onChange={e => updateField('project_Name', e.target.value)} 
+                                required
+                            />
+                        </div>
 
-                <label>Start Date</label>
-                <input
-                    type="date"
-                    value={convertToInputFormat(newProject.start_Date)}
-                    onChange={e => updateField('start_Date', convertToDisplayFormat(e.target.value))}
-                />
+                        <div className="form-group-aproject">
+                            <label>Company*</label>
+                            <input 
+                                type="text" 
+                                placeholder="Enter company name" 
+                                value={newProject.company || ''} 
+                                onChange={e => updateField('company', e.target.value)} 
+                                required
+                            />
+                        </div>
 
-                <label>End Date</label>
-                <input
-                    type="date"
-                    value={convertToInputFormat(newProject.end_Date)}
-                    onChange={e => updateField('end_Date', convertToDisplayFormat(e.target.value))}
-                />
+                        <div className="form-group-aproject">
+                            <label>Budget</label>
+                            <input 
+                                type="text" 
+                                placeholder="Enter budget" 
+                                value={newProject.budget || ''} 
+                                onChange={e => updateField('budget', e.target.value)} 
+                            />
+                        </div>
 
-                <textarea placeholder="Description" value={newProject.description || ''} onChange={e => updateField('description', e.target.value)} />
-                <input type="text" placeholder="Project Image URL" value={newProject.image || ''} onChange={e => updateField('image', e.target.value)} />
-                <input type="text" placeholder="Company Logo URL" value={newProject.company_img || ''} onChange={e => updateField('company_img', e.target.value)} />
+                        <div className="form-group-aproject">
+                            <label>Role</label>
+                            <input 
+                                type="text" 
+                                placeholder="Enter role" 
+                                value={newProject.role || ''} 
+                                onChange={e => updateField('role', e.target.value)} 
+                            />
+                        </div>
+                    </div>
 
-                <label>Select Assigned Employees:</label>
-                <select multiple onChange={handleEmployeeSelection}>
-                    {employeeOptions.map((emp, index) => (
-                        <option key={emp.uid} value={index}>{emp.fullName}</option>
-                    ))}
-                </select>
+                    {/* Dates & Media Column */}
+                    <div className="form-column-aproject">
+                        <div className="form-group-aproject">
+                            <label>Start Date*</label>
+                            <input
+                                type="date"
+                                value={convertToInputFormat(newProject.start_Date)}
+                                onChange={e => updateField('start_Date', convertToDisplayFormat(e.target.value))}
+                                required
+                            />
+                        </div>
 
-                <div className="modal-actions">
-                    <button onClick={handleCreateProject}>Create</button>
-                    <button onClick={() => setShowCreateModal(false)}>Cancel</button>
+                        <div className="form-group-aproject">
+                            <label>End Date</label>
+                            <input
+                                type="date"
+                                value={convertToInputFormat(newProject.end_Date)}
+                                onChange={e => updateField('end_Date', convertToDisplayFormat(e.target.value))}
+                            />
+                        </div>
+
+                        <div className="form-group-aproject">
+                            <label>Project Image URL</label>
+                            <input 
+                                type="text" 
+                                placeholder="Enter image URL" 
+                                value={newProject.image || ''} 
+                                onChange={e => updateField('image', e.target.value)} 
+                            />
+                        </div>
+
+                        <div className="form-group-aproject">
+                            <label>Company Logo URL</label>
+                            <input 
+                                type="text" 
+                                placeholder="Enter logo URL" 
+                                value={newProject.company_img || ''} 
+                                onChange={e => updateField('company_img', e.target.value)} 
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Full-width elements */}
+                <div className="form-group-aproject">
+                    <label>Description</label>
+                    <textarea 
+                        placeholder="Enter project description" 
+                        value={newProject.description || ''} 
+                        onChange={e => updateField('description', e.target.value)} 
+                        rows="4"
+                    />
+                </div>
+
+                <div className="form-group-aproject">
+                    <label>Assigned Employees</label>
+                    <select 
+                        multiple 
+                        onChange={handleEmployeeSelection}
+                        className="employee-select-aproject"
+                    >
+                        {employeeOptions.map((emp, index) => (
+                            <option key={emp.uid} value={index}>{emp.fullName}</option>
+                        ))}
+                    </select>
+                    <small className="select-hint-aproject">Hold Ctrl/Cmd to select multiple</small>
+                </div>
+
+                <div className="modal-actions-aproject">
+                    <button 
+                        className="cancel-btn-aproject" 
+                        onClick={() => setShowCreateModal(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        className="create-btn-aproject" 
+                        onClick={handleCreateProject}
+                    >
+                        Create Project
+                    </button>
                 </div>
             </div>
         </div>

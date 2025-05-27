@@ -21,12 +21,12 @@ const ProjectAdminLayout = ({
                                 handleFileChange
                             }) => {
     return (
-        <div className={`admin-dashboard-page-container ${darkMode ? 'dark-theme' : ''}`}>
+        <div className={`app-container-b ${darkMode ? 'dark-theme' : ''}`}>
             <AdminSidebar
                 activeMenuItem={activeMenuItem}
                 handleMenuItemClick={handleMenuItemClick}
             />
-            <div className="admin-dashboard-main-content">
+            <div className="main-content-aproject">
                 <AdminHeader
                     activeMenuItem={activeMenuItem}
                     searchQuery={searchQuery}

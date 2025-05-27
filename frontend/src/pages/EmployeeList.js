@@ -1,9 +1,15 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { auth } from "../config/firebaseConfig"
 import { signOut, onAuthStateChanged } from "firebase/auth"
+import AdminSidebar from "./Admin/AdminSidebar";
+import AdminHeader from "./Admin/AdminHeader";
+import AdminFooter from "./Admin/AdminFooter";
+import "./Admin/AdminSidebar.css";
+import "./Admin/AdminHeader.css";
+import "./Admin/AdminFooter.css";
 import "../styles/EmployeeList.css"
 
 // NotificationsDropdown component
@@ -250,6 +256,9 @@ const ProfileDropdown = ({ profileImage, handleProfileAction }) => {
 
 export default function EmployeePage() {
   const navigate = useNavigate()
+  const location = useLocation();
+
+  const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [currentPage, setCurrentPage] = useState(1)
@@ -423,14 +432,29 @@ export default function EmployeePage() {
     },
   ]
 
-  const navItems = [
-    { path: "/admin/dashboard", icon: "dashboard", label: "Dashboard" },
-    { path: "/admin/profile", icon: "profile", label: "Profile" },
-    { path: "/new-hires", icon: "new-hires", label: "New Hires" },
-    { path: "/employee", icon: "employees", label: "Employees", active: true },
-    { path: "/projects", icon: "projects", label: "Projects" },
-    { path: "/billing", icon: "billing", label: "Billing" },
-  ]
+  function getActiveMenuItem() {
+    const path = location.pathname;
+    if (path.includes("/admin/dashboard")) return "Dashboard";
+    if (path.includes("/admin/profile")) return "Profile";
+    if (path.includes("/new-hires")) return "New Hires";
+    if (path.includes("/employee")) return "Employees";
+    if (path.includes("/billing")) return "Billing";
+    if (path.includes("/admin/projects")) return "Projects";
+    return "Dashboard"; // default
+  }
+
+  const handleMenuItemClick = (menuItem) => {
+    setActiveMenuItem(menuItem);
+    const routes = {
+      Dashboard: "/admin/dashboard",
+      Profile: "/admin/profile",
+      "New Hires": "/new-hires",
+      Employees: "/employee",
+      Billing: "/billing",
+      Projects: "/admin/projects",
+    };
+    navigate(routes[menuItem] || "/admin/dashboard");
+  };
 
   // Fetch employees from backend API
   const fetchEmployees = async () => {
@@ -668,97 +692,10 @@ export default function EmployeePage() {
 
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: "none" }} />
 
-      <div className="sidebar">
-        <div className="logo">HRCLOUDX</div>
-
-        <nav className="menu">
-          {navItems.map((item) => (
-            <div
-              key={item.path}
-              className={`menu-item ${item.active ? "active" : ""}`}
-              onClick={() => navigate(item.path)}
-            >
-              <svg
-                className="menu-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {item.icon === "dashboard" && (
-                  <>
-                    <rect x="3" y="3" width="7" height="9"></rect>
-                    <rect x="14" y="3" width="7" height="5"></rect>
-                    <rect x="14" y="12" width="7" height="9"></rect>
-                    <rect x="3" y="16" width="7" height="5"></rect>
-                  </>
-                )}
-                {item.icon === "profile" && (
-                  <>
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </>
-                )}
-                {item.icon === "new-hires" && (
-                  <>
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </>
-                )}
-                {item.icon === "employees" && (
-                  <>
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </>
-                )}
-                {item.icon === "projects" && (
-                  <>
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                  </>
-                )}
-                {item.icon === "billing" && (
-                  <>
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                  </>
-                )}
-              </svg>
-              <span>{item.label}</span>
-            </div>
-          ))}
-        </nav>
-
-        <div className="upgrade-card">
-          <div className="upgrade-icon">
-            <svg
-              className="icon"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="16"></line>
-              <line x1="8" y1="12" x2="16" y2="12"></line>
-            </svg>
-          </div>
-          <div className="upgrade-title">Upgrade to PRO</div>
-          <div className="upgrade-desc">to get access to all features!</div>
-        </div>
-      </div>
+      <AdminSidebar
+        activeMenuItem={activeMenuItem}
+        handleMenuItemClick={handleMenuItemClick}
+      />
 
       <div className="main-content">
         <div className="header-container">
