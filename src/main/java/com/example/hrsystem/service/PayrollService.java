@@ -69,7 +69,7 @@ public class PayrollService {
             Map<String, Object> payrollData = new HashMap<>();
             payrollData.put("employeeId", employee.getId());
             payrollData.put("employeeName", employee.getName());
-            payrollData.put("department", employee.getDepartament());
+            payrollData.put("department", employee.getDepartment());
             payrollData.put("grossSalary", employee.getGrossSalary());
             payrollData.put("paymentDate", now.toString());
             payrollData.put("dueDate", dueDate.toString());
@@ -100,7 +100,7 @@ public class PayrollService {
 
             for (QueryDocumentSnapshot doc : documents) {
                 Employee employee = doc.toObject(Employee.class);
-                String department = employee.getDepartament();
+                String department = employee.getDepartment();
                 double grossSalary = employee.getGrossSalary();
 
                 summary.put(department, summary.getOrDefault(department, 0.0) + grossSalary);
