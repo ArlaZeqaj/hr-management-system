@@ -26,10 +26,31 @@ export default function ProjectAdminPage() {
     };
 
     const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
-    const handleMenuItemClick = (item) => {
-        setActiveMenuItem(item);
-        navigate(`/admin/${item.toLowerCase().replace(' ', '-')}`);
-    };
+    const handleMenuItemClick = (menuItem) => {
+        setActiveMenuItem(menuItem);
+        switch (menuItem) {
+          case 'Dashboard':
+            navigate('/admin/dashboard');
+            break;
+          case 'Profile':
+            navigate('/admin/profile');
+            break;
+          case 'New Hires':
+            navigate('/new-hires');
+            break;
+          case 'Employees':
+            navigate('/employee');
+            break;
+          case 'Billing':
+            navigate('/billing');
+            break;
+          case 'Projects':
+            navigate('/admin/projects');
+            break;
+          default:
+            navigate('/admin/dashboard');
+        }
+      };
 
     const [searchQuery, setSearchQuery] = useState('');
     const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');

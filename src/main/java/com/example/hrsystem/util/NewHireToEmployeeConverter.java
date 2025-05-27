@@ -28,11 +28,11 @@ public class NewHireToEmployeeConverter {
         // Default or placeholder values
         employeeData.put("avatarURL", "https://i.pinimg.com/564x/a4/79/36/a47936f449be9aeaa3c98d3e096ddff5.jpg");
         employeeData.put("joinDate", System.currentTimeMillis());
-        employeeData.put("grossSalary", null);
-        employeeData.put("organization", null);
-        employeeData.put("posts", 0);
-        employeeData.put("storageTotal", 0);
-        employeeData.put("storageUsed", 0);
+        employeeData.put("grossSalary", 45000);
+        employeeData.put("organization", "Cloud");
+        employeeData.put("posts", 10);
+        employeeData.put("storageTotal", 110);
+        employeeData.put("storageUsed", 30);
 
         // Notifications defaults
         Map<String, Boolean> notifications = new HashMap<>();
