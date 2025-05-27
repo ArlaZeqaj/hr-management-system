@@ -28,7 +28,11 @@ const TransactionItem = ({ transaction, formatDateGroup }) => {
 
   return (
     <div className={`transaction ${transactionType}`}>
-      <img src={icon} alt={name} className="transaction-icon" />
+      <img
+        src="https://img.icons8.com/windows/32/refund-2.png"
+        alt={name}
+        className="transaction-icon"
+      />
       <div className="transaction-info">
         <span className="name">{company || name}</span>
         <span className="date">{formattedDate}</span>

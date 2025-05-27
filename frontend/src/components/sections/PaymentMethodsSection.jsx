@@ -13,12 +13,12 @@ const PaymentMethodsSection = ({ cardData, setShowModal }) => {
 
       <div className="cards-list">
         <SavedCard
-          icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/lyn2slbm_expires_30_days.png"
+          icon="https://img.icons8.com/?size=100&id=106942&format=png&color=A3AED0"
           number={cardData.number}
           active
         />
         <SavedCard
-          icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/8rtvtp5o_expires_30_days.png"
+          icon="https://img.icons8.com/?size=100&id=106942&format=png&color=A3AED0"
           number={cardData.number}
         />
       </div>

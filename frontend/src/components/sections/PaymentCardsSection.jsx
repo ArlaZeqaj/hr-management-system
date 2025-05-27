@@ -6,19 +6,19 @@ const PaymentCardsSection = ({ cardData }) => {
   return (
     <div className="card-row">
       <PaymentCard
-        logo="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/4a0s3ehi_expires_30_days.png"
+        logo="https://img.icons8.com/?size=100&id=106942&format=png&color=FFFFFFD4"
         number={cardData.number}
         expiry={cardData.expiry}
         cvv={cardData.cvv}
       />
       <PaymentMethodCard
-        icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/vxv57pzf_expires_30_days.png"
+        icon="https://img.icons8.com/?size=100&id=106586&format=png&color=FFFFFF"
         title="Balance"
         amount={`+${cardData.salary || "$55640.07"}`}
         color="#4318FF"
       />
       <PaymentMethodCard
-        icon="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/358903cd_expires_30_days.png"
+        icon="https://img.icons8.com/?size=100&id=106586&format=png&color=FFFFFF"
         title="Expenses"
         amount={cardData.paypal || "$7505.21"}
         color="#2D3748"
