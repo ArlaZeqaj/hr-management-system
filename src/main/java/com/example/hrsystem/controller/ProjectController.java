@@ -92,7 +92,7 @@ public class ProjectController {
     }
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Map<String, Object>> createProject(
             @RequestBody Map<String, Object> request,
             @RequestHeader("Authorization") String token) {
