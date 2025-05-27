@@ -19,10 +19,17 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--light);
   color: var(--dark);
+
 }
 
 /* Main Content Styles */
-.admin-main-content-t {
+.admin-main-content{
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  padding: 2rem;
+  overflow-y: auto;
+}
+.admin-main-content-t{
   margin-left: 280px;
   width: calc(100% - 280px);
   padding: 2rem;
