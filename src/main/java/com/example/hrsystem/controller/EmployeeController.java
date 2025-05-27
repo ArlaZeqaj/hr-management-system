@@ -34,7 +34,7 @@ public class EmployeeController {
     }
 
     // Get all employees
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
         try {
             return ResponseEntity.ok(service.getAllEmployees());
