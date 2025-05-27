@@ -758,39 +758,46 @@ const AdminDashboard = () => {
     {
       id: 1,
       department: "Engineering",
-      amount: 85000,
+      amount: 5800,
       status: "processed",
-      date: "2023-05-01",
+      date: "2025-06-07",
     },
     {
       id: 2,
       department: "Marketing",
-      amount: 42500,
+      amount: 4250,
       status: "pending",
-      date: "2023-05-01",
+      date: "2025-06-07",
     },
     {
       id: 3,
       department: "Sales",
-      amount: 63200,
+      amount: 6320,
       status: "processed",
-      date: "2023-05-01",
+      date: "2025-06-07",
     },
     {
       id: 4,
       department: "HR",
-      amount: 38750,
+      amount: 3875,
       status: "pending",
-      date: "2023-05-01",
+      date: "2025-06-07",
+    },
+    {
+      id: 5,
+      department: "IT",
+      amount: 6875,
+      status: "pending",
+      date: "2025-06-07",
     },
   ]);
 
   const hiringTrendData = {
-    labels: ["Q1", "Q2", "Q3", "Q4"],
+    labels: ["sales", "marketing", "engineering", "IT"],
     datasets: [
       {
         label: "New Hires",
-        data: [8, 12, 10, 15],
+        data: [5, 3, 2, 1],
         backgroundColor: "#05CD99",
       },
     ],
@@ -884,6 +891,13 @@ const AdminDashboard = () => {
         item.id === id ? { ...item, status: "processed" } : item
       )
     );
+  };
+
+  const handleProcessAllPayroll = () => {
+    const updatedData = payrollData.map((item) =>
+      item.status === "pending" ? { ...item, status: "processed" } : item
+    );
+    setPayrollData(updatedData);
   };
 
   // Format time
@@ -1229,7 +1243,12 @@ const AdminDashboard = () => {
               <div className="payroll-tab">
                 <div className="section-header">
                   <h2>Payroll Management</h2>
-                  <button className="view-all">Process All</button>
+                  <button
+                    className="view-all"
+                    onClick={handleProcessAllPayroll}
+                  >
+                    Process All
+                  </button>
                 </div>
 
                 <div className="payroll-cards">
