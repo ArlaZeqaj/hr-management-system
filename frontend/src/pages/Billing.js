@@ -409,6 +409,10 @@ export default () => {
     return acc;
   }, {});
 
+  const handleDelete = (id) => {
+    setBillingData((prev) => prev.filter((emp) => emp.id !== id));
+  };
+
   return (
     <div className="app-container-b">
       <AdminSidebar
@@ -462,6 +466,7 @@ export default () => {
               handleSave={handleSave}
               onCancel={() => setEditingId(null)}
               setEditAccNo={setEditAccNo}
+              handleDelete={handleDelete}
             />
           </div>
 

@@ -9,6 +9,7 @@ const BillingInfoSection = ({
   handleEdit,
   handleSave,
   setEditAccNo,
+  handleDelete, // ✅ Accept this prop
 }) => {
   return (
     <section className="billing-info">
@@ -19,19 +20,18 @@ const BillingInfoSection = ({
         ) : billingData.length === 0 ? (
           <p>No billing information found.</p>
         ) : (
-          billingData
-            .slice(0, 3)
-            .map((emp) => (
-              <BillingInfoCard
-                key={emp.id}
-                emp={emp}
-                editingId={editingId}
-                editAccNo={editAccNo}
-                onEdit={handleEdit}
-                onSave={handleSave}
-                setEditAccNo={setEditAccNo}
-              />
-            ))
+          billingData.slice(0, 3).map((emp) => (
+            <BillingInfoCard
+              key={emp.id}
+              emp={emp}
+              editingId={editingId}
+              editAccNo={editAccNo}
+              onEdit={handleEdit}
+              onSave={handleSave}
+              setEditAccNo={setEditAccNo}
+              onDelete={() => handleDelete(emp.id)} // ✅ Now passed
+            />
+          ))
         )}
       </div>
     </section>
