@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -33,7 +34,7 @@ public class EmployeeController {
     }
 
     // Get all employees
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<Employee>> getAllEmployees() {
         try {
             return ResponseEntity.ok(service.getAllEmployees());
@@ -68,7 +69,14 @@ public class EmployeeController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
-
+    @GetMapping("/dropdown")
+    public ResponseEntity<List<Map<String, String>>> getEmployeeDropdownList() {
+        try {
+            return ResponseEntity.ok(service.getEmployeeDropdownList());
+        } catch (ExecutionException | InterruptedException e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 
     // Add a new employee
     /*
