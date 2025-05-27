@@ -25,6 +25,18 @@ const AdminProfilePage = () => {
   const [pendingLeavesCount, setPendingLeavesCount] = useState(0);
   const [ongoingProjectsCount, setOngoingProjectsCount] = useState(0);
   const [leaveChartData, setLeaveChartData] = useState(null);
+  const [notifications, setNotifications] = useState({
+    "Item updates": true,
+    "New hires": true,
+    "Payroll alerts": false,
+    "System updates": true,
+  });
+  const toggleNotification = (notification) => {
+    setNotifications((prev) => ({
+      ...prev,
+      [notification]: !prev[notification],
+    }));
+  };
 
   const [activeMenuItem, setActiveMenuItem] = useState(() => {
     const path = location.pathname;
@@ -68,9 +80,9 @@ const AdminProfilePage = () => {
 
   const handleLeaveAction = (id, action) => {
     setLeaveRequests(prev =>
-      prev.map(request =>
-        request.id === id ? { ...request, status: action } : request
-      )
+        prev.map(request =>
+            request.id === id ? {...request, status: action} : request
+        )
     );
     alert(`Leave request ${id} has been ${action}`);
   };
@@ -107,7 +119,7 @@ const AdminProfilePage = () => {
     try {
       const token = await user.getIdToken();
       const response = await axios.get(`/api/Admin/by-email?email=${user.email}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: {'Authorization': `Bearer ${token}`}
       });
 
       setAdminData({
@@ -133,29 +145,29 @@ const AdminProfilePage = () => {
     try {
       const token = await user.getIdToken();
       const response = await axios.get('/api/employees', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: {'Authorization': `Bearer ${token}`}
       });
 
       const employeesWithAuthData = await Promise.all(
-        response.data.map(async (employee) => {
-          try {
-            const authResponse = await axios.get(`/api/auth/last-signin?email=${employee.email}`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            return {
-              ...employee,
-              lastSignIn: authResponse.data.lastSignIn || "Never signed in",
-              department: employee.department || "Unassigned"
-            };
-          } catch (authError) {
-            console.error(`Error fetching auth data for ${employee.email}:`, authError);
-            return {
-              ...employee,
-              lastSignIn: "Error fetching data",
-              department: employee.department || "Unassigned"
-            };
-          }
-        })
+          response.data.map(async (employee) => {
+            try {
+              const authResponse = await axios.get(`/api/auth/last-signin?email=${employee.email}`, {
+                headers: {'Authorization': `Bearer ${token}`}
+              });
+              return {
+                ...employee,
+                lastSignIn: authResponse.data.lastSignIn || "Never signed in",
+                department: employee.department || "Unassigned"
+              };
+            } catch (authError) {
+              console.error(`Error fetching auth data for ${employee.email}:`, authError);
+              return {
+                ...employee,
+                lastSignIn: "Error fetching data",
+                department: employee.department || "Unassigned"
+              };
+            }
+          })
       );
 
       setEmployees(employeesWithAuthData);
@@ -209,17 +221,17 @@ const AdminProfilePage = () => {
     try {
       const token = await user.getIdToken();
       const response = await axios.get('/api/leaves/all', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: {'Authorization': `Bearer ${token}`}
       });
 
       console.log('API Response:', response.data);
 
       const approvedRequests = response.data.filter(req =>
-        req.status && req.status.toLowerCase() === 'approved'
+          req.status && req.status.toLowerCase() === 'approved'
       );
 
       const pendingRequests = response.data.filter(req =>
-        req.status && req.status.toLowerCase() === 'approved'
+          req.status && req.status.toLowerCase() === 'approved'
       );
 
       setPendingLeavesCount(pendingRequests.length);
@@ -230,9 +242,9 @@ const AdminProfilePage = () => {
       const leaveTypes = ['Vacation', 'Remote', 'MedicalLeave', 'SpecialLeave'];
 
       const leaveCounts = leaveTypes.map(type =>
-        approvedRequests.filter(req =>
-          req.leaveType && req.leaveType.toLowerCase() === type.toLowerCase()
-        ).length
+          approvedRequests.filter(req =>
+              req.leaveType && req.leaveType.toLowerCase() === type.toLowerCase()
+          ).length
       );
 
       console.log('Leave counts:', leaveCounts);
@@ -286,7 +298,7 @@ const AdminProfilePage = () => {
     try {
       const token = await user.getIdToken();
       const response = await axios.get('/api/projects/ongoing', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: {'Authorization': `Bearer ${token}`}
       });
 
       console.log('Ongoing Projects Response:', response.data);
@@ -335,10 +347,10 @@ const AdminProfilePage = () => {
       setCurrentPage(1);
     } else {
       const filtered = employees.filter(employee =>
-        employee.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        employee.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (employee.department && employee.department.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (employee.position && employee.position.toLowerCase().includes(searchQuery.toLowerCase()))
+          employee.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          employee.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (employee.department && employee.department.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (employee.position && employee.position.toLowerCase().includes(searchQuery.toLowerCase()))
       );
       setFilteredEmployees(filtered);
       setCurrentPage(1);
@@ -357,7 +369,7 @@ const AdminProfilePage = () => {
   };
 
   const handleEditFormChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setEditFormData(prev => ({
       ...prev,
       [name]: value
@@ -370,21 +382,21 @@ const AdminProfilePage = () => {
     try {
       const token = await auth.currentUser.getIdToken();
       await axios.patch(
-        `/api/employees/${editingEmployee.id}`,
-        editFormData,
-        { headers: { 'Authorization': `Bearer ${token}` } }
+          `/api/employees/${editingEmployee.id}`,
+          editFormData,
+          {headers: {'Authorization': `Bearer ${token}`}}
       );
 
       setEmployees(prev =>
-        prev.map(emp =>
-          emp.id === editingEmployee.id ? { ...emp, ...editFormData } : emp
-        )
+          prev.map(emp =>
+              emp.id === editingEmployee.id ? {...emp, ...editFormData} : emp
+          )
       );
 
       setFilteredEmployees(prev =>
-        prev.map(emp =>
-          emp.id === editingEmployee.id ? { ...emp, ...editFormData } : emp
-        )
+          prev.map(emp =>
+              emp.id === editingEmployee.id ? {...emp, ...editFormData} : emp
+          )
       );
 
       setEditingEmployee(null);
@@ -409,466 +421,461 @@ const AdminProfilePage = () => {
 
   // Stats calculation
   const adminStats = useMemo(() => [
-    { label: "Total Employees", value: employees.length, change: "", trend: "neutral" },
-    { label: "Departments", value: Object.keys(departmentDistribution).length, change: "", trend: "neutral" },
-    { label: "Approved Leaves", value: pendingLeavesCount, change: "", trend: "neutral" },
-    { label: "Ongoing Projects", value: ongoingProjectsCount, change: "", trend: "neutral" },
+    {label: "Total Employees", value: employees.length, change: "", trend: "neutral"},
+    {label: "Departments", value: Object.keys(departmentDistribution).length, change: "", trend: "neutral"},
+    {label: "Approved Leaves", value: pendingLeavesCount, change: "", trend: "neutral"},
+    {label: "Ongoing Projects", value: ongoingProjectsCount, change: "", trend: "neutral"},
   ], [employees.length, departmentDistribution, pendingLeavesCount, ongoingProjectsCount]);
 
   if (adminData.loading) {
     return (
-      <div className="adm-loading">
-        <div className="adm-spinner"></div>
-        <p>Loading admin dashboard...</p>
-      </div>
+        <div className="adm-loading">
+          <div className="adm-spinner"></div>
+          <p>Loading admin dashboard...</p>
+        </div>
     );
   }
 
   if (adminData.error) {
     return (
-      <div className="adm-error">
-        <p>Error loading admin dashboard: {adminData.error}</p>
-      </div>
+        <div className="adm-error">
+          <p>Error loading admin dashboard: {adminData.error}</p>
+        </div>
     );
   }
 
   return (
-    <div className={`adm-root ${darkMode ? 'adm-dark-theme' : ''}`}>
-      <AdminSidebar
-        activeMenuItem={activeMenuItem}
-        handleMenuItemClick={handleMenuItemClick}
-        darkMode={darkMode}
-      />
-
-      <div className="adm-main-content">
-        <AdminHeader
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+      <div className={`admin-container-t ${darkMode ? 'adm-dark-theme' : ''}`}>
+        <AdminSidebar
+            activeMenuItem={activeMenuItem}
+            handleMenuItemClick={handleMenuItemClick}
+            darkMode={darkMode}
         />
 
-        <div className="adm-stats">
-          {adminStats.map((stat, index) => (
-            <div key={index} className="adm-stat-card">
-              <div>
-                <span className="adm-stat-label">{stat.label}</span>
-                <span className="adm-stat-value">{stat.value}</span>
-              </div>
-              {stat.change && (
-                <div className={`adm-stat-change ${stat.trend}`}>
-                  <i className={`fas ${
-                    stat.trend === "up" ? "fa-arrow-up" :
-                    stat.trend === "down" ? "fa-arrow-down" : "fa-minus"
-                  }`} />
-                  <span>{stat.change}</span>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <div className="admin-main-content-t">
+          <AdminHeader
+              activeMenuItem={activeMenuItem}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              darkMode={darkMode}
+              toggleDarkMode={toggleDarkMode}
+              notifications={notifications}
+              toggleNotification={toggleNotification}
+          />
 
-        <div className="adm-profile-section">
-          <div className="adm-profile-card">
-            <div className="adm-profile-header">
-              <div className="adm-cover-photo-overlay"></div>
-              <img
-                src="https://images.unsplash.com/photo-1579547945413-497e1b99dac0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                className="adm-cover-photo"
-                alt="Cover"
-              />
-              <div className="adm-profile-photo-container">
+          <div className="admin-stats-t">
+            {adminStats.map((stat, index) => (
+                <div key={index} className="stat-card-t">
+                  <div className="stat-info-t">
+                    <span className="stat-label-t">{stat.label}</span>
+                    <span className="stat-value-t">{stat.value}</span>
+                  </div>
+                  {stat.change && (
+                      <div className={`stat-change-t ${stat.trend}`}>
+                        <i className={`fas ${
+                            stat.trend === "up" ? "fa-arrow-up" :
+                                stat.trend === "down" ? "fa-arrow-down" : "fa-minus"
+                        }`}/>
+                        <span>{stat.change}</span>
+                      </div>
+                  )}
+                </div>
+            ))}
+          </div>
+          <div className="admin-profile-section-t">
+            <div className="admin-profile-card-t">
+              <div className="admin-profile-header-t">
+                <div className="admin-cover-photo-overlay-t"></div>
                 <img
-                  src={adminData.avatarURL}
-                  className="adm-profile-photo"
-                  alt="Profile"
+                    src="https://images.unsplash.com/photo-1579547945413-497e1b99dac0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                    className="admin-cover-photo-t"
+                    alt="Cover"
                 />
-                <span className="adm-status-badge">
-                  <i className="fas fa-shield-alt"></i> Super Admin
-                </span>
-              </div>
-            </div>
-
-            <div className="adm-profile-content">
-              <h1 className="adm-profile-name">{adminData.name}</h1>
-              <p className="adm-profile-title">{adminData.position}</p>
-              <div className="adm-profile-divider"></div>
-              <p className="adm-profile-bio">{adminData.bio}</p>
-              <p className="adm-profile-department">{adminData.department}</p>
-
-              <div className="adm-profile-stats">
-                <div className="adm-stat-item">
-                  <span className="adm-stat-number">{employees.length}</span>
-                  <span className="adm-stat-label">Employees</span>
-                </div>
-                <div className="adm-stat-item">
-                  <span className="adm-stat-number">{Object.keys(departmentDistribution).length}</span>
-                  <span className="adm-stat-label">Departments</span>
-                </div>
-                <div className="adm-stat-item">
-                  <span className="adm-stat-number">{ongoingProjectsCount}</span>
-                  <span className="adm-stat-label">Ongoing</span>
+                <div className="admin-profile-photo-container-t">
+                  <img
+                      src={adminData.avatarURL}
+                      className="admin-profile-photo-t"
+                      alt="Profile"
+                  />
+                  <span className="admin-status-badge-t">
+                <i className="fas fa-shield-alt"></i> Super Admin
+              </span>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="adm-content-section">
-          <div className="adm-tabs">
-            <button
-              className={`adm-tab-btn ${activeTab === "overview" ? "active" : ""}`}
-              onClick={() => setActiveTab("overview")}
-            >
-              <i className="fas fa-chart-pie"></i> Overview
-            </button>
-            <button
-              className={`adm-tab-btn ${activeTab === "employees" ? "active" : ""}`}
-              onClick={() => setActiveTab("employees")}
-            >
-              <i className="fas fa-users"></i> Employees
-            </button>
-            <button
-              className={`adm-tab-btn ${activeTab === "leaves" ? "active" : ""}`}
-              onClick={() => setActiveTab("leaves")}
-            >
-              <i className="fas fa-calendar-alt"></i> Leave Requests
-            </button>
-            <button
-              className={`adm-tab-btn ${activeTab === "performance" ? "active" : ""}`}
-              onClick={() => setActiveTab("performance")}
-            >
-              <i className="fas fa-chart-line"></i> Performance
-            </button>
-          </div>
+              <div className="admin-profile-content-t">
+                <h1 className="admin-profile-name-t">{adminData.name}</h1>
+                <p className="admin-profile-title-t">{adminData.position}</p>
+                <div className="admin-profile-divider-t"></div>
+                <p className="admin-profile-bio-t">{adminData.bio}</p>
+                <p className="admin-profile-department">{adminData.department}</p>
 
-          <div className="adm-tab-content">
-            {activeTab === "overview" && (
-              <div className="adm-overview-tab">
-                <div className="adm-chart-container">
-                  <h3>Employee Distribution by Department</h3>
-                  {departmentChartData ? (
-                    <div className="adm-chart-wrapper" style={{ height: '400px', width: '100%' }}>
-                      <Chart
-                        type="pie"
-                        data={departmentChartData}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              position: 'right',
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="adm-chart-placeholder">
-                      <i className="fas fa-chart-bar"></i>
-                      <p>Loading department distribution...</p>
-                    </div>
-                  )}
-                </div>
-                <div className="adm-chart-container">
-                  <h3>Leave Requests by Type</h3>
-                  {leaveChartData ? (
-                    <div className="adm-chart-wrapper" style={{ height: '400px', width: '100%' }}>
-                      <Chart
-                        type="bar"
-                        data={leaveChartData}
-                        options={{
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          plugins: {
-                            legend: {
-                              position: 'top',
-                            },
-                            title: {
-                              display: true,
-                              text: 'Leave Requests by Type'
-                            }
-                          },
-                          scales: {
-                            y: {
-                              beginAtZero: true,
-                              ticks: {
-                                stepSize: 1
-                              }
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="adm-chart-placeholder">
-                      <i className="fas fa-chart-bar"></i>
-                      <p>Loading leave request data...</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {activeTab === "employees" && (
-              <div className="adm-employees-tab">
-                <div className="adm-table-header">
-                  <h3>Employee Management</h3>
-                  <div className="adm-table-actions">
-                    <div className="adm-search-filter">
-                      <input
-                        type="text"
-                        placeholder="Filter employees..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                      <i className="fas fa-filter"></i>
-                    </div>
+                <div className="admin-profile-stats-t">
+                  <div className="admin-stat-item-t">
+                    <span className="admin-stat-number-t">{employees.length}</span>
+                    <span className="admin-stat-label-t">Employees</span>
+                  </div>
+                  <div className="admin-stat-item-t">
+                    <span className="admin-stat-number-t">{Object.keys(departmentDistribution).length}</span>
+                    <span className="admin-stat-label-t">Departments</span>
+                  </div>
+                  <div className="admin-stat-item-t">
+                    <span className="admin-stat-number-t">{ongoingProjectsCount}</span>
+                    <span className="admin-stat-label-t">Ongoing</span>
                   </div>
                 </div>
-                <div className="adm-table-responsive">
-                  <table className="adm-employees-table">
-                    <thead>
-                      <tr>
-                        <th>Employee</th>
-                        <th>Email</th>
-                        <th>Department</th>
-                        <th>Position</th>
-                        <th>Last Active</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentEmployees.map((employee) => (
-                        <tr key={employee.id}>
-                          <td>
-                            <div className="adm-employee-info">
-                              <img
-                                src={employee.avatarURL || "https://randomuser.me/api/portraits/men/32.jpg"}
-                                alt={employee.name}
-                                className="adm-employee-avatar"
+              </div>
+            </div>
+          </div>
+
+          <div className="admin-content-section-t">
+            <div className="admin-tabs-t">
+              <button
+                  className={`tab-btn-t ${activeTab === "overview" ? "active" : ""}`}
+                  onClick={() => setActiveTab("overview")}
+              >
+                <i className="fas fa-chart-pie"></i> Overview
+              </button>
+              <button
+                  className={`tab-btn-t ${activeTab === "employees" ? "active" : ""}`}
+                  onClick={() => setActiveTab("employees")}
+              >
+                <i className="fas fa-users"></i> Employees
+              </button>
+              <button
+                  className={`tab-btn-t ${activeTab === "leaves" ? "active" : ""}`}
+                  onClick={() => setActiveTab("leaves")}
+              >
+                <i className="fas fa-calendar-alt"></i> Leave Requests
+              </button>
+              <button
+                  className={`tab-btn-t ${activeTab === "performance" ? "active" : ""}`}
+                  onClick={() => setActiveTab("performance")}
+              >
+                <i className="fas fa-chart-line"></i> Performance
+              </button>
+            </div>
+
+            <div className="admin-tab-content-t">
+              {activeTab === "overview" && (
+                  <div className="admin-overview-tab-t">
+                    <div className="admin-chart-container-t">
+                      <h3>Employee Distribution by Department</h3>
+                      {departmentChartData ? (
+                          <div style={{height: '400px', width: '100%'}}>
+                            <Chart
+                                type="pie"
+                                data={departmentChartData}
+                                options={{
+                                  responsive: true,
+                                  maintainAspectRatio: false,
+                                  plugins: {
+                                    legend: {
+                                      position: 'right',
+                                    }
+                                  }
+                                }}
+                            />
+                          </div>
+                      ) : (
+                          <div className="admin-chart-placeholder-t">
+                            <i className="fas fa-chart-bar"></i>
+                            <p>Loading department distribution...</p>
+                          </div>
+                      )}
+                    </div>
+                    <div className="admin-chart-container-t">
+                      <h3>Leave Requests by Type</h3>
+                      {leaveChartData ? (
+                          <div style={{height: '400px', width: '100%'}}>
+                            <Chart
+                                type="bar"
+                                data={leaveChartData}
+                                options={{
+                                  responsive: true,
+                                  maintainAspectRatio: false,
+                                  plugins: {
+                                    legend: {position: 'top'},
+                                    title: {
+                                      display: true,
+                                      text: 'Leave Requests by Type'
+                                    }
+                                  },
+                                  scales: {
+                                    y: {
+                                      beginAtZero: true,
+                                      ticks: {stepSize: 1}
+                                    }
+                                  }
+                                }}
+                            />
+                          </div>
+                      ) : (
+                          <div className="admin-chart-placeholder-t">
+                            <i className="fas fa-chart-bar"></i>
+                            <p>Loading leave request data...</p>
+                          </div>
+                      )}
+                    </div>
+                  </div>
+              )}
+              {activeTab === "employees" && (
+                  <div className="admin-tab-content-t">
+                    <div className="table-header-t">
+                      <h3>Employee Management</h3>
+                      <div className="table-actions-t">
+                        <div className="search-filter-t">
+                          <input
+                              type="text"
+                              placeholder="Filter employees..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                          />
+                          <i className="fas fa-filter"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="table-responsive-t">
+                      <table className="employees-table-t">
+                        <thead>
+                        <tr>
+                          <th>Employee</th>
+                          <th>Email</th>
+                          <th>Department</th>
+                          <th>Position</th>
+                          <th>Last Active</th>
+                          <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {currentEmployees.map((employee) => (
+                            <tr key={employee.id}>
+                              <td>
+                                <div className="employee-info-t">
+                                  <img
+                                      src={employee.avatarURL || "https://randomuser.me/api/portraits/men/32.jpg"}
+                                      alt={employee.name}
+                                      className="employee-avatar-t"
+                                  />
+                                  <span>{employee.name || `${employee.firstName} ${employee.lastName}`}</span>
+                                </div>
+                              </td>
+                              <td>{employee.email}</td>
+                              <td>{employee.department || "N/A"}</td>
+                              <td>{employee.position || "N/A"}</td>
+                              <td>{employee.lastSignIn || "N/A"}</td>
+                              <td>
+                                <div className="action-buttons-t">
+                                  <button
+                                      className="icon-btn-t"
+                                      title="Edit Employee"
+                                      onClick={() => handleEditEmployee(employee)}
+                                  >
+                                    <img
+                                        src="https://img.icons8.com/?size=100&id=89778&format=png&color=A3AED0"
+                                        className="activate-icon-t"
+                                        alt="Edit"
+                                    />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                      </table>
+
+                      {totalPages > 1 && (
+                          <div className="pagination">
+                            <button
+                                onClick={() => paginate(Math.max(1, currentPage - 1))}
+                                disabled={currentPage === 1}
+                            >
+                              &laquo; Prev
+                            </button>
+                            {Array.from({length: Math.min(5, totalPages)}, (_, i) => {
+                              let pageNum;
+                              if (totalPages <= 5) {
+                                pageNum = i + 1;
+                              } else if (currentPage <= 3) {
+                                pageNum = i + 1;
+                              } else if (currentPage >= totalPages - 2) {
+                                pageNum = totalPages - 4 + i;
+                              } else {
+                                pageNum = currentPage - 2 + i;
+                              }
+                              return (
+                                  <button
+                                      key={pageNum}
+                                      onClick={() => paginate(pageNum)}
+                                      className={currentPage === pageNum ? 'active' : ''}
+                                  >
+                                    {pageNum}
+                                  </button>
+                              );
+                            })}
+                            {totalPages > 5 && currentPage < totalPages - 2 && (
+                                <span className="ellipsis">...</span>
+                            )}
+                            <button
+                                onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
+                                disabled={currentPage === totalPages}
+                            >
+                              Next &raquo;
+                            </button>
+                          </div>
+                      )}
+                    </div>
+
+                    {editingEmployee && (
+                        <div className="modal-overlay">
+                          <div className="modal-content">
+                            <h3>Edit Employee</h3>
+                            <div className="form-group">
+                              <label>Name</label>
+                              <input
+                                  type="text"
+                                  name="name"
+                                  value={editFormData.name}
+                                  onChange={handleEditFormChange}
                               />
-                              <span>{employee.name || `${employee.firstName} ${employee.lastName}`}</span>
                             </div>
-                          </td>
-                          <td>{employee.email}</td>
-                          <td>{employee.department || "N/A"}</td>
-                          <td>{employee.position || "N/A"}</td>
-                          <td>{employee.lastSignIn || "N/A"}</td>
-                          <td>
-                            <div className="adm-action-buttons">
-                              <button
-                                className="adm-icon-btn"
-                                title="Edit Employee"
-                                onClick={() => handleEditEmployee(employee)}
+                            <div className="form-group">
+                              <label>Email</label>
+                              <input
+                                  type="email"
+                                  name="email"
+                                  value={editFormData.email}
+                                  onChange={handleEditFormChange}
+                                  disabled
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label>Department</label>
+                              <select
+                                  name="department"
+                                  value={editFormData.department}
+                                  onChange={handleEditFormChange}
                               >
-                                <img
-                                  src="https://img.icons8.com/?size=100&id=89778&format=png&color=A3AED0"
-                                  className="activate-icon"
-                                  alt="Edit"
-                                />
+                                <option value="">Select Department</option>
+                                {Object.keys(departmentDistribution).map(dept => (
+                                    <option key={dept} value={dept}>{dept}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="form-group">
+                              <label>Position</label>
+                              <input
+                                  type="text"
+                                  name="position"
+                                  value={editFormData.position}
+                                  onChange={handleEditFormChange}
+                              />
+                            </div>
+                            <div className="modal-actions">
+                              <button
+                                  className="btn-t secondary"
+                                  onClick={() => setEditingEmployee(null)}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                  className="btn-t primary"
+                                  onClick={saveEditedEmployee}
+                              >
+                                Save Changes
                               </button>
                             </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  {totalPages > 1 && (
-                    <div className="adm-pagination">
-                      <button
-                        onClick={() => paginate(Math.max(1, currentPage - 1))}
-                        disabled={currentPage === 1}
-                      >
-                        &laquo; Prev
-                      </button>
-                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                        let pageNum;
-                        if (totalPages <= 5) {
-                          pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNum = totalPages - 4 + i;
-                        } else {
-                          pageNum = currentPage - 2 + i;
-                        }
-                        return (
-                          <button
-                            key={pageNum}
-                            onClick={() => paginate(pageNum)}
-                            className={currentPage === pageNum ? 'active' : ''}
-                          >
-                            {pageNum}
-                          </button>
-                        );
-                      })}
-                      {totalPages > 5 && currentPage < totalPages - 2 && (
-                        <span className="adm-ellipsis">...</span>
-                      )}
-                      <button
-                        onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                        disabled={currentPage === totalPages}
-                      >
-                        Next &raquo;
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {editingEmployee && (
-                  <div className="adm-modal-overlay">
-                    <div className="adm-modal-content">
-                      <h3>Edit Employee</h3>
-                      <div className="adm-form-group">
-                        <label>Name</label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={editFormData.name}
-                          onChange={handleEditFormChange}
-                        />
-                      </div>
-                      <div className="adm-form-group">
-                        <label>Email</label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={editFormData.email}
-                          onChange={handleEditFormChange}
-                          disabled
-                        />
-                      </div>
-                      <div className="adm-form-group">
-                        <label>Department</label>
-                        <select
-                          name="department"
-                          value={editFormData.department}
-                          onChange={handleEditFormChange}
-                        >
-                          <option value="">Select Department</option>
-                          {Object.keys(departmentDistribution).map(dept => (
-                            <option key={dept} value={dept}>{dept}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="adm-form-group">
-                        <label>Position</label>
-                        <input
-                          type="text"
-                          name="position"
-                          value={editFormData.position}
-                          onChange={handleEditFormChange}
-                        />
-                      </div>
-                      <div className="adm-modal-actions">
-                        <button
-                          className="adm-btn secondary"
-                          onClick={() => setEditingEmployee(null)}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="adm-btn primary"
-                          onClick={saveEditedEmployee}
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === "leaves" && <AdminLeaveRequestManager />}
-
-            {activeTab === "performance" && (
-              <div className="adm-performance-tab">
-                <div className="adm-performance-header">
-                  <h3>Employee Performance Metrics</h3>
-                  <div className="adm-performance-filters">
-                    <select>
-                      <option>All Departments</option>
-                      {Object.keys(departmentDistribution).map(dept => (
-                        <option key={dept}>{dept}</option>
-                      ))}
-                    </select>
-                    <select>
-                      <option>Last Quarter</option>
-                      <option>Last Month</option>
-                      <option>Last Year</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="adm-performance-grid">
-                  {performanceData.map((employee) => (
-                    <div key={employee.id} className="adm-performance-card">
-                      <div className="adm-employee-info">
-                        <img
-                          src={employees.find((e) => e.name === employee.employee)?.avatarURL}
-                          alt={employee.employee}
-                          className="adm-employee-avatar"
-                        />
-                        <div>
-                          <h4>{employee.employee}</h4>
-                          <p>
-                            {employees.find((e) => e.name === employee.employee)?.department}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="adm-performance-metrics">
-                        <div className="adm-metric">
-                          <span className="adm-metric-label">Completion</span>
-                          <div className="adm-progress-bar">
-                            <div
-                              className="adm-progress-fill"
-                              style={{ width: `${employee.completion}%` }}
-                            ></div>
-                          </div>
-                          <span className="adm-metric-value">
-                            {employee.completion}%
-                          </span>
-                        </div>
-                        <div className="adm-metric">
-                          <span className="adm-metric-label">Quality</span>
-                          <div className="adm-rating">
-                            {[...Array(5)].map((_, i) => (
-                              <i
-                                key={i}
-                                className={`fas fa-star ${
-                                  i < Math.floor(employee.quality)
-                                    ? "filled"
-                                    : i < employee.quality
-                                      ? "half"
-                                      : ""
-                                }`}
-                              ></i>
-                            ))}
-                            <span>({employee.quality})</span>
                           </div>
                         </div>
-                      </div>
-                      <div className="adm-performance-actions">
-                        <button className="adm-btn primary sm">
-                          <i className="fas fa-chart-line"></i> Details
-                        </button>
-                        <button className="adm-btn secondary sm">
-                          <i className="fas fa-comment-alt"></i> Feedback
-                        </button>
-                      </div>
+                    )}
+                  </div>
+              )}
+              {activeTab === "leaves" && <AdminLeaveRequestManager/>}
+
+              {activeTab === "performance" && (
+                  <div className="performance-header">
+                    <h3>Employee Performance Metrics</h3>
+                    <div className="performance-filters">
+                      <select>
+                        <option>All Departments</option>
+                        {Object.keys(departmentDistribution).map(dept => (
+                            <option key={dept}>{dept}</option>
+                        ))}
+                      </select>
+                      <select>
+                        <option>Last Quarter</option>
+                        <option>Last Month</option>
+                        <option>Last Year</option>
+                      </select>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
+
+                    <div className="performance-grid">
+                      {performanceData.map((employee) => (
+                          <div key={employee.id} className="performance-card">
+                            <div className="employee-info">
+                              <img
+                                  src={employees.find((e) => e.name === employee.employee)?.avatarURL}
+                                  alt={employee.employee}
+                                  className="employee-avatar"
+                              />
+                              <div>
+                                <h4>{employee.employee}</h4>
+                                <p>{employees.find((e) => e.name === employee.employee)?.department}</p>
+                              </div>
+                            </div>
+
+                            <div className="performance-metrics">
+                              <div className="metric">
+                                <span className="metric-label">Completion</span>
+                                <div className="progress-bar">
+                                  <div
+                                      className="progress-fill"
+                                      style={{width: `${employee.completion}%`}}
+                                  ></div>
+                                </div>
+                                <span className="metric-value">{employee.completion}%</span>
+                              </div>
+
+                              <div className="metric">
+                                <span className="metric-label">Quality</span>
+                                <div className="rating">
+                                  {[...Array(5)].map((_, i) => (
+                                      <i
+                                          key={i}
+                                          className={`fas fa-star ${
+                                              i < Math.floor(employee.quality)
+                                                  ? "filled"
+                                                  : i < employee.quality
+                                                      ? "half"
+                                                      : ""
+                                          }`}
+                                      ></i>
+                                  ))}
+                                  <span>({employee.quality})</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="performance-actions">
+                              <button className="btn-t primary sm">
+                                <i className="fas fa-chart-line"></i> Details
+                              </button>
+                              <button className="btn-t secondary sm">
+                                <i className="fas fa-comment-alt"></i> Feedback
+                              </button>
+                            </div>
+                          </div>
+                      ))}
+                    </div>
+                  </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        <AdminFooter darkMode={darkMode} />
+          <AdminFooter darkMode={darkMode}/>
+        </div>
       </div>
-    </div>
   );
 };
 
-export default AdminProfilePage;
+  export default AdminProfilePage;
