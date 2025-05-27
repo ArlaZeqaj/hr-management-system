@@ -27,11 +27,14 @@ public class FirebaseTokenFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getRequestURI();
 
-        // ✅ Allow public access to uploaded files
-        if (path.startsWith("/uploads/")) {
+        if (path.startsWith("/uploads/")
+                || path.equals("/api/auth/reset-password")
+                || path.equals("/error")
+        ){
             chain.doFilter(request, response);
             return;
         }
+
 
         String authHeader = httpRequest.getHeader("Authorization");
         System.out.println("Authorization header: " + authHeader);

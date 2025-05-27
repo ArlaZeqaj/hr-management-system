@@ -1,5 +1,6 @@
 package com.example.hrsystem.controller;
 
+import com.example.hrsystem.service.EmailService;
 import com.example.hrsystem.service.FirebaseAuthService;
 import com.example.hrsystem.service.LoginAttemptService;
 import com.google.cloud.firestore.DocumentReference;
@@ -28,6 +29,11 @@ public class AuthController {
 
     @Autowired
     private FirebaseAuthService firebaseAuthService;
+    private final EmailService emailService;
+    public AuthController(FirebaseAuthService firebaseAuthService, EmailService emailService) {
+        this.firebaseAuthService = firebaseAuthService;
+        this.emailService = emailService;
+    }
 
     /**
      * Handles login by verifying Firebase ID token sent from frontend.
@@ -65,6 +71,15 @@ public class AuthController {
         response.put("lastSignIn", "2025-05-16T12:34:56Z");
         return response;
     }
-
+    @PostMapping("/reset-password")
+    public String sendResetPasswordEmail(@RequestParam String email) {
+        try {
+            String resetLink = firebaseAuthService.generatePasswordResetLink(email);
+            emailService.sendPasswordResetEmail(email, resetLink);
+            return "✅ Password reset email sent to " + email;
+        } catch (FirebaseAuthException e) {
+            return "❌ Error: " + e.getMessage();
+        }
+    }
 
 }

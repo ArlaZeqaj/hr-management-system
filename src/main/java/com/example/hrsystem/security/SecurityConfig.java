@@ -25,12 +25,16 @@ public class SecurityConfig {
                 .addFilterBefore(new FirebaseTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/uploads/**").permitAll() // ✅ Allow file access without authentication
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/api/auth/reset-password").permitAll() // ✅ allow reset-password without token
+                        .requestMatchers("/api/auth/**").permitAll()             // ✅ allow other auth endpoints
+                        .requestMatchers("/error").permitAll()                   // ✅ allow Spring's error endpoint
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .build();
     }
+
 
 
 }

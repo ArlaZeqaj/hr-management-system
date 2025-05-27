@@ -9,13 +9,14 @@ import Billing from "./pages/Billing";
 import Projects from "./pages/Projects";
 import NewHires from "./pages/NewHires";
 import FirebaseTest from "./pages/FirebaseTest";
-import { BirthdayProvider } from './services/BirthdayContext';
-import TestPanel from './pages/TestPanel';
+import { BirthdayProvider } from "./services/BirthdayContext";
+import TestPanel from "./pages/TestPanel";
 import LeaveRequest from "./pages/LeaveRequest";
-import AdminProfile from './pages/AdminProfilePage';
-import EmployeeList from './pages/EmployeeList';
+import AdminProfile from "./pages/AdminProfilePage";
+import EmployeeList from "./pages/EmployeeList";
 import Documents from "./pages/Documents";
-import ProjectAdmin from "./pages/ProjectAdminPage"
+import ProjectAdmin from "./pages/ProjectAdminPage";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -45,6 +46,9 @@ function App() {
           {/* Testing */}
           <Route path="/firebase/test" element={<FirebaseTest />} />
           <Route path="/databasa" element={<TestPanel />} />
+
+          {/* Reset password */}
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* TODO: Add <PrivateRoute> wrappers later for protection */}
         </Routes>

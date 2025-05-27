@@ -25,4 +25,5 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/"); // folder at project-root/uploads/
     }
+
 }

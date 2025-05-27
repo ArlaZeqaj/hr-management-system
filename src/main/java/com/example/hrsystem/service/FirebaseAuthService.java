@@ -79,5 +79,9 @@ public class FirebaseAuthService {
         db.collection("attendanceLogs").document(docId).set(data);
     }
 
+    public String generatePasswordResetLink(String email) throws FirebaseAuthException {
+        return FirebaseAuth.getInstance().generatePasswordResetLink(email);
+    }
+
 
 }
