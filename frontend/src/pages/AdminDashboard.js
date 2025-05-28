@@ -4,6 +4,7 @@ import axios from "axios";
 import { getIdToken } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collectionGroup, getDocs } from "firebase/firestore";
 
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
@@ -81,9 +82,12 @@ const AdminDashboard = () => {
   const filterTasks = (tasks) => {
     if (!tasks) return [];
 
-    return tasks.filter(task => {
+    return tasks.filter((task) => {
       // Filter by assignee
-      if (filters.assignee && (!task.assignees || !task.assignees.includes(filters.assignee))) {
+      if (
+        filters.assignee &&
+        (!task.assignees || !task.assignees.includes(filters.assignee))
+      ) {
         return false;
       }
 
@@ -128,7 +132,6 @@ const AdminDashboard = () => {
   // budegt allocation
   const [budgetData, setBudgetData] = useState({});
 
-
   useEffect(() => {
     console.log("useEffect running");
     const fetchBudgetData = async () => {
@@ -138,10 +141,10 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken();
         const res = await fetch(
-            "http://localhost:8080/api/admin1/budget-allocation",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
+          "http://localhost:8080/api/admin1/budget-allocation",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
 
         if (!res.ok) throw new Error("Failed to fetch budget data");
@@ -156,8 +159,6 @@ const AdminDashboard = () => {
 
     fetchBudgetData();
   }, []);
-
-
 
   // per te bere edit nje task
   const [editMode, setEditMode] = useState(false);
@@ -252,17 +253,19 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken(); // Firebase ID token
         const response = await fetch(
-            "http://localhost:8080/api/admin1/active-projects/count",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          "http://localhost:8080/api/admin1/active-projects/count",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch active projects count: ${response.status}`);
+          throw new Error(
+            `Failed to fetch active projects count: ${response.status}`
+          );
         }
 
         const count = await response.json();
@@ -297,17 +300,19 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken(); // Firebase ID token
         const response = await fetch(
-            "http://localhost:8080/api/admin1/tasks/pending/count",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          "http://localhost:8080/api/admin1/tasks/pending/count",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch pending tasks count: ${response.status}`);
+          throw new Error(
+            `Failed to fetch pending tasks count: ${response.status}`
+          );
         }
 
         const count = await response.json();
@@ -331,8 +336,6 @@ const AdminDashboard = () => {
     return () => unsubscribe();
   }, []); // runs once on mount and whenever auth state changes
 
-
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -343,12 +346,12 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken();
         const response = await fetch(
-            "http://localhost:8080/api/admin1/employees/distribution",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          "http://localhost:8080/api/admin1/employees/distribution",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         if (!response.ok)
@@ -484,6 +487,12 @@ const AdminDashboard = () => {
     ],
   });
 
+  const [totalGross, setTotalGross] = useState(0);
+  const [loadingPayroll, setLoadingPayroll] = useState(true);
+  const db = getFirestore();
+
+  const [totalPayrollForMay, setTotalPayrollForMay] = useState(0);
+
   useEffect(() => {
     const fetchPayrollTrend = async () => {
       const user = auth.currentUser;
@@ -509,6 +518,9 @@ const AdminDashboard = () => {
 
         const data = await response.json(); // e.g. { "2025-01": 1000, "2025-02": 1200 }
         console.log("Payroll data recieved ", data);
+
+        const mayTotal = data["2025-05"] || 0;
+        setTotalPayrollForMay(mayTotal); // <-- use this state
 
         // Sort by date (ascending)
         const sortedEntries = Object.entries(data).sort(([a], [b]) =>
@@ -773,8 +785,6 @@ const AdminDashboard = () => {
     );
   };
 
-  /// total Payroll
-
   // Update current time every minute
   useEffect(() => {
     const timer = setInterval(() => {
@@ -821,6 +831,30 @@ const AdminDashboard = () => {
     },
   ]);
 
+  /// total Payroll
+  const fetchPayrollDataForMay2025 = async () => {
+    try {
+      const snapshot = await getDocs(collectionGroup(db, "payroll"));
+      const filtered = snapshot.docs
+        .map((doc) => doc.data())
+        .filter((item) => item.date?.startsWith("2025-05"));
+
+      const total = filtered.reduce((sum, item) => sum + (item.amount || 0), 0);
+
+      setTotalGross(total);
+    } catch (error) {
+      console.error("Failed to fetch payroll data:", error);
+      setTotalGross(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPayrollDataForMay2025();
+  }, []);
+  <p>${totalGross.toLocaleString()}</p>;
+
   const hiringTrendData = {
     labels: ["sales", "marketing", "engineering", "IT"],
     datasets: [
@@ -851,9 +885,7 @@ const AdminDashboard = () => {
     },
     {
       title: "Total Payroll",
-      value: `$${payrollData
-        .reduce((sum, item) => sum + item.amount, 0)
-        .toLocaleString()}`,
+      value: `${totalPayrollForMay.toLocaleString()}`,
       icon: "https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF",
     },
   ];
@@ -1100,7 +1132,7 @@ const AdminDashboard = () => {
                         <span>2 hours ago</span>
                       </div>
                     </div>
-                    <div className="activity-item">
+                    {/* <div className="activity-item">
                       <div className="activity-icon">
                         <img
                           src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF"
@@ -1112,7 +1144,7 @@ const AdminDashboard = () => {
                         <p>Engineering department - $85,000</p>
                         <span>1 day ago</span>
                       </div>
-                    </div>
+                    </div> */}
                     <div className="activity-item">
                       <div className="activity-icon">
                         <img
@@ -1736,8 +1768,8 @@ const AdminDashboard = () => {
             )}
           </div>
         </div>
-         {/* Footer */}
-         <AdminFooter />
+        {/* Footer */}
+        <AdminFooter />
       </div>
     </div>
   );
