@@ -12,7 +12,7 @@
   --danger: #e53e3e;
   --border: #e2e8f0;
   --shadow: 0px 3.5px 5px rgba(0, 0, 0, 0.03);
-  
+
   /* Dark mode variables */
   --dark-primary: #6b73ff;
   --dark-secondary: #4fd1c5;
@@ -397,8 +397,8 @@ body {
 }
 
 .saved-card .card-type-icon {
-  width: 42px;    
-  height: 26px;  
+  width: 42px;
+  height: 26px;
   object-fit: contain;
 }
 
@@ -503,7 +503,7 @@ body {
 
 .edit-btn-b {
   background-color: rgba(51, 154, 240, 0.1);
-  color: #339AF0;
+  color: #339af0;
 }
 
 .edit-btn-b:hover {
@@ -512,7 +512,7 @@ body {
 
 .delete-btn-b {
   background-color: rgba(229, 62, 62, 0.1);
-  color: #E53E3E;
+  color: #e53e3e;
 }
 
 .delete-btn-b:hover {
@@ -712,6 +712,28 @@ body {
   font-weight: 700;
   font-size: 0.75rem;
   margin: 1rem 0 0.5rem;
+}
+
+.invoices-container {
+  max-height: 400px; /* Adjust as needed */
+  overflow-y: auto;
+  padding-right: 8px; /* Optional scrollbar padding */
+}
+
+.invoices-scrollable {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Optional scrollbar styling */
+.invoices-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.invoices-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
 }
 
 .transaction {

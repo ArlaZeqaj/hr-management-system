@@ -7,23 +7,24 @@ const InvoicesSection = ({ invoices, generateInvoicePDF }) => {
   return (
     <section className="invoices">
       <InvoiceHeader />
-
-      {invoices.length === 0 ? (
-        <p className="no-invoices">No invoices found.</p>
-      ) : (
-        <div className="invoices-list">
-          {invoices.map((invoice) => (
-            <InvoiceItem
-              key={invoice.id}
-              date={invoice.date}
-              invoiceNumber={invoice.invoiceNumber}
-              amount={invoice.amount}
-              currency={invoice.currency}
-              onGeneratePDF={() => generateInvoicePDF(invoice)}
-            />
-          ))}
+      <div className="invoices-container">
+        <div className="invoices-scrollable">
+          {invoices.length === 0 ? (
+            <p className="no-invoices">No invoices found.</p>
+          ) : (
+            invoices.map((invoice) => (
+              <InvoiceItem
+                key={invoice.id}
+                date={invoice.date}
+                invoiceNumber={invoice.invoiceNumber}
+                amount={invoice.amount}
+                currency={invoice.currency}
+                onGeneratePDF={() => generateInvoicePDF(invoice)}
+              />
+            ))
+          )}
         </div>
-      )}
+      </div>
     </section>
   );
 };
