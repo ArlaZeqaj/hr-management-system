@@ -640,10 +640,10 @@ export default function EmployeePage() {
     }, 100)
   }
 
-  // Handle click outside dropdowns
+  // Handle click outside dropdowns (close dropdown header)
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showProfileDropdown && !event.target.closest(".user-profile")) {
+      if (showProfileDropdown && !event.target.closest(".user-profile-el")) {
         setShowProfileDropdown(false)
       }
       if (showNotifications && !event.target.closest(".notifications-container")) {
@@ -835,7 +835,7 @@ export default function EmployeePage() {
               {showNotifications && <NotificationsDropdown notifications={notifications} isOpen={showNotifications} />}
             </div>
 
-            <div className="user-profile" style={{ position: "relative" }}>
+            <div className="user-profile-el" style={{ position: "relative" }}>
               <div
                 className="avatar-container"
                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}

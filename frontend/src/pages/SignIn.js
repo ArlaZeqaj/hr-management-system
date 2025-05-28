@@ -55,18 +55,7 @@ export default function SignIn() {
   return (
     <div className="sigin-contain">
       <div className="sigin-scroll-view">
-        <div
-          className="sigin-row-view"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate(-1)}
-        >
-          <img
-            src="https://img.icons8.com/?size=100&id=85498&format=png&color=a3aed0"
-            className="sigin-image"
-            alt="Back arrow icon"
-          />
-          <span className="sigin-text">Back to dashboard</span>
-        </div>
+        
         <div className="sigin-column">
           <div className="sigin-column2">
             <div className="sigin-column3">
@@ -84,7 +73,7 @@ export default function SignIn() {
                 <div className="sigin-view">
                   <input
                     type="email"
-                    placeholder="mail@cloudx.com"
+                    placeholder="mail@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -124,15 +113,6 @@ export default function SignIn() {
 
               <div className="sigin-row-view4">
                 <div className="sigin-row-view">
-                  <div className="sigin-view2">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      disabled={loading}
-                    />
-                  </div>
-                  <span className="sigin-text7">Keep me logged in</span>
                   <a href="/reset-password" className="sigin-text8">
                     Forgot password?
                   </a>

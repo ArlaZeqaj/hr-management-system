@@ -17,19 +17,7 @@ const AdminHeader = ({
       </div>
 
       <div className="admin-header-actions">
-        <div className="admin-search-bar">
-          <i className="fas fa-search"></i>
-          <input
-            placeholder="Search employees, reports..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
         <div className="admin-action-icons">
-          <button className="admin-icon-btn" title="Messages">
-          <img src="https://img.icons8.com/?size=100&id=ga8Uy7FrWYne&format=png&color=A3AED0" className="messages-icon"/>
-            <span className="badge">3</span>
-          </button>
           <button className="admin-icon-btn" title="Alerts">
           <img src="https://img.icons8.com/?size=100&id=86551&format=png&color=A3AED0" className="alerts-icon"/>
             <span className="badge">7</span>
@@ -68,31 +56,6 @@ const AdminHeader = ({
                   <p>Super Administrator</p>
                 </div>
               </div>
-              <a href="#">
-                <i className="fas fa-user"></i> My Profile
-              </a>
-              <a href="#">
-                <i className="fas fa-cog"></i> Settings
-              </a>
-              <a href="#">
-                <i className="fas fa-lock"></i> Security
-              </a>
-              <div className="admin-dropdown-divider"></div>
-              <h5>Notification Settings</h5>
-              {Object.keys(notifications).map((item) => (
-                <div key={item} className="admin-toggle-item">
-                  <span>{item}</span>
-                  <label className="admin-toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={notifications[item]}
-                      onChange={() => toggleNotification(item)}
-                    />
-                    <span className="admin-toggle-slider"></span>
-                  </label>
-                </div>
-              ))}
-              <div className="admin-dropdown-divider"></div>
               <a href="/" className="logout">
               <img src="https://img.icons8.com/?size=100&id=2444&format=png&color=FA5252" className="alerts-icon"/> Logout
               </a>

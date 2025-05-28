@@ -377,32 +377,6 @@
   margin-top: 0.5rem;
 }
 
-.user-profile {
-  display: flex;
-  align-items: center;
-  background: var(--white);
-  border-radius: 2rem;
-  padding: 0.5rem 1rem 0.5rem 1.5rem;
-  box-shadow: 14px 17px 40px rgba(112, 144, 176, 0.1);
-}
-
-.user-profile img:first-child {
-  width: 38px;
-  height: 34px;
-  margin-right: 0.75rem;
-}
-
-.user-profile span {
-  color: var(--dark);
-  font-weight: 700;
-  margin-right: 1.5rem;
-}
-
-.user-profile img:last-child {
-  width: 32px;
-  height: 31px;
-}
-
 /* Event Details Sidebar */
 .event-sidebar-lr {
   width: 280px;

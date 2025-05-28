@@ -215,7 +215,7 @@ body {
   justify-content: center;
 }
 
-.user-profile {
+.user-profile-el {
   display: flex;
   align-items: center;
   position: relative;

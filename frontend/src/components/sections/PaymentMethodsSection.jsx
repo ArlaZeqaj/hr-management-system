@@ -18,7 +18,7 @@ const PaymentMethodsSection = ({ cardData, setShowModal }) => {
           active
         />
         <SavedCard
-          icon="https://img.icons8.com/?size=100&id=106942&format=png&color=A3AED0"
+          icon="https://img.icons8.com/?size=100&id=87495&format=png&color=A3AED0"
           number={cardData.number}
         />
       </div>

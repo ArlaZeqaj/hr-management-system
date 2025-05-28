@@ -6,8 +6,8 @@ const SavedCard = ({ icon, number, active = false }) => (
       <img src={icon} alt="Card" className="card-type-icon" />
       <span>{number}</span>
       <img
-        width="18"
-        height="18"
+        width="14"
+        height="14"
         src="https://img.icons8.com/?size=100&id=11476&format=png&color=A3A3D0"
         alt="visa"
       />
