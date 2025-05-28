@@ -6,9 +6,10 @@ const SavedCard = ({ icon, number, active = false }) => (
       <img src={icon} alt="Card" className="card-type-icon" />
       <span>{number}</span>
       <img
-        src="https://storage.googleapis.com/tagjs-prod.appspot.com/v1/Hvb8f3Xbra/luyjsx96_expires_30_days.png"
-        alt="Options"
-        className="card-menu-icon"
+        width="18"
+        height="18"
+        src="https://img.icons8.com/?size=100&id=11476&format=png&color=A3A3D0"
+        alt="visa"
       />
     </div>
     <div className="card-divider"></div>
