@@ -128,6 +128,7 @@ const AdminDashboard = () => {
   // budegt allocation
   const [budgetData, setBudgetData] = useState({});
 
+
   useEffect(() => {
     console.log("useEffect running");
     const fetchBudgetData = async () => {
@@ -137,10 +138,10 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken();
         const res = await fetch(
-          "http://localhost:8080/api/admin1/budget-allocation",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+            "http://localhost:8080/api/admin1/budget-allocation",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
         );
 
         if (!res.ok) throw new Error("Failed to fetch budget data");
@@ -155,6 +156,8 @@ const AdminDashboard = () => {
 
     fetchBudgetData();
   }, []);
+
+
 
   // per te bere edit nje task
   const [editMode, setEditMode] = useState(false);
@@ -238,16 +241,8 @@ const AdminDashboard = () => {
     return () => unsubscribe();
   }, []);
 
-  // Fetch active projects count
   useEffect(() => {
     const fetchActiveProjectsCount = async () => {
-      // Check localStorage first
-      const savedCount = localStorage.getItem("activeProjectsCount");
-      if (savedCount !== null) {
-        setActiveProjectsCount(Number(savedCount));
-        return;
-      }
-
       const user = auth.currentUser;
       if (!user) {
         console.error("❌ No authenticated user");
@@ -255,41 +250,44 @@ const AdminDashboard = () => {
       }
 
       try {
-        const token = await getIdToken(user); // Use the token after verifying the user
+        const token = await user.getIdToken(); // Firebase ID token
         const response = await fetch(
-          "http://localhost:8080/api/admin1/active-projects/count",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`, // Attach the token in the Authorization header
-            },
-          }
+            "http://localhost:8080/api/admin1/active-projects/count",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
         );
 
-        if (!response.ok)
-          throw new Error("Failed to fetch active projects count");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch active projects count: ${response.status}`);
+        }
 
-        const count = await response.json(); // Parse the count from the response
-        console.log("✅ Active projects count from backend:", count); // For debugging purposes
-        setActiveProjectsCount(count); // Update the state with the active projects count
-        localStorage.setItem("activeProjectsCount", count); // Save to localStorage
+        const count = await response.json();
+        console.log("✅ Active projects count from backend:", count);
+        setActiveProjectsCount(count);
       } catch (error) {
         console.error("Error fetching active projects count:", error);
       }
     };
 
-    fetchActiveProjectsCount(); // Call the function to fetch data when component mounts
-  }, []); // Empty dependency array so this runs only once when the component mounts
+    // Listen to auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is authenticated:", user);
+        fetchActiveProjectsCount();
+      } else {
+        console.error("❌ No authenticated user");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []); // runs once on mount and whenever auth state changes
 
   useEffect(() => {
-    const fetchPendingTasks = async () => {
-      // Check localStorage first
-      const savedCount = localStorage.getItem("pendingTasksCount");
-      if (savedCount !== null) {
-        setPendingTasksCount(Number(savedCount));
-        return;
-      }
-
+    const fetchPendingTasksCount = async () => {
       const user = auth.currentUser;
       if (!user) {
         console.error("❌ No authenticated user");
@@ -297,41 +295,46 @@ const AdminDashboard = () => {
       }
 
       try {
-        const token = await user.getIdToken();
+        const token = await user.getIdToken(); // Firebase ID token
         const response = await fetch(
-          "http://localhost:8080/api/admin1/tasks/pending/count",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+            "http://localhost:8080/api/admin1/tasks/pending/count",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
         );
 
-        if (!response.ok)
-          throw new Error("Failed to fetch pending tasks count");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch pending tasks count: ${response.status}`);
+        }
 
         const count = await response.json();
-        console.log("✅ Pending tasks count:", count);
+        console.log("✅ Pending tasks count from backend:", count);
         setPendingTasksCount(count);
-        localStorage.setItem("pendingTasksCount", count);
       } catch (error) {
-        console.error("Error fetching pending tasks:", error);
+        console.error("Error fetching pending tasks count:", error);
       }
     };
 
-    fetchPendingTasks();
-  }, []);
+    // Listen to auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is authenticated:", user);
+        fetchPendingTasksCount();
+      } else {
+        console.error("❌ No authenticated user");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []); // runs once on mount and whenever auth state changes
+
+
 
   useEffect(() => {
-    const fetchDistribution = async () => {
-      // Check localStorage first
-      const savedData = localStorage.getItem("departmentDistribution");
-      if (savedData) {
-        setDepartmentDistribution(JSON.parse(savedData));
-        return;
-      }
-
-      const user = auth.currentUser;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         console.error("❌ No authenticated user");
         return;
@@ -340,12 +343,12 @@ const AdminDashboard = () => {
       try {
         const token = await user.getIdToken();
         const response = await fetch(
-          "http://localhost:8080/api/admin1/employees/distribution",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+            "http://localhost:8080/api/admin1/employees/distribution",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
         );
 
         if (!response.ok)
@@ -353,14 +356,12 @@ const AdminDashboard = () => {
 
         const data = await response.json();
         setDepartmentDistribution(data);
-        // Save to localStorage
-        localStorage.setItem("departmentDistribution", JSON.stringify(data));
       } catch (error) {
         console.error("Error fetching department distribution:", error);
       }
-    };
+    });
 
-    fetchDistribution();
+    return () => unsubscribe(); // cleanup listener
   }, []);
 
   const handleTaskSubmit = async (e) => {
