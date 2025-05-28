@@ -110,6 +110,42 @@
     margin-top: 0.25rem;
     font-style: italic;
   }
+
+  .task-id {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    background-color: #f0f4ff;
+    border-radius: 8px;
+    color: #4318FF;
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 16px;
+  }
+  
+  .task-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .task-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  /* Remove the completed class styling if you're not using it anymore */
+  .task-item.completed {
+    opacity: 0.7;
+    background-color: #f8f8f8;
+  }
   
   /* Priority and Status Options */
   .priority-options-ad,

@@ -991,16 +991,15 @@ const AdminDashboard = () => {
               <p>{formattedDate}</p>
             </div>
             <div className="quick-actions">
-              <button
+            <a href="/new-hires"
                 className="quick-action"
-                onClick={() => setActiveTab("employees")}
               >
                 <img
                   src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF"
                   alt="Add Employee"
                 />
                 <span>Add Employee</span>
-              </button>
+              </a>
               <button
                 className="quick-action"
                 onClick={() => setActiveTab("payroll")}

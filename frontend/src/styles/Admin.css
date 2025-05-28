@@ -24,6 +24,10 @@
   gap: 1rem;
 }
 
+.quick-actions a {
+  text-decoration: none;
+}
+
 .quick-action {
   display: flex;
   flex-direction: column;

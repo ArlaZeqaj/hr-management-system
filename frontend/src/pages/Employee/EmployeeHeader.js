@@ -7,37 +7,16 @@ const EmployeeHeader = ({
   darkMode,
   toggleDarkMode
 }) => {
-
   const [showNotifications, setShowNotifications] = useState(false);
-
   const [userData, setUserData] = useState({
     name: "",
     surname: "",
     email: "",
-    bio: "",
-    education: "",
-    languages: "",
-    departament: "",
-    workHistory: "",
-    organization: "",
-    birthDate: "",
+    department: "",
     avatarURL: "",
     loading: true,
     error: null
   });
-  const [notifications, setNotifications] = useState({
-    "Item update notifications": false,
-    "Item comment notifications": false,
-    "Buyer review notifications": false,
-    "Rating reminders notifications": true,
-    "Meetups near you notifications": false,
-    "Company news notifications": false,
-    "New launches and projects": false,
-    "Monthly product changes": false,
-    "Subscribe to newsletter": false,
-    "Email me when someone follows me": false,
-  });
-  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const notificationRef = useRef(null);
 
@@ -53,7 +32,7 @@ const EmployeeHeader = ({
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target) &&
-        !event.target.closest('.profile-button')) {
+        !event.target.closest('.employee-profile-button')) {
         setShowNotifications(false);
       }
     };
@@ -66,62 +45,42 @@ const EmployeeHeader = ({
 
   useEffect(() => {
     const auth = getAuth();
-
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const token = await user.getIdToken();
-
           const response = await axios.get(`/api/employees/by-email?email=${user.email}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
           });
 
-          setUserData({
+          setUserData(u => ({
+            ...u,
             name: response.data.firstName || response.data.name || "",
             surname: response.data.lastName || response.data.surname || "",
             email: response.data.email || user.email,
-            bio: response.data.bio || "No bio",
-            education: response.data.education || "No data",
-            languages: Array.isArray(response.data.languages)
-              ? response.data.languages.join(", ")
-              : response.data.languages || "No data",
-            workHistory: Array.isArray(response.data.workHistory)
-              ? response.data.workHistory.join(", ")
-              : response.data.workHistory || "No data",
-            departament: response.data.departament || "No data",
-            organization: response.data.organization || "No data",
-            birthDate: response.data.birthDate || "No data",
+            department: response.data.department || "No department",
             avatarURL: response.data.avatarURL || "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
             loading: false,
             error: null
-          });
+          }));
         } catch (error) {
           console.error("Failed to fetch user data:", error);
-          setUserData({
-            ...userData,
+          setUserData(u => ({
+            ...u,
             loading: false,
             error: error.response?.data?.message || error.message
-          });
+          }));
         }
       } else {
-        setUserData({
-          ...userData,
+        setUserData(u => ({
+          ...u,
           loading: false,
           error: "No user logged in"
-        });
+        }));
       }
     });
     return () => unsubscribe();
   }, []);
-
-  const toggleNotification = (notification) => {
-    setNotifications(prev => ({
-      ...prev,
-      [notification]: !prev[notification]
-    }));
-  };
 
   return (
     <div className="employee-header">
@@ -132,25 +91,6 @@ const EmployeeHeader = ({
 
       <div className="employee-header-actions">
         <div className="employee-action-icons">
-          <button
-            onClick={toggleDarkMode}
-            style={{
-              background: "none",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-            }}
-          >
-            <img
-              src={
-                darkMode
-                  ? "https://img.icons8.com/?size=100&id=83221&format=png&color=FFFFFF"
-                  : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
-              }
-              alt={darkMode ? "Light Mode" : "Dark Mode"}
-              style={{ width: "24px", height: "24px" }}
-            />
-          </button>
           <div className="employee-profile-dropdown" ref={notificationRef}>
             <button
               className="employee-profile-button"
@@ -161,28 +101,49 @@ const EmployeeHeader = ({
                 alt="Profile"
               />
             </button>
+
             {showNotifications && (
               <div className="employee-dropdown-menu">
-                <h3>Notification Settings</h3>
-                {Object.keys(notifications).map((item) => (
-                  <div key={item} className="employee-toggle-item">
-                    <span>{item}</span>
-                    <label className="employee-toggle-switch">
-                      <input
-                        type="checkbox"
-                        checked={notifications[item]}
-                        onChange={() => toggleNotification(item)}
-                      />
-                      <span className="employee-toggle-slider"></span>
-                    </label>
+                {/* Dark Mode Toggle (small icon in corner) */}
+                <button
+                  className="dark-mode-toggle-icon"
+                  onClick={toggleDarkMode}
+                  aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+                >
+                  <img
+                    src={
+                      darkMode
+                        ? "https://img.icons8.com/?size=100&id=83221&format=png&color=FFFFFF"
+                        : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
+                    }
+                    alt=""
+                    className="dark-mode-icon"
+                  />
+                </button>
+
+                {/* Employee Info Section */}
+                <div className="employee-dropdown-header">
+                  <img
+                    src={userData.avatarURL}
+                    alt="Profile"
+                    className="employee-dropdown-avatar"
+                  />
+                  <div className="employee-dropdown-info">
+                    <h4>{userData.name} {userData.surname}</h4>
+                    <p>{userData.email}</p>
+                    <div className="employee-department-badge">
+                      {userData.department}
+                    </div>
                   </div>
-                ))}
-                <div className="employee-dropdown-divider">
+                </div>
+
+                <div className="employee-dropdown-divider"></div>
+
+                {/* Logout Section */}
                 <button className="employee-logout-btn" onClick={() => {
-                  // Add your logout logic here
                   const auth = getAuth();
                   auth.signOut();
-                  window.location.href = "/"; // or your login route
+                  window.location.href = "/";
                 }}>
                   <img
                     src="https://img.icons8.com/?size=100&id=2444&format=png&color=FA5252"
@@ -191,7 +152,6 @@ const EmployeeHeader = ({
                   />
                   <span>Logout</span>
                 </button>
-                </div>
               </div>
             )}
           </div>
