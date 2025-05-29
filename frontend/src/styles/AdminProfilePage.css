@@ -488,37 +488,158 @@
   object-fit: cover;
 }
 
-.action-buttons-t {
-  display: flex;
-  gap: 0.5rem;
+/* CENTERED ACTIONS COLUMN HEADER */
+.employees-table-t th:last-child {
+  text-align: center !important;
+  vertical-align: middle !important;
 }
 
-.icon-btn-t {
-  width: 32px;
-  height: 32px;
+/* PERFECTLY ALIGNED ACTION BUTTONS - Centered under Actions column header */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+/* Ensure Actions column cells are properly centered */
+.employees-table-t td:last-child {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* Approve button - Blue gradient styling */
+.btn.success.sm {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
-  background: none;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+  min-width: 75px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.success.sm:hover {
+  background: linear-gradient(135deg, #3a0ca3 0%, #2d0a87 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.35);
+}
+
+.btn.success.sm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(67, 97, 238, 0.3);
+}
+
+/* Reject button - Lighter blue gradient styling */
+.btn.danger.sm {
+  background: linear-gradient(135deg, #4895ef 0%, #4361ee 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(72, 149, 239, 0.2);
+  min-width: 75px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.danger.sm:hover {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 149, 239, 0.35);
+}
+
+.btn.danger.sm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(72, 149, 239, 0.3);
+}
+
+/* Subtle shine effect for both buttons */
+.btn.success.sm::before,
+.btn.danger.sm::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.btn.success.sm:hover::before,
+.btn.danger.sm:hover::before {
+  left: 100%;
+}
+
+/* Alternative compact icon button style */
+.icon-btn-t {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: white;
   border: 1px solid var(--gray-light);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-btn-t.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: #10b981;
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+}
+
+.icon-btn-t.danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-color: #ef4444;
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.icon-btn-t:hover {
+  transform: translateY(-2px);
+}
+
+.icon-btn-t.success:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+}
+
+.icon-btn-t.danger:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
 }
 
 .activate-icon-t {
   width: 16px;
   height: 16px;
   object-fit: contain;
-}
-
-.icon-btn-t:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  transform: translateY(-2px);
-}
-
-.icon-btn-t:hover .activate-icon-t {
   filter: brightness(0) invert(1);
 }
 
@@ -904,7 +1025,7 @@ body.adm-dark-theme .employees-table-t td {
 }
 
 body.adm-dark-theme .employees-table-t tr:hover td {
-  background: rgba(67, 97, 238, 0.1);
+  background: rgba(67, 97, 238, 0.03);
 }
 
 body.adm-dark-theme .admin-profile-stats-t {
@@ -942,6 +1063,27 @@ body.adm-dark-theme .icon-btn-t:hover {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
+}
+
+/* Dark theme for the enhanced buttons */
+body.adm-dark-theme .btn.success.sm {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  box-shadow: 0 2px 4px rgba(67, 97, 238, 0.3);
+}
+
+body.adm-dark-theme .btn.success.sm:hover {
+  background: linear-gradient(135deg, #3a0ca3 0%, #2d0a87 100%);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4);
+}
+
+body.adm-dark-theme .btn.danger.sm {
+  background: linear-gradient(135deg, #4895ef 0%, #4361ee 100%);
+  box-shadow: 0 2px 4px rgba(72, 149, 239, 0.3);
+}
+
+body.adm-dark-theme .btn.danger.sm:hover {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+  box-shadow: 0 4px 12px rgba(72, 149, 239, 0.4);
 }
 
 body.adm-dark-theme .pagination {
@@ -1092,6 +1234,23 @@ body.adm-dark-theme .leave-filter-tab.active {
     height: 35px;
     font-size: 0.8rem;
   }
+
+  .action-buttons {
+    gap: 8px;
+    padding: 0 0.5rem;
+  }
+
+  .btn.success.sm,
+  .btn.danger.sm {
+    min-width: 65px;
+    font-size: 0.75rem;
+  }
+
+  /* Refresh button spacing on mobile */
+  .refresh-btn,
+  button.refresh-btn {
+    margin: 1rem 0;
+  }
 }
 
 @media (max-width: 576px) {
@@ -1123,15 +1282,26 @@ body.adm-dark-theme .leave-filter-tab.active {
   .modal-actions .btn-t {
     width: 100%;
   }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn.success.sm,
+  .btn.danger.sm {
+    width: 100%;
+    min-width: auto;
+  }
 }
 
-/* Performance Tab Refresh Button - Modified to be smaller */
+/* ENHANCED REFRESH DATA BUTTON - With proper spacing from other elements */
 .refresh-btn,
 button.refresh-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1rem; /* Reduced padding */
+  padding: 0.6rem 1rem;
   background: var(--primary);
   color: white;
   border: none;
@@ -1139,10 +1309,14 @@ button.refresh-btn {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.85rem; /* Reduced font size */
+  font-size: 0.85rem;
   font-family: inherit;
   box-shadow: 0 2px 8px rgba(67, 97, 238, 0.2);
-  height: 36px; /* Added fixed height */
+  height: 36px;
+  /* ADDED SPACING FROM OTHER ELEMENTS */
+  margin: 1.5rem 0; /* Top and bottom margin for separation */
+  margin-left: 0; /* Align to left */
+  margin-right: auto; /* Push other elements away */
 }
 
 .refresh-btn:hover,
@@ -1197,4 +1371,71 @@ body.adm-dark-theme .refresh-btn:disabled,
 body.adm-dark-theme button.refresh-btn:disabled {
   background: #64748b;
   color: #a0aec0;
+}
+
+/* Additional direct targeting for action-buttons */
+div[class*="action-buttons"] {
+  display: flex;
+  gap: 10px !important;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Force proper spacing and alignment */
+button.btn.success.sm {
+  margin-right: 5px !important;
+}
+
+button.btn.danger.sm {
+  margin-left: 5px !important;
+}
+
+/* Ensure the buttons don't touch in any case */
+button.btn.success.sm + button.btn.danger.sm {
+  margin-left: 10px !important;
+}
+
+/* Dark theme table hover fixes */
+body.adm-dark-theme .employees-table-t tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+body.adm-dark-theme .performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Ensure input fields and textareas maintain proper colors on hover in dark mode */
+body.adm-dark-theme .performance-table tr:hover input[type="number"],
+body.adm-dark-theme .performance-table tr:hover textarea {
+  background: #2d3748 !important;
+  color: #f8fafc !important;
+  border-color: #4a5568 !important;
+}
+
+/* Fix any white backgrounds that might appear on hover */
+body.adm-dark-theme .performance-table td:hover,
+body.adm-dark-theme .employees-table-t td:hover {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Ensure buttons remain visible on hover */
+body.adm-dark-theme .performance-table tr:hover .save-btn,
+body.adm-dark-theme .performance-table tr:hover .btn {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+/* Performance table specific hover fixes */
+.performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.05);
+  color: var(--text-primary);
+}
+
+/* Dark mode performance table hover */
+body.adm-dark-theme .performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
 }
