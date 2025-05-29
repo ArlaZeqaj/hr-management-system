@@ -1025,7 +1025,7 @@ body.adm-dark-theme .employees-table-t td {
 }
 
 body.adm-dark-theme .employees-table-t tr:hover td {
-  background: rgba(67, 97, 238, 0.1);
+  background: rgba(67, 97, 238, 0.03);
 }
 
 body.adm-dark-theme .admin-profile-stats-t {
@@ -1395,3 +1395,47 @@ button.btn.success.sm + button.btn.danger.sm {
   margin-left: 10px !important;
 }
 
+/* Dark theme table hover fixes */
+body.adm-dark-theme .employees-table-t tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+body.adm-dark-theme .performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Ensure input fields and textareas maintain proper colors on hover in dark mode */
+body.adm-dark-theme .performance-table tr:hover input[type="number"],
+body.adm-dark-theme .performance-table tr:hover textarea {
+  background: #2d3748 !important;
+  color: #f8fafc !important;
+  border-color: #4a5568 !important;
+}
+
+/* Fix any white backgrounds that might appear on hover */
+body.adm-dark-theme .performance-table td:hover,
+body.adm-dark-theme .employees-table-t td:hover {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Ensure buttons remain visible on hover */
+body.adm-dark-theme .performance-table tr:hover .save-btn,
+body.adm-dark-theme .performance-table tr:hover .btn {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+/* Performance table specific hover fixes */
+.performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.05);
+  color: var(--text-primary);
+}
+
+/* Dark mode performance table hover */
+body.adm-dark-theme .performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
