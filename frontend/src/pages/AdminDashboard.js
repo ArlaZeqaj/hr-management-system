@@ -73,7 +73,7 @@ const AdminDashboard = () => {
     dueDate: "",
     notes: "",
   };
-  
+
   const handleEditTask = (task) => {
     setNewTask(task);
     setEditMode(true);
@@ -478,14 +478,14 @@ const AdminDashboard = () => {
     }
   };
 
-    // Update the "Create New Task" button click handler:
-    const handleCreateNewTask = () => {
-      setNewTask(INITIAL_TASK_STATE); // Reset form
-      setEditMode(false);
-      setTaskBeingEdited(null);
-      setShowModal(true);
-    };
-    
+  // Update the "Create New Task" button click handler:
+  const handleCreateNewTask = () => {
+    setNewTask(INITIAL_TASK_STATE); // Reset form
+    setEditMode(false);
+    setTaskBeingEdited(null);
+    setShowModal(true);
+  };
+
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -1023,9 +1023,7 @@ const AdminDashboard = () => {
               <p>{formattedDate}</p>
             </div>
             <div className="quick-actions">
-            <a href="/new-hires"
-                className="quick-action"
-              >
+              <a href="/new-hires" className="quick-action">
                 <img
                   src="https://img.icons8.com/?size=100&id=85167&format=png&color=4318FF"
                   alt="Add Employee"
@@ -1126,7 +1124,6 @@ const AdminDashboard = () => {
                     />
                   </div>
                 </div>
-
                 {/* Payroll Trend Chart */}
                 <div className="chart-card">
                   <h3>Payroll Trend</h3>
@@ -1145,8 +1142,7 @@ const AdminDashboard = () => {
                     />
                   </div>
                 </div>
-
-                {/* Recent Activity */}
+                {/*  Recent Activity
                 <div className="recent-activity">
                   <h3>Recent Activity</h3>
                   <div className="activity-list">
@@ -1163,7 +1159,7 @@ const AdminDashboard = () => {
                         <span>2 hours ago</span>
                       </div>
                     </div>
-                    {/* <div className="activity-item">
+                    <div className="activity-item">
                       <div className="activity-icon">
                         <img
                           src="https://img.icons8.com/?size=100&id=87528&format=png&color=4318FF"
@@ -1175,7 +1171,7 @@ const AdminDashboard = () => {
                         <p>Engineering department - $85,000</p>
                         <span>1 day ago</span>
                       </div>
-                    </div> */}
+                    </div> 
                     <div className="activity-item">
                       <div className="activity-icon">
                         <img
@@ -1190,8 +1186,7 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-
+                </div> */}
                 {/* Hiring Trend Chart */}
                 <div className="chart-card">
                   <h3>Hiring Trend</h3>
@@ -1375,10 +1370,7 @@ const AdminDashboard = () => {
               <div className="tasks-tab-admin">
                 <div className="section-header">
                   <h2>Task Management</h2>
-                  <button
-                    className="view-all"
-                    onClick={handleCreateNewTask}
-                  >
+                  <button className="view-all" onClick={handleCreateNewTask}>
                     Create New Task
                   </button>
                 </div>
@@ -1427,7 +1419,7 @@ const AdminDashboard = () => {
                   ) : tasks.length === 0 ? (
                     <div className="no-tasks-ad">
                       <svg className="empty-icon-ad" viewBox="0 0 24 24">
-                      <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z" />
+                        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z" />
                       </svg>
                       <p>No tasks found. Create your first task!</p>
                     </div>
@@ -1435,12 +1427,11 @@ const AdminDashboard = () => {
                     filterTasks(tasks).map((task, index) => (
                       <div
                         key={index}
-                        className={`task-item ${task.completed ? "completed" : ""
-                          }`}
+                        className={`task-item ${
+                          task.completed ? "completed" : ""
+                        }`}
                       >
-                        <div className="task-id">
-                          #{index + 1}
-                        </div>
+                        <div className="task-id">#{index + 1}</div>
                         <div className="task-details-ad">
                           <h3>{task.title}</h3>
                           <p>Due: {task.dueDate}</p>
@@ -1461,9 +1452,9 @@ const AdminDashboard = () => {
                             View Details
                           </button>
                           <button
-      className="action-btn-ad edit"
-      onClick={() => handleEditTask(task)} // Updated handler
-    >
+                            className="action-btn-ad edit"
+                            onClick={() => handleEditTask(task)} // Updated handler
+                          >
                             Edit
                           </button>
 
