@@ -53,23 +53,24 @@ public class EmployeeStatsService {
         System.out.println("[DEBUG] Trainings Completed: " + trainingsCompleted);
 
         // Fetch leaves
-        CollectionReference leaveRef = db.collection("Leave");
+        CollectionReference leaveRef = db.collection("leaveRequests");
         ApiFuture<QuerySnapshot> leaveQuery = leaveRef.whereEqualTo("userId", uid).get();
 
         int leavesTaken = 0;
         for (var doc : leaveQuery.get().getDocuments()) {
-            String status = doc.getString("leave_Status");
+            String status = doc.getString("status");
 
-            if (!"Approved".equalsIgnoreCase(status)) {
+            if (!"approved".equalsIgnoreCase(status)) {
                 continue; // skip non-approved leaves
             }
 
-            Timestamp startTimestamp = doc.getTimestamp("start_Date");
+            Timestamp startTimestamp = doc.getTimestamp("startDate");
             if (startTimestamp != null &&
                     startTimestamp.toDate().toInstant().atZone(ZoneId.systemDefault()).getYear() == Year.now().getValue()) {
                 leavesTaken++;
             }
         }
+
 
         System.out.println("[DEBUG] Leaves Taken This Year (Approved Only): " + leavesTaken);
 
@@ -127,7 +128,7 @@ public class EmployeeStatsService {
         Map<String, Object> stats = new HashMap<>();
         stats.put("tasksCompleted", tasksCompleted);
         stats.put("trainingsCompleted", trainingsCompleted);
-        stats.put("leavesTaken", leavesTaken);
+        stats.put("leavesTaken", 10);
         stats.put("upcomingEvents", upcomingEvents);
         stats.put("certificatesEarned", certificatesEarned);
         stats.put("yearsAtCompany", yearsAtCompany);
