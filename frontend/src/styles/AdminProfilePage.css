@@ -464,6 +464,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
   background: #f8fafc;
 }
 
@@ -473,6 +474,7 @@
 
 .employees-table-t tr:hover td {
   background: rgba(67, 97, 238, 0.03);
+  transform: scale(1.001);
 }
 
 .employee-info-t {
@@ -728,6 +730,7 @@ body.adm-dark-theme .icon-action-btn i {
 [data-lucide="pencil"] {
   color: white !important;
   stroke: white !important;
+  font-size: 0.9rem !important;
 }
 
 /* Approve button - Blue gradient styling */
@@ -1786,6 +1789,87 @@ body.adm-dark-theme .performance-loading p {
   color: #a0aec0;
 }
 
+/* DARK THEME MODAL FIXES - CRITICAL ADDITIONS */
+/* Dark theme for modal overlay and popup elements */
+body.adm-dark-theme .modal-overlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+body.adm-dark-theme .modal-content {
+  background: #242c3e !important;
+  border-color: #2d3748 !important;
+  color: #f8fafc !important;
+}
+
+/* Dark theme for any popup or overlay elements */
+body.adm-dark-theme .popup,
+body.adm-dark-theme .overlay,
+body.adm-dark-theme .dropdown-menu,
+body.adm-dark-theme .tooltip {
+  background: #242c3e !important;
+  border-color: #2d3748 !important;
+  color: #f8fafc !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Dark theme for any white backgrounds that might appear */
+body.adm-dark-theme [style*="background: white"],
+body.adm-dark-theme [style*="background-color: white"],
+body.adm-dark-theme [style*="background:#fff"],
+body.adm-dark-theme [style*="background-color:#fff"] {
+  background: #242c3e !important;
+  color: #f8fafc !important;
+}
+
+/* Dark theme for form elements in modals */
+body.adm-dark-theme .modal-content input,
+body.adm-dark-theme .modal-content select,
+body.adm-dark-theme .modal-content textarea {
+  background: #1a1f2e !important;
+  border-color: #3a4a61 !important;
+  color: #f8fafc !important;
+}
+
+/* Dark theme for modal headers and footers */
+body.adm-dark-theme .modal-header,
+body.adm-dark-theme .modal-footer,
+body.adm-dark-theme .modal-actions {
+  background: #242c3e !important;
+  border-color: #2d3748 !important;
+}
+
+/* Dark theme for any card or panel elements */
+body.adm-dark-theme .card,
+body.adm-dark-theme .panel,
+body.adm-dark-theme .widget {
+  background: #242c3e !important;
+  border-color: #2d3748 !important;
+  color: #f8fafc !important;
+}
+
+/* Force dark theme on any remaining white elements */
+body.adm-dark-theme * {
+  scrollbar-color: #4a5568 #2d3748;
+}
+
+body.adm-dark-theme *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body.adm-dark-theme *::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+body.adm-dark-theme *::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 4px;
+}
+
+body.adm-dark-theme *::-webkit-scrollbar-thumb:hover {
+  background: #5a6578;
+}
+
 /* Loading Spinner */
 .adm-loading {
   display: flex;
@@ -2071,3 +2155,72 @@ button.btn.success.sm + button.btn.danger.sm {
   margin-left: 10px !important;
 }
 
+/* FIXED: Dark theme table row hover - Force proper dark hover for all tables */
+body.adm-dark-theme table tr:hover td,
+body.adm-dark-theme .table tr:hover td,
+body.adm-dark-theme .employees-table-t tr:hover td,
+body.adm-dark-theme .leave-table tr:hover td,
+body.adm-dark-theme .performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Force dark theme on any table row hover regardless of class */
+body.adm-dark-theme tr:hover {
+  background: rgba(67, 97, 238, 0.15) !important;
+}
+
+body.adm-dark-theme tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Override any inline styles or specific hover effects */
+body.adm-dark-theme [style*="background: white"]:hover,
+body.adm-dark-theme [style*="background-color: white"]:hover,
+body.adm-dark-theme [style*="background:#fff"]:hover,
+body.adm-dark-theme [style*="background-color:#fff"]:hover {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Specific fix for leave requests table hover */
+body.adm-dark-theme .leave-requests-table tr:hover td,
+body.adm-dark-theme .admin-content-section-t table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* SPECIFIC FIX FOR LEAVE REQUESTS TABLE HOVER IN DARK MODE */
+body.adm-dark-theme .leaves-table tr:hover td,
+body.adm-dark-theme .leave-requests-table tr:hover td,
+body.adm-dark-theme .admin-tab-content-t table tr:hover td,
+body.adm-dark-theme [class*="leave"] table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Override any specific leave table styling */
+body.adm-dark-theme table.leaves-table tr:hover,
+body.adm-dark-theme table.leave-requests-table tr:hover {
+  background: rgba(67, 97, 238, 0.15) !important;
+}
+
+body.adm-dark-theme table.leaves-table tr:hover td,
+body.adm-dark-theme table.leave-requests-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Force override any inline styles on leave table rows */
+body.adm-dark-theme .admin-content-section-t .admin-tab-content-t table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Additional targeting for any table within leave requests section */
+body.adm-dark-theme [data-tab="leave-requests"] table tr:hover td,
+body.adm-dark-theme .leave-tab table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
