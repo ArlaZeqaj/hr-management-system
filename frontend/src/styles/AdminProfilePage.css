@@ -494,20 +494,240 @@
   vertical-align: middle !important;
 }
 
-/* PERFECTLY ALIGNED ACTION BUTTONS - Centered under Actions column header */
+/* ACTION BUTTONS - Ensure visibility in both light and dark modes */
 .action-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 }
 
-/* Ensure Actions column cells are properly centered */
-.employees-table-t td:last-child {
-  text-align: center !important;
-  vertical-align: middle !important;
+/* Edit/Update Button - Visible in light mode */
+.edit-btn,
+.update-btn,
+.btn-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0.5rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(67, 97, 238, 0.2);
+  font-size: 0.85rem;
+}
+
+.edit-btn:hover,
+.update-btn:hover,
+.btn-edit:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+}
+
+/* Icon styling for action buttons */
+.edit-btn i,
+.update-btn i,
+.btn-edit i {
+  font-size: 0.9rem;
+  color: white;
+}
+
+/* Alternative icon button styling */
+.icon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(67, 97, 238, 0.2);
+  margin: 0 2px;
+}
+
+.icon-action-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+.icon-action-btn.edit {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+}
+
+.icon-action-btn.delete {
+  background: linear-gradient(135deg, #ef476f 0%, #dc2626 100%);
+}
+
+.icon-action-btn.view {
+  background: linear-gradient(135deg, #06d6a0 0%, #059669 100%);
+}
+
+/* Ensure icons are visible */
+.icon-action-btn i {
+  font-size: 0.9rem;
+  color: white !important;
+}
+
+/* Generic action button that works with any icon library */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0.4rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 0.8rem;
+  margin: 0 2px;
+}
+
+.action-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(67, 97, 238, 0.25);
+}
+
+.action-btn.primary {
+  background: var(--primary);
+}
+
+.action-btn.danger {
+  background: var(--danger);
+}
+
+.action-btn.success {
+  background: var(--success);
+}
+
+.action-btn.warning {
+  background: var(--warning);
+}
+
+/* Ensure text/icons are always visible */
+.action-btn,
+.action-btn i,
+.action-btn span {
+  color: white !important;
+}
+
+/* Light mode specific fixes */
+body:not(.adm-dark-theme) .action-buttons button,
+body:not(.adm-dark-theme) .action-btn,
+body:not(.adm-dark-theme) .edit-btn,
+body:not(.adm-dark-theme) .update-btn,
+body:not(.adm-dark-theme) .icon-action-btn {
+  background: var(--primary) !important;
+  color: white !important;
+  border: 1px solid var(--primary) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body:not(.adm-dark-theme) .action-buttons button i,
+body:not(.adm-dark-theme) .action-btn i,
+body:not(.adm-dark-theme) .edit-btn i,
+body:not(.adm-dark-theme) .update-btn i,
+body:not(.adm-dark-theme) .icon-action-btn i {
+  color: white !important;
+  opacity: 1 !important;
+}
+
+/* Dark theme action buttons */
+body.adm-dark-theme .action-buttons button,
+body.adm-dark-theme .action-btn,
+body.adm-dark-theme .edit-btn,
+body.adm-dark-theme .update-btn,
+body.adm-dark-theme .icon-action-btn {
+  background: var(--primary) !important;
+  color: white !important;
+  border: 1px solid var(--primary) !important;
+}
+
+body.adm-dark-theme .action-buttons button i,
+body.adm-dark-theme .action-btn i,
+body.adm-dark-theme .edit-btn i,
+body.adm-dark-theme .update-btn i,
+body.adm-dark-theme .icon-action-btn i {
+  color: white !important;
+}
+
+/* Force visibility for any action button in the actions column */
+.employees-table-t td:last-child button,
+.employees-table-t td:last-child .btn,
+.employees-table-t td:last-child a {
+  background: var(--primary) !important;
+  color: white !important;
+  border: 1px solid var(--primary) !important;
+  padding: 0.4rem 0.8rem !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  transition: all 0.3s ease !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.employees-table-t td:last-child button:hover,
+.employees-table-t td:last-child .btn:hover,
+.employees-table-t td:last-child a:hover {
+  background: var(--primary-dark) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 6px rgba(67, 97, 238, 0.25) !important;
+}
+
+/* Ensure icons inside action buttons are visible */
+.employees-table-t td:last-child button i,
+.employees-table-t td:last-child .btn i,
+.employees-table-t td:last-child a i,
+.employees-table-t td:last-child button svg,
+.employees-table-t td:last-child .btn svg,
+.employees-table-t td:last-child a svg {
+  color: white !important;
+  fill: white !important;
+  font-size: 0.9rem !important;
+}
+
+/* If using Font Awesome or similar icon fonts */
+.fa-edit,
+.fa-pen,
+.fa-pencil,
+.fa-pencil-alt,
+.fas.fa-edit,
+.fas.fa-pen,
+.fas.fa-pencil,
+.fas.fa-pencil-alt {
+  color: white !important;
+}
+
+/* If using Lucide React icons or similar */
+[data-lucide="edit"],
+[data-lucide="pen"],
+[data-lucide="pencil"] {
+  color: white !important;
+  stroke: white !important;
 }
 
 /* Approve button - Blue gradient styling */
@@ -967,6 +1187,297 @@ body.adm-dark-theme .status-badge.pending {
   justify-content: center;
 }
 
+/* MODERN PERFORMANCE DASHBOARD STYLES */
+
+/* Enhanced Performance Dashboard Container */
+.performance-dashboard {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 1rem 0;
+  border: 1px solid var(--gray-light);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.performance-dashboard h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Modern Dashboard Controls */
+.dashboard-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  border: 1px solid var(--gray-light);
+}
+
+.date-selectors {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.date-selectors label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 0.9rem;
+}
+
+/* Modern Select Dropdown */
+.date-selectors select {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-light);
+  border-radius: 12px;
+  background: white;
+  color: var(--dark);
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-width: 120px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+.date-selectors select:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+  transform: translateY(-1px);
+}
+
+.date-selectors select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Modern Year Input */
+.date-selectors input[type="number"] {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-light);
+  border-radius: 12px;
+  background: white;
+  color: var(--dark);
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-width: 100px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.date-selectors input[type="number"]:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+  transform: translateY(-1px);
+}
+
+.date-selectors input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Enhanced Performance Table */
+.performance-table-container {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--gray-light);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.performance-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.performance-table th {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: var(--dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1.25rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--gray-light);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.performance-table td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--gray-light);
+  vertical-align: middle;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.03);
+  transform: scale(1.001);
+}
+
+/* Modern Score Input */
+.performance-table input[type="number"] {
+  width: 80px;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  background: white;
+  color: var(--dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.performance-table input[type="number"]:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+  transform: translateY(-1px);
+}
+
+.performance-table input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Modern Textarea */
+.performance-table textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.75rem;
+  border: 2px solid var(--gray-light);
+  border-radius: 10px;
+  background: white;
+  color: var(--dark);
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.performance-table textarea:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+}
+
+.performance-table textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+/* Modern Save Button */
+.save-btn {
+  padding: 0.7rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(67, 97, 238, 0.35);
+}
+
+.save-btn:active {
+  transform: translateY(0);
+}
+
+.save-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.save-btn:hover::before {
+  left: 100%;
+}
+
+/* Count Cell Styling */
+.count-cell {
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Employee Name Styling */
+.performance-table td:first-child {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 0.95rem;
+}
+
+/* Loading States */
+.performance-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: white;
+  border-radius: 20px;
+  margin: 1rem 0;
+}
+
+.performance-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--gray-light);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.performance-loading p {
+  color: var(--gray);
+  font-weight: 500;
+}
+
 /* DARK THEME IMPROVEMENTS */
 body.adm-dark-theme {
   background-color: #1a1f2e;
@@ -1025,7 +1536,8 @@ body.adm-dark-theme .employees-table-t td {
 }
 
 body.adm-dark-theme .employees-table-t tr:hover td {
-  background: rgba(67, 97, 238, 0.03);
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
 }
 
 body.adm-dark-theme .admin-profile-stats-t {
@@ -1159,6 +1671,121 @@ body.adm-dark-theme .leave-filter-tab.active {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Dark theme for Performance Dashboard */
+body.adm-dark-theme .performance-dashboard {
+  background: #242c3e;
+  border-color: #2d3748;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+body.adm-dark-theme .performance-dashboard h2 {
+  color: #f8fafc;
+  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body.adm-dark-theme .dashboard-controls {
+  background: linear-gradient(135deg, #2d3748 0%, #1a1f2e 100%);
+  border-color: #3a4a61;
+}
+
+body.adm-dark-theme .date-selectors label {
+  color: #f8fafc;
+}
+
+body.adm-dark-theme .date-selectors select,
+body.adm-dark-theme .date-selectors input[type="number"] {
+  background: #1a1f2e;
+  border-color: #3a4a61;
+  color: #f8fafc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.adm-dark-theme .date-selectors select:hover,
+body.adm-dark-theme .date-selectors input[type="number"]:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+}
+
+body.adm-dark-theme .date-selectors select:focus,
+body.adm-dark-theme .date-selectors input[type="number"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+body.adm-dark-theme .performance-table-container {
+  background: #242c3e;
+  border-color: #2d3748;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+body.adm-dark-theme .performance-table th {
+  background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+  color: #f8fafc;
+  border-bottom-color: #3a4a61;
+}
+
+body.adm-dark-theme .performance-table td {
+  background: #242c3e;
+  border-bottom-color: #2d3748;
+  color: #f8fafc;
+}
+
+body.adm-dark-theme .performance-table tr:hover td {
+  background: rgba(67, 97, 238, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+body.adm-dark-theme .performance-table input[type="number"],
+body.adm-dark-theme .performance-table textarea {
+  background: #1a1f2e;
+  border-color: #3a4a61;
+  color: #f8fafc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.adm-dark-theme .performance-table input[type="number"]:hover,
+body.adm-dark-theme .performance-table textarea:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+}
+
+body.adm-dark-theme .performance-table input[type="number"]:focus,
+body.adm-dark-theme .performance-table textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+body.adm-dark-theme .performance-table tr:hover input[type="number"],
+body.adm-dark-theme .performance-table tr:hover textarea {
+  background: #1a1f2e !important;
+  color: #f8fafc !important;
+  border-color: #4a5568 !important;
+}
+
+body.adm-dark-theme .count-cell {
+  color: var(--primary-light);
+}
+
+body.adm-dark-theme .performance-table td:first-child {
+  color: #f8fafc;
+}
+
+body.adm-dark-theme .performance-loading {
+  background: #242c3e;
+}
+
+body.adm-dark-theme .performance-loading-spinner {
+  border-color: #3a4a61;
+  border-top-color: var(--primary);
+}
+
+body.adm-dark-theme .performance-loading p {
+  color: #a0aec0;
+}
+
 /* Loading Spinner */
 .adm-loading {
   display: flex;
@@ -1251,6 +1878,29 @@ body.adm-dark-theme .leave-filter-tab.active {
   button.refresh-btn {
     margin: 1rem 0;
   }
+
+  /* Performance Dashboard Mobile */
+  .dashboard-controls {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .date-selectors {
+    justify-content: center;
+  }
+
+  .performance-table-container {
+    overflow-x: auto;
+  }
+
+  .performance-table input[type="number"] {
+    width: 60px;
+  }
+
+  .performance-table textarea {
+    min-height: 60px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -1293,6 +1943,19 @@ body.adm-dark-theme .leave-filter-tab.active {
     width: 100%;
     min-width: auto;
   }
+
+  .performance-dashboard {
+    padding: 1rem;
+  }
+
+  .performance-dashboard h2 {
+    font-size: 1.5rem;
+  }
+
+  .date-selectors {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* ENHANCED REFRESH DATA BUTTON - With proper spacing from other elements */
@@ -1301,29 +1964,25 @@ button.refresh-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: var(--primary);
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   border: none;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.85rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.9rem;
   font-family: inherit;
-  box-shadow: 0 2px 8px rgba(67, 97, 238, 0.2);
-  height: 36px;
-  /* ADDED SPACING FROM OTHER ELEMENTS */
-  margin: 1.5rem 0; /* Top and bottom margin for separation */
-  margin-left: 0; /* Align to left */
-  margin-right: auto; /* Push other elements away */
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+  position: relative;
+  overflow: hidden;
 }
 
 .refresh-btn:hover,
 button.refresh-btn:hover {
-  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+  box-shadow: 0 8px 20px rgba(67, 97, 238, 0.35);
 }
 
 .refresh-btn:active,
@@ -1338,6 +1997,23 @@ button.refresh-btn:active {
 
 .refresh-btn:hover i {
   transform: rotate(180deg);
+}
+
+.refresh-btn::before,
+button.refresh-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.refresh-btn:hover::before,
+button.refresh-btn:hover::before {
+  left: 100%;
 }
 
 .refresh-btn:disabled,
@@ -1358,13 +2034,13 @@ button.refresh-btn:disabled:hover {
 /* Dark theme for refresh button */
 body.adm-dark-theme .refresh-btn,
 body.adm-dark-theme button.refresh-btn {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
 }
 
 body.adm-dark-theme .refresh-btn:hover,
 body.adm-dark-theme button.refresh-btn:hover {
-  background: var(--primary-dark);
+  box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
 }
 
 body.adm-dark-theme .refresh-btn:disabled,
@@ -1395,47 +2071,3 @@ button.btn.success.sm + button.btn.danger.sm {
   margin-left: 10px !important;
 }
 
-/* Dark theme table hover fixes */
-body.adm-dark-theme .employees-table-t tr:hover td {
-  background: rgba(67, 97, 238, 0.15) !important;
-  color: #f8fafc !important;
-}
-
-body.adm-dark-theme .performance-table tr:hover td {
-  background: rgba(67, 97, 238, 0.15) !important;
-  color: #f8fafc !important;
-}
-
-/* Ensure input fields and textareas maintain proper colors on hover in dark mode */
-body.adm-dark-theme .performance-table tr:hover input[type="number"],
-body.adm-dark-theme .performance-table tr:hover textarea {
-  background: #2d3748 !important;
-  color: #f8fafc !important;
-  border-color: #4a5568 !important;
-}
-
-/* Fix any white backgrounds that might appear on hover */
-body.adm-dark-theme .performance-table td:hover,
-body.adm-dark-theme .employees-table-t td:hover {
-  background: rgba(67, 97, 238, 0.15) !important;
-  color: #f8fafc !important;
-}
-
-/* Ensure buttons remain visible on hover */
-body.adm-dark-theme .performance-table tr:hover .save-btn,
-body.adm-dark-theme .performance-table tr:hover .btn {
-  background: var(--primary) !important;
-  color: white !important;
-}
-
-/* Performance table specific hover fixes */
-.performance-table tr:hover td {
-  background: rgba(67, 97, 238, 0.05);
-  color: var(--text-primary);
-}
-
-/* Dark mode performance table hover */
-body.adm-dark-theme .performance-table tr:hover td {
-  background: rgba(67, 97, 238, 0.15) !important;
-  color: #f8fafc !important;
-}
