@@ -168,12 +168,13 @@
 
 /* ===== Base Styles ===== */
 .profile-page-container-ep {
-  padding-left: 20px;
+  padding: 0;
   display: flex;
   min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--light);
-  color: var(--dark);
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  width: 100%;
 }
 
 /* Typography Enhancements */
@@ -186,21 +187,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== Main Content Area ===== */
 .profile-main-content-ep {
-  margin-left: 250px;
-  width: calc(100% - 280px);
-  padding: 2rem;
+  margin-left: 280px; /* Increased from 250px to 280px for more spacing */
+  width: calc(100% - 320px); /* Adjusted to account for the increased margin + extra padding */
+  padding: 2.5rem; /* Increased from 2rem to 2.5rem */
   overflow-y: auto;
+  max-width: none;
 }
 
 /* ===== Profile Section ===== */
 .profile-section-ep {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  align-items: stretch;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem; /* Increased from 1.5rem to 2rem for better spacing */
+  margin-bottom: 2rem; /* Increased from 1.5rem to 2rem */
+  width: 100%;
 }
-
 
 /* Profile Card with Cover Photo */
 .profile-card-ep {
@@ -209,19 +210,15 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-md);
   position: relative;
   transition: var(--transition);
-  flex: 1 1 300px; /* Grow, shrink, with minimum width of 300px */
-  min-width: 300px; /* Ensure it doesn't get too small */
-  max-width: 400px; /* Prevent it from growing too large */
-  overflow: hidden; /* This will clip the cover photo to the border radius */
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Birthday Card */
 .birthday-card-container-ep {
   position: relative;
   z-index: 1;
-  flex: 1 1 300px;
-  min-width: 300px;
-  max-width: 350px;
+  width: 100%;
   height: 100%;
 }
 
@@ -277,7 +274,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   align-items: center;
   transition: var(--transition-slow);
-  z-index: 3; /* Higher than content */
+  z-index: 3;
 }
 
 .profile-card-ep:hover .profile-photo-container-ep {
@@ -506,9 +503,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 1.8rem;
   box-shadow: var(--shadow-md);
   transition: var(--transition);
-  flex: 1 1 300px;
-  min-width: 300px;
-  max-width: 350px;
+  width: 100%;
   height: 100%;
 }
 
@@ -812,17 +807,19 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ===== Content Section ===== */
 .content-section-ep {
-  display: flex;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem; /* Increased from 1.5rem to 2rem */
+  width: 100%;
 }
 
 .projects-card-ep {
-  flex: 2;
   background: var(--bg-card);
   border-radius: var(--border-radius-lg);
   padding: 1.8rem;
   box-shadow: var(--shadow-md);
   transition: var(--transition);
+  width: 100%;
 }
 
 .projects-card-ep:hover {
@@ -831,12 +828,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .info-card-ep {
-  flex: 3;
   background: var(--bg-card);
   border-radius: var(--border-radius-lg);
   padding: 1.8rem;
   box-shadow: var(--shadow-md);
   transition: var(--transition);
+  width: 100%;
 }
 
 .info-card-ep:hover {
@@ -916,7 +913,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .project-meta-ep .bullet-ep {
-  margin: 0 8px; /* Adjust spacing as needed */
+  margin: 0 8px;
   display: inline-block;
 }
 
@@ -1019,33 +1016,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ===== Responsive Design ===== */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
   .profile-section-ep {
-    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
   }
 
-  .birthday-card, .upload-card-ep {
-    width: 100%;
+  .upload-card-ep {
+    grid-column: 1 / -1;
   }
 
   .content-section-ep {
-    flex-direction: column;
-  }
-
-  .profile-card-ep,
-  .birthday-card-container-ep,
-  .upload-card-ep {
-    flex: 1 1 calc(50% - 1.5rem);
-    max-width: calc(50% - 1.5rem);
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 992px) {
-
-  .profile-main-content {
+  .profile-main-content-ep {
     margin-left: 0;
     width: 100%;
     padding: 1.5rem;
+  }
+
+  .profile-section-ep {
+    grid-template-columns: 1fr;
   }
 
   .menu-toggle {
@@ -1070,14 +1064,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 768px) {
   .profile-section-ep {
-    flex-direction: column;
-  }
-
-  .profile-card-ep,
-  .birthday-card-container-ep,
-  .upload-card-ep {
-    flex: 1 1 100%;
-    max-width: 100%;
+    grid-template-columns: 1fr;
   }
 
   .header {
