@@ -63,15 +63,37 @@ const AdminDashboard = () => {
     }
   };
 
+  const INITIAL_TASK_STATE = {
+    title: "",
+    description: "",
+    assignees: [],
+    priority: "low",
+    status: "Pending",
+    startDate: "",
+    dueDate: "",
+    notes: "",
+  };
+  
+  const handleEditTask = (task) => {
+    setNewTask(task);
+    setEditMode(true);
+    setTaskBeingEdited(task);
+    setShowModal(true);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    setEditMode(false);
+    setTaskBeingEdited(null);
+    setNewTask(INITIAL_TASK_STATE);
+  };
+
   const [searchQuery, setSearchQuery] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   ///tasks
   //const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState({
-    title: "",
-    dueDate: "",
-    priority: "low",
-  });
+  const [newTask, setNewTask] = useState(INITIAL_TASK_STATE);
+
   const [showModal, setShowModal] = useState(false);
   const [viewingTask, setViewingTask] = useState(null);
 
@@ -441,6 +463,8 @@ const AdminDashboard = () => {
         notes: "",
       });
 
+      // On success:
+      setNewTask(INITIAL_TASK_STATE); // Reset form
       setShowModal(false);
       setEditMode(false);
       setTaskBeingEdited(null);
@@ -454,6 +478,14 @@ const AdminDashboard = () => {
     }
   };
 
+    // Update the "Create New Task" button click handler:
+    const handleCreateNewTask = () => {
+      setNewTask(INITIAL_TASK_STATE); // Reset form
+      setEditMode(false);
+      setTaskBeingEdited(null);
+      setShowModal(true);
+    };
+    
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -1345,7 +1377,7 @@ const AdminDashboard = () => {
                   <h2>Task Management</h2>
                   <button
                     className="view-all"
-                    onClick={() => setShowModal(true)}
+                    onClick={handleCreateNewTask}
                   >
                     Create New Task
                   </button>
@@ -1434,23 +1466,9 @@ const AdminDashboard = () => {
                             View Details
                           </button>
                           <button
-                            className="action-btn-ad edit"
-                            onClick={() => {
-                              setTaskBeingEdited(task);
-                              setNewTask({
-                                title: task.title || "",
-                                description: task.description || "",
-                                assignees: task.assignees || [],
-                                priority: task.priority || "low",
-                                status: task.status || "Pending",
-                                startDate: task.startDate || "",
-                                dueDate: task.dueDate || "",
-                                notes: task.notes || "",
-                              });
-                              setEditMode(true);
-                              setShowModal(true);
-                            }}
-                          >
+      className="action-btn-ad edit"
+      onClick={() => handleEditTask(task)} // Updated handler
+    >
                             Edit
                           </button>
 
@@ -1658,7 +1676,7 @@ const AdminDashboard = () => {
                           <button
                             type="button"
                             className="cancel-btn-ad"
-                            onClick={() => setShowModal(false)}
+                            onClick={handleCancel}
                           >
                             Cancel
                           </button>

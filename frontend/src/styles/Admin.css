@@ -1,3 +1,18 @@
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+.admin-main-content {
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  padding: 2rem;
+  overflow-y: auto;
+}
+
 /* Dashboard Header */
 .dashboard-header {
   display: flex;
