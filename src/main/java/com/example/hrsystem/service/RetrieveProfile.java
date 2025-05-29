@@ -20,23 +20,68 @@ public class RetrieveProfile {
         System.out.println("🫖 Debug Tea: getEmployeeByEmail called with email: " + email);
         Firestore db = FirestoreClient.getFirestore();
 
-        Query query = db.collection(COLLECTION_NAME)
-                .whereEqualTo("email", email)
-                .limit(1);
+        try {
+            Query query = db.collection(COLLECTION_NAME)
+                    .whereEqualTo("email", email)
+                    .limit(1);
 
-        ApiFuture<QuerySnapshot> querySnapshot = query.get();
-        List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            QuerySnapshot snapshot = querySnapshot.get();
+            List<QueryDocumentSnapshot> documents = snapshot.getDocuments();
 
-        System.out.println("🫖 Debug Tea: Query returned " + documents.size() + " documents");
+            System.out.println("🫖 Debug Tea: Query returned " + documents.size() + " documents");
 
-        if (!documents.isEmpty()) {
-            Employee emp = documents.get(0).toObject(Employee.class);
-            System.out.println("🫖 Debug Tea: Found employee: " + emp);
+            if (documents.isEmpty()) {
+                System.out.println("🫖 Debug Tea: No employee found with email: " + email);
+                return null;
+            }
+
+            QueryDocumentSnapshot doc = documents.get(0);
+            Map<String, Object> data = doc.getData();
+            System.out.println("🫖 Debug Tea: Raw document data: " + data);
+
+            // Manual mapping like in getAllEmployees()
+            Employee emp = new Employee();
+            emp.setId(doc.getId());
+            emp.setName((String) data.get("name"));
+            emp.setSurname((String) data.get("surname"));
+            emp.setEmail((String) data.get("email"));
+            emp.setDepartment((String) data.get("department"));
+            emp.setPosition((String) data.get("position"));
+            emp.setBio((String) data.get("bio"));
+            emp.setBirthDate((String) data.get("birthDate"));
+            emp.setAvatarURL((String) data.get("avatarURL"));
+            emp.setEducation((String) data.get("education"));
+            emp.setOrganization((String) data.get("organization"));
+
+            // Handle languages array
+            List<Object> rawLangs = (List<Object>) data.get("languages");
+            if (rawLangs != null) {
+                List<String> languages = new ArrayList<>();
+                for (Object o : rawLangs) {
+                    languages.add(o.toString());
+                }
+                emp.setLanguages(languages);
+            }
+
+            // Handle workHistory array
+            List<Object> rawWorkHistory = (List<Object>) data.get("workHistory");
+            if (rawWorkHistory != null) {
+                List<String> workHistory = new ArrayList<>();
+                for (Object o : rawWorkHistory) {
+                    workHistory.add(o.toString());
+                }
+                emp.setWorkHistory(workHistory);
+            }
+
+            System.out.println("🫖 Debug Tea: Successfully mapped employee: " + emp);
             return emp;
-        }
 
-        System.out.println("🫖 Debug Tea: No employee found with email: " + email);
-        return null;
+        } catch (Exception e) {
+            System.err.println("🔥 Error in getEmployeeByEmail: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public Employee getEmployeeByDocumentId(String documentId) throws ExecutionException, InterruptedException {
@@ -77,17 +122,26 @@ public class RetrieveProfile {
             try {
                 Employee emp = new Employee();
                 emp.setId(doc.getId());
-                emp.setName((String) data.get("Name"));
-                emp.setSurname((String) data.get("Surname"));
+                emp.setName((String) data.get("name"));
+                emp.setSurname((String) data.get("surname"));
                 emp.setEmail((String) data.get("email"));
-                emp.setDepartment((String) data.get("Department"));
-                emp.setPosition((String) data.get("Position"));
-                emp.setBio((String) data.get("Bio"));
-                emp.setPhoneNumber((String) data.get("Phone Number"));
-                emp.setAddress((String) data.get("Address"));
+                emp.setDepartment((String) data.get("department"));
+                emp.setPosition((String) data.get("position"));
+                emp.setBio((String) data.get("bio"));
+                emp.setBirthDate((String) data.get("birthDate"));
+                emp.setPhoneNumber((String) data.get("phoneNumber"));
+                emp.setAddress((String) data.get("address"));
                 emp.setAvatarURL((String) data.get("avatarURL"));
                 emp.setEducation((String) data.get("education"));
-                emp.setLanguages((List<String>) data.get("languages"));
+
+                List<Object> rawLangs = (List<Object>) data.get("languages");
+                if (rawLangs != null) {
+                    List<String> languages = new ArrayList<>();
+                    for (Object o : rawLangs) {
+                        languages.add(o.toString());
+                    }
+                    emp.setLanguages(languages);
+                }
 
                 Timestamp joinDateTs = (Timestamp) data.get("joinDate");
                 if (joinDateTs != null) {
@@ -105,8 +159,6 @@ public class RetrieveProfile {
         return employees;
     }
 
-
-
     public boolean updateEmployeeFields(String id, Employee updatedFields) throws ExecutionException, InterruptedException {
         System.out.println("🫖 Debug Tea: updateEmployeeFields called with ID: " + id);
         Firestore db = FirestoreClient.getFirestore();
@@ -115,32 +167,25 @@ public class RetrieveProfile {
         Map<String, Object> updates = new HashMap<>();
 
         if (updatedFields.getName() != null) {
-            updates.put("Name", updatedFields.getName());
-            System.out.println("🫖 Debug Tea: Updating name -> " + updatedFields.getName());
+            updates.put("name", updatedFields.getName());
         }
         if (updatedFields.getSurname() != null) {
-            updates.put("Surname", updatedFields.getSurname());
-            System.out.println("🫖 Debug Tea: Updating surname -> " + updatedFields.getSurname());
+            updates.put("surname", updatedFields.getSurname());
         }
         if (updatedFields.getDepartment() != null) {
-            updates.put("Department", updatedFields.getDepartment());
-            System.out.println("🫖 Debug Tea: Updating department -> " + updatedFields.getDepartment());
+            updates.put("department", updatedFields.getDepartment());
         }
         if (updatedFields.getPosition() != null) {
-            updates.put("Position", updatedFields.getPosition());
-            System.out.println("🫖 Debug Tea: Updating position -> " + updatedFields.getPosition());
+            updates.put("position", updatedFields.getPosition());
         }
         if (updatedFields.getBio() != null) {
-            updates.put("Bio", updatedFields.getBio());
-            System.out.println("🫖 Debug Tea: Updating bio -> " + updatedFields.getBio());
+            updates.put("bio", updatedFields.getBio());
         }
         if (updatedFields.getPhoneNumber() != null) {
-            updates.put("Phone Number", updatedFields.getPhoneNumber());
-            System.out.println("🫖 Debug Tea: Updating phone number -> " + updatedFields.getPhoneNumber());
+            updates.put("phoneNumber", updatedFields.getPhoneNumber());
         }
         if (updatedFields.getAddress() != null) {
-            updates.put("Address", updatedFields.getAddress());
-            System.out.println("🫖 Debug Tea: Updating address -> " + updatedFields.getAddress());
+            updates.put("address", updatedFields.getAddress());
         }
 
         if (updates.isEmpty()) {

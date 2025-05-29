@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
 import 'inter-ui/inter.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -29,25 +29,13 @@ const ProfilePageEmployee = () => {
     bio: "",
     education: "",
     languages: "",
-    departament: "",
+    department: "",
     workHistory: "",
     organization: "",
     birthDate: "",
     avatarURL: "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
     loading: true,
     error: null
-  });
-  const [notifications, setNotifications] = useState({
-    "Item update notifications": false,
-    "Item comment notifications": false,
-    "Buyer review notifications": false,
-    "Rating reminders notifications": true,
-    "Meetups near you notifications": false,
-    "Company news notifications": false,
-    "New launches and projects": false,
-    "Monthly product changes": false,
-    "Subscribe to newsletter": false,
-    "Email me when someone follows me": false,
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [currentProjects, setCurrentProjects] = useState([]);
@@ -106,10 +94,6 @@ const ProfilePageEmployee = () => {
     setIsUploading(true);
 
     try {
-      const user = auth.currentUser;
-      if (!user) throw new Error('User not authenticated');
-
-      const token = await user.getIdToken(true);
       const formData = new FormData();
 
       selectedFiles.forEach(file => {
@@ -156,34 +140,47 @@ const ProfilePageEmployee = () => {
   const fetchUserData = useCallback(async (user) => {
     try {
       const token = await user.getIdToken();
-      const response = await axios.get(`/api/employees/by-email?email=${user.email}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-        timeout: 5000
-      });
+      const response = await axios.get(
+        `http://localhost:8080/api/employees/by-email?email=${encodeURIComponent(user.email)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          timeout: 5000
+        }
+      );
 
-      setUserData(prev => ({
+      const employeeData = response.data;
+      console.log("Received employee data:", employeeData);
+
+      setUserData((prev) => ({
         ...prev,
-        name: response.data.firstName || response.data.name || "",
-        surname: response.data.lastName || response.data.surname || "",
-        email: response.data.email || user.email,
-        bio: response.data.bio || "No bio",
-        education: response.data.education || "No data",
-        languages: Array.isArray(response.data.languages)
-          ? response.data.languages.join(", ")
-          : response.data.languages || "No data",
-        workHistory: Array.isArray(response.data.workHistory)
-          ? response.data.workHistory.join(", ")
-          : response.data.workHistory || "No data",
-        departament: response.data.departament || "No data",
-        organization: response.data.organization || "No data",
-        birthDate: response.data.birthDate || "No data",
-        avatarURL: response.data.avatarURL || prev.avatarURL,
+        name: employeeData.name || "",
+        surname: employeeData.surname || "",
+        email: employeeData.email,
+        bio: employeeData.bio || "No bio",
+        education: employeeData.education || "No data",
+        languages: employeeData.languages
+          ? (Array.isArray(employeeData.languages)
+              ? employeeData.languages.join(", ")
+              : employeeData.languages)
+          : "No data",
+        workHistory: employeeData.workHistory
+          ? (Array.isArray(employeeData.workHistory)
+            ? employeeData.workHistory.join(", ")
+            : employeeData.workHistory)
+          : "No data",
+        department: employeeData.department || "No data",
+        organization: employeeData.organization || "No data",
+        birthDate: employeeData.birthDate || "No data",
+        avatarURL: employeeData.avatarURL || prev.avatarURL,
         loading: false,
         error: null
       }));
+
     } catch (error) {
       console.error("Failed to fetch user data:", error);
-      setUserData(prev => ({
+      setUserData((prev) => ({
         ...prev,
         loading: false,
         error: error.response?.data?.message || error.message
@@ -242,21 +239,17 @@ const ProfilePageEmployee = () => {
     else if (menuItem === "Leave Request") {
       navigate("/leave-request");
     }
+    else if (menuItem === "Documents") {
+      navigate("/documents");
+    }
   };
 
   const toggleDarkMode = useCallback(() => {
     setDarkMode(prev => !prev);
   }, []);
 
-  const toggleNotification = useCallback((notification) => {
-    setNotifications(prev => ({
-      ...prev,
-      [notification]: !prev[notification]
-    }));
-  }, []);
-
   const handleSendWish = useCallback((employee) => {
-    alert(`Sending birthday wish to ${employee.name}!`);
+
   }, []);
 
   const handleProjectClick = useCallback(() => {
@@ -287,7 +280,7 @@ const ProfilePageEmployee = () => {
           {userData.name} {userData.surname}
         </h1>
         <p className="profile-title-ep">{userData.email}</p>
-        <p className="profile-title-ep">{userData.departament}</p>
+        <p className="profile-title-ep">{userData.department}</p>
         <div className="profile-divider-ep"></div>
         <p className="profile-bio-ep">{userData.bio}</p>
       </>
@@ -308,7 +301,7 @@ const ProfilePageEmployee = () => {
       <div className="project-list-ep">
         {currentProjects.map((project, index) => (
           <div
-            key={index}
+            key={`${project.id || project.project_Name}-${index}`}
             className="project-item-ep"
             onClick={handleProjectClick}
           >
@@ -339,6 +332,15 @@ const ProfilePageEmployee = () => {
     );
   };
 
+  const infoItems = [
+    { key: "education", label: "Education" },
+    { key: "languages", label: "Languages" },
+    { key: "department", label: "Department" },
+    { key: "workHistory", label: "Work History" },
+    { key: "organization", label: "Organization" },
+    { key: "birthDate", label: "Birthday" }
+  ];
+
   return (
     <div className={`profile-page-container-ep ${darkMode ? 'dark-theme' : ''}`}>
       <EmployeeSidebar
@@ -352,8 +354,6 @@ const ProfilePageEmployee = () => {
           activeMenuItem={activeMenuItem}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
-          notifications={notifications}
-          toggleNotification={toggleNotification}
           userData={userData}
         />
 
@@ -472,14 +472,10 @@ const ProfilePageEmployee = () => {
 
             <div className="info-grid-ep">
               {infoItems.map((item) => (
-                <button
-                  key={item.key}
-                  className="info-item-ep"
-                  onClick={() => alert(`${item.label} clicked`)}
-                >
+                <div key={item.key} className="info-item-ep">
                   <span className="info-label-ep">{item.label}</span>
                   <span className="info-value-ep">{userData[item.key]}</span>
-                </button>
+                </div>
               ))}
             </div>
           </div>
@@ -490,14 +486,5 @@ const ProfilePageEmployee = () => {
     </div>
   );
 };
-
-const infoItems = [
-  { key: "education", label: "Education" },
-  { key: "languages", label: "Languages" },
-  { key: "departament", label: "Department" },
-  { key: "workHistory", label: "Work History" },
-  { key: "organization", label: "Organization" },
-  { key: "birthDate", label: "Birthday" }
-];
 
 export default ProfilePageEmployee;

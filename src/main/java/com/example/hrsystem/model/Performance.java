@@ -21,7 +21,7 @@ public class Performance {
     private List<String> strengths;
     private List<String> areasForImprovement;
     private String reviewerId; // Admin who conducted the review
-
+    private boolean valid;
 
 
     public String getId() {
@@ -58,12 +58,21 @@ public class Performance {
     }
 
     public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    // Update your existing isValid() method to avoid conflict
+    public boolean isDataValid() {
         return employeeId != null && !employeeId.isEmpty() &&
                 month > 0 && month <= 12 &&
                 year > 2000 && year < 2100 &&
                 performanceScore >= 0 && performanceScore <= 100 &&
                 reviewerId != null && !reviewerId.isEmpty() &&
-                strengths != null && // Add null checks for lists
+                strengths != null &&
                 areasForImprovement != null;
     }
 

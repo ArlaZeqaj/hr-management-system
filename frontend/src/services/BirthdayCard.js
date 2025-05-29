@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useBirthdays } from '../services/BirthdayContext';
 import '../styles/BirthdayCard.css';
@@ -10,6 +10,8 @@ const BirthdayCard = ({
   onSendWish = () => {}
 }) => {
   const { allEmployees, loading, error, refreshEmployees } = useBirthdays();
+  const [sentWishes, setSentWishes] = useState({});
+  const [showTooltip, setShowTooltip] = useState(null);
 
   const getTodaysBirthdays = () => {
     const today = new Date();
@@ -33,7 +35,25 @@ const BirthdayCard = ({
   const todaysBirthdays = getTodaysBirthdays();
 
   const handleSendWish = (employee) => {
-    onSendWish(employee);
+    if (!sentWishes[employee.id]) {
+      onSendWish(employee);
+      setSentWishes(prev => ({ ...prev, [employee.id]: true }));
+
+      // Show the funny tooltip
+      setShowTooltip(employee.id);
+      setTimeout(() => setShowTooltip(null), 3000);
+    }
+  };
+
+  const funnyMessages = [
+    "Did you really just email 'Happy Bday'?",
+    "That's cold. Where's the personal touch?",
+    "Wow, such effort. Much birthday. Very generic.",
+    "Sent via email? How... corporate of you."
+  ];
+
+  const getRandomMessage = () => {
+    return funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
   };
 
   // Generate random balloon colors
@@ -44,7 +64,7 @@ const BirthdayCard = ({
       {/* Decorative balloons */}
       <div className="balloons-container-ep">
         {[...Array(5)].map((_, i) => (
-          <div 
+          <div
             key={i}
             className="balloon-ep"
             style={{
@@ -55,7 +75,7 @@ const BirthdayCard = ({
           />
         ))}
       </div>
-      
+
       <div className="birthday-content-ep">
         <div className="birthday-header-ep">
           <div className="header-content-ep">
@@ -117,14 +137,23 @@ const BirthdayCard = ({
                     )}
                   </div>
                   {showSendButton && (
-                    <button
-                      className="wish-btn-ep"
-                      onClick={() => handleSendWish(employee)}
-                      disabled={loading}
-                    >
-                      <span className="wish-icon-ep">🎉</span>
-                      <span className="wish-text-ep">Send Wish</span>
-                    </button>
+                    <div className="wish-button-container-ep">
+                      <button
+                        className={`wish-btn-ep ${sentWishes[employee.id] ? 'wish-sent-ep' : ''}`}
+                        onClick={() => handleSendWish(employee)}
+                        disabled={loading || sentWishes[employee.id]}
+                      >
+                        <span className="wish-icon-ep">🎉</span>
+                        <span className="wish-text-ep">
+                          {sentWishes[employee.id] ? 'Wish Sent!' : 'Send Wish'}
+                        </span>
+                      </button>
+                      {showTooltip === employee.id && (
+                        <div className="wish-tooltip-ep">
+                          {getRandomMessage()}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </li>
               ))}

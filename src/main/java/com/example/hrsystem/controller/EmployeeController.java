@@ -35,11 +35,11 @@ public class EmployeeController {
 
     // Get all employees
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {
+    public List<Employee> getAllEmployees() {
         try {
-            return ResponseEntity.ok(service.getAllEmployees());
+            return service.getAllEmployees();
         } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.status(500).build();
+            throw new RuntimeException(e);
         }
     }
 

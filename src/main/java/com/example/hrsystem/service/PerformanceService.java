@@ -15,6 +15,7 @@ public class PerformanceService {
     private static final String PERFORMANCE_COLLECTION = "Performance";
     private static final String EMPLOYEE_COLLECTION = "employees";
 
+    // In PerformanceService.java
     public Performance getEmployeePerformanceReview(String employeeId, String yearMonth)
             throws ExecutionException, InterruptedException {
         String[] parts = yearMonth.split("-");
@@ -30,6 +31,7 @@ public class PerformanceService {
         DocumentSnapshot doc = snapshot.getDocuments().get(0);
         Performance review = doc.toObject(Performance.class);
         review.setId(doc.getId());
+        review.setValid(doc.getBoolean("valid")); // Add this line
         return review;
     }
 
@@ -68,7 +70,7 @@ public class PerformanceService {
         int year = Integer.parseInt(parts[0]);
         int month = Integer.parseInt(parts[1]);
 
-        // Get all employees
+        // Get all employees - ensure we're fetching the name properly
         List<QueryDocumentSnapshot> employeeDocs = FirestoreClient.getFirestore()
                 .collection(EMPLOYEE_COLLECTION)
                 .get().get().getDocuments();
@@ -91,12 +93,15 @@ public class PerformanceService {
                         }
                 ));
 
-        // Combine data
+        // Combine data - ensure name is properly extracted
         return employeeDocs.stream()
                 .map(emp -> {
                     Map<String, Object> result = new HashMap<>();
                     result.put("id", emp.getId());
-                    result.put("name", emp.getString("Name"));
+                    // Fix: Use correct field name (might be "name" or "Name")
+                    result.put("name", emp.getString("name") != null ?
+                            emp.getString("name") :
+                            emp.getString("Name")); // Try both cases
 
                     Performance review = reviewMap.get(emp.getId());
                     if (review != null) {

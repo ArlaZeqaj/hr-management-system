@@ -77,7 +77,8 @@ const PerformanceDashboard = () => {
           : (employee.areasForImprovement || '').split('\n').filter(s => s.trim()),
         year: selectedYear,
         month: selectedMonth,
-        reviewerId: currentUser.uid
+        reviewerId: currentUser.uid,
+        valid: true
       };
 
       await axios({

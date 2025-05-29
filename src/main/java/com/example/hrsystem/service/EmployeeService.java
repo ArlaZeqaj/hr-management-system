@@ -37,9 +37,11 @@ public class EmployeeService {
     public List<Employee> getAllEmployees() throws ExecutionException, InterruptedException {
         return retrieveProfile.getAllEmployees();
     }
+
     public boolean updateEmployeeFields(String id, Employee updatedFields) throws ExecutionException, InterruptedException {
         return retrieveProfile.updateEmployeeFields(id, updatedFields);
     }
+
     public List<Map<String, Object>> getAllEmployeesBasicInfo() throws ExecutionException, InterruptedException {
         return retrieveProfile.getAllEmployees().stream()
                 .map(emp -> {

@@ -3,7 +3,6 @@
   background: var(--bg-card);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
-  padding: 0;
   padding-bottom: 5rem;
   width: 100%;
   height: 100%;
@@ -13,6 +12,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  overflow: hidden;
 }
 
 .birthday-card-ep:hover {
@@ -28,6 +29,8 @@
   width: 100%;
   height: 80px;
   overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .balloon-ep {
@@ -38,22 +41,14 @@
   bottom: -20px;
   animation: floatUp 8s ease-in infinite;
   opacity: 0.7;
-  margin-right: 30px; 
 }
-
-/* Adjust balloon positioning to account for the new spacing */
-.balloon-ep:nth-child(1) { left: 5%; }
-.balloon-ep:nth-child(2) { left: 25%; }
-.balloon-ep:nth-child(3) { left: 45%; }
-.balloon-ep:nth-child(4) { left: 65%; }
-.balloon-ep:nth-child(5) { left: 85%; }
 
 .balloon-ep:before {
   content: '';
   position: absolute;
   width: 1px;
   height: 50px;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   bottom: -50px;
   left: 50%;
 }
@@ -91,7 +86,6 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.5rem;
-  position: relative;
 }
 
 .header-content-ep {
@@ -101,28 +95,26 @@
 }
 
 .birthday-icon-container-ep {
-  position: relative;
   width: 50px;
   height: 50px;
-  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .birthday-icon-ep {
   font-size: 2.5rem;
-  position: relative;
   z-index: 2;
 }
 
 .sparkles-ep {
-  margin-top: 0.3rem;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .sparkle-ep {
@@ -132,9 +124,9 @@
   background: #FFD166;
   top: 50%;
   left: 50%;
+  transform-origin: center -15px;
   margin-top: -6px;
   margin-left: -2px;
-  transform-origin: center -15px; /* Adjusted transform origin */
   animation: sparklePulse 1.5s ease-in-out infinite alternate;
 }
 
@@ -145,7 +137,6 @@
 
 .birthday-header-ep h3 {
   margin: 0;
-  color: var(--text-dark);
   font-size: 1.3rem;
   font-weight: var(--font-weight-bold);
   background: linear-gradient(90deg, var(--primary), var(--accent));
@@ -156,33 +147,30 @@
 
 .birthday-subtitle-ep {
   margin: 0;
-  color: var(--text-light);
   font-size: 0.85rem;
+  color: var(--text-light);
   font-weight: var(--font-weight-medium);
 }
 
 .refresh-btn-ep {
-  border: none;
   width: 36px;
   height: 36px;
+  border: none;
   border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   transition: var(--transition-fast);
-  color: var(--primary);
 }
 
 .refresh-btn-ep:hover {
   transform: rotate(180deg) scale(1.1);
 }
 
-/* Birthday list styles */
-.birthday-list-ep {
-  min-height: 150px;
-}
-
+/* Birthday list */
 .birthday-items-ep {
   list-style: none;
   padding: 0;
@@ -195,11 +183,11 @@
 .birthday-item-ep {
   display: flex;
   align-items: center;
-  padding: 0.8rem;
-  background: rgba(255, 77, 77, 0.03);
-  border-radius: var(--border-radius);
-  transition: var(--transition-fast);
   gap: 1rem;
+  padding: 0.8rem;
+  border-radius: var(--border-radius);
+  background: rgba(255, 77, 77, 0.03);
+  transition: var(--transition-fast);
   position: relative;
   overflow: hidden;
 }
@@ -209,7 +197,7 @@
   transform: translateY(-2px);
 }
 
-.birthday-item-ep:hover:before {
+.birthday-item-ep:hover::before {
   content: '';
   position: absolute;
   top: 0;
@@ -227,15 +215,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  overflow: hidden;
   flex-shrink: 0;
 }
 
 .employee-avatar-ep img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .avatar-placeholder-ep {
@@ -248,14 +236,14 @@
   position: absolute;
   bottom: -5px;
   right: -5px;
-  background: white;
   width: 20px;
   height: 20px;
+  background: #fff;
   border-radius: 50%;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
@@ -270,17 +258,17 @@
 }
 
 .employee-name-ep {
+  font-size: 0.95rem;
   font-weight: var(--font-weight-semi-bold);
   color: var(--text-dark);
-  font-size: 0.95rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .employee-email-ep {
-  color: var(--text-light);
   font-size: 0.8rem;
+  color: var(--text-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -292,30 +280,42 @@
   padding: 0.2rem 0.6rem;
   border-radius: 12px;
   font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
   display: inline-block;
   margin-top: 0.3rem;
-  font-weight: var(--font-weight-medium);
 }
 
 .wish-btn-ep {
   background: var(--primary-gradient);
+  color: #fff;
+  font-weight: var(--font-weight-medium);
+  font-size: 0.85rem;
   border: none;
-  border-radius: 20px;
   padding: 0.5rem 1rem;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   transition: var(--transition);
-  color: white;
-  font-weight: var(--font-weight-medium);
-  font-size: 0.85rem;
   flex-shrink: 0;
 }
 
 .wish-btn-ep:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(255, 77, 77, 0.3);
+}
+
+/* Dimmed state for sent wishes */
+.wish-btn-ep.wish-sent-ep {
+  opacity: 0.7;
+  background: var(--text-light);
+  cursor: default;
+}
+
+.wish-btn-ep.wish-sent-ep:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .wish-icon-ep {
@@ -332,103 +332,79 @@
   }
 }
 
-/* Loading state */
-.birthday-loading-ep {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  gap: 1rem;
+/* Loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .loading-spinner-ep {
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255, 77, 77, 0.1);
-  border-radius: 50%;
   border-top-color: var(--primary);
+  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-/* Error state */
-.birthday-error-ep {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  gap: 1rem;
-  color: #ff4757;
-  text-align: center;
+/* Tooltip */
+.wish-button-container-ep {
+  position: relative;
 }
 
-.birthday-error-ep button {
-  background: rgba(255, 77, 77, 0.1);
-  border: 1px solid var(--primary);
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  color: var(--primary);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-
-.birthday-error-ep button:hover {
-  background: rgba(255, 77, 77, 0.2);
-}
-
-/* No birthdays state */
-.no-birthdays-ep {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  gap: 0.5rem;
-  text-align: center;
-}
-
-.no-birthdays-icon-ep {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-  opacity: 0.7;
-}
-
-.no-birthdays-ep p {
-  margin: 0;
-  color: var(--text-medium);
-  font-weight: var(--font-weight-medium);
-}
-
-.no-birthdays-subtext-ep {
+.wish-tooltip-ep {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background-color: #fef3bd;
+  color: #5c3d00;
+  padding: 6px 10px;
+  border-radius: 8px;
   font-size: 0.85rem;
-  color: var(--text-light);
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 10;
+  animation: fadeIn 0.2s ease-out;
+  min-width: 180px;
+  text-align: center;
 }
 
-/* Dark theme adjustments */
-body.dark-theme .birthday-card-ep {
-  background: var(--bg-card);
-  border-color: rgba(255, 77, 77, 0.2);
+.wish-tooltip-ep::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 15px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #fef3bd transparent transparent transparent;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark theme */
 body.dark-theme .birthday-item-ep {
   background: rgba(255, 77, 77, 0.05);
 }
-
 body.dark-theme .birthday-item-ep:hover {
   background: rgba(255, 77, 77, 0.1);
 }
-
 body.dark-theme .employee-department-ep {
   background: rgba(255, 77, 77, 0.2);
   color: var(--primary-light);
 }
-
 body.dark-theme .refresh-btn-ep {
-  background: rgba(136, 146, 108,0.2);
+  background: rgba(136, 146, 108, 0.2);
   color: var(--primary-light);
 }
-
 body.dark-theme .refresh-btn-ep:hover {
   background: rgba(136, 146, 108, 0.3);
+}
+body.dark-theme .wish-tooltip-ep {
+  background-color: #5c3d00;
+  color: #fef3bd;
+}
+body.dark-theme .wish-tooltip-ep::after {
+  border-color: #5c3d00 transparent transparent transparent;
 }
