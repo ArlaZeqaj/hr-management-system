@@ -30,18 +30,7 @@ export default () => {
   const [cardData, setCardData] = useState({});
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
   const [showModal, setShowModal] = useState(false);
-  const [notifications, setNotifications] = useState({
-    "New employee registrations": true,
-    "Leave request approvals": true,
-    "System alerts": true,
-    "Payroll processing": false,
-    "Performance reviews": false,
-    "Company announcements": true,
-    "Security alerts": true,
-    "Data export completions": false,
-  });
   const [darkMode, setDarkMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const [cardForm, setCardForm] = useState({
     number: "",
@@ -316,13 +305,6 @@ export default () => {
     }
   }, []);
 
-  const toggleNotification = (notification) => {
-    setNotifications((prev) => ({
-      ...prev,
-      [notification]: !prev[notification],
-    }));
-  };
-
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -422,12 +404,8 @@ export default () => {
       <div className="main-content-b">
         <AdminHeader
           activeMenuItem={activeMenuItem}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
-          notifications={notifications}
-          toggleNotification={toggleNotification}
         />
 
         {/* Payment Cards */}

@@ -27,12 +27,6 @@ const AdminProfilePage = () => {
   const [pendingLeavesCount, setPendingLeavesCount] = useState(0);
   const [ongoingProjectsCount, setOngoingProjectsCount] = useState(0);
   const [leaveChartData, setLeaveChartData] = useState(null);
-  const [notifications, setNotifications] = useState({
-    "Item updates": true,
-    "New hires": true,
-    "Payroll alerts": false,
-    "System updates": true,
-  });
 
   const [activeMenuItem, setActiveMenuItem] = useState(() => {
     const path = location.pathname;
@@ -75,13 +69,6 @@ const AdminProfilePage = () => {
   });
 
   const employeesPerPage = 5;
-
-  const toggleNotification = (notification) => {
-    setNotifications((prev) => ({
-      ...prev,
-      [notification]: !prev[notification],
-    }));
-  };
 
   const handleLeaveAction = (id, action) => {
     setLeaveRequests(prev =>
@@ -460,12 +447,8 @@ const AdminProfilePage = () => {
       <div className="admin-main-content-t">
         <AdminHeader
           activeMenuItem={activeMenuItem}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
-          notifications={notifications}
-          toggleNotification={toggleNotification}
         />
 
         <div className="admin-stats-t">

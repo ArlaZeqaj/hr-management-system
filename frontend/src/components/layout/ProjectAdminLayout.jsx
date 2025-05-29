@@ -7,12 +7,8 @@ const ProjectAdminLayout = ({
                                 children,
                                 activeMenuItem,
                                 handleMenuItemClick,
-                                searchQuery,
-                                setSearchQuery,
                                 darkMode,
                                 toggleDarkMode,
-                                notifications,
-                                toggleNotification,
                                 profileImage,
                                 showProfileDropdown,
                                 setShowProfileDropdown,
@@ -29,12 +25,8 @@ const ProjectAdminLayout = ({
             <div className="main-content-aproject">
                 <AdminHeader
                     activeMenuItem={activeMenuItem}
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
                     darkMode={darkMode}
                     toggleDarkMode={toggleDarkMode}
-                    notifications={notifications}
-                    toggleNotification={toggleNotification}
                     profileImage={profileImage}
                     showProfileDropdown={showProfileDropdown}
                     setShowProfileDropdown={setShowProfileDropdown}

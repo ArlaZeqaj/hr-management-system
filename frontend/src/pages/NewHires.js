@@ -47,12 +47,6 @@ const NewHires = () => {
   const [darkMode, setDarkMode] = useState(false)
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem())
 
-  const [notificationSettings, setNotificationSettings] = useState({
-    "Email Notifications": true,
-    "Push Notifications": false,
-    "SMS Notifications": true,
-  })
-
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("All")
   const [currentPage, setCurrentPage] = useState(1)
@@ -72,13 +66,6 @@ const NewHires = () => {
       document.body.classList.toggle("dark-theme", savedMode === "true")
     }
   }, [])
-
-  const toggleNotification = (item) => {
-    setNotificationSettings((prev) => ({
-      ...prev,
-      [item]: !prev[item],
-    }))
-  }
 
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem)
@@ -264,12 +251,8 @@ const NewHires = () => {
       <div className="main-content">
         <AdminHeader
           activeMenuItem={activeMenuItem}
-          searchQuery={searchTerm}
-          setSearchQuery={setSearchTerm}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
-          notifications={notificationSettings}
-          toggleNotification={(item) => setNotificationSettings((prev) => ({ ...prev, [item]: !prev[item] }))}
         />
 
         <div className="card hires-card">

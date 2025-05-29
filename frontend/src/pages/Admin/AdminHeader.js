@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -7,74 +7,99 @@ const AdminHeader = ({
   darkMode, 
   toggleDarkMode,
 }) => {
-
+  const [showNotifications, setShowNotifications] = useState(false);
   const [userData, setUserData] = useState({
     name: "",
-    surname: "",
     email: "",
-    bio: "",
-    education: "",
-    languages: "",
-    departament: "",
-    workHistory: "",
-    organization: "",
-    birthDate: "",
+    role: "",
     avatarURL: "",
     loading: true,
     error: null
   });
 
+  const notificationRef = useRef(null);
+  const auth = getAuth();
+
+  const fetchAdminData = useCallback(async (user) => {
+    try {
+      const token = await user.getIdToken();
+      const response = await axios.get(`/api/admins/by-email?email=${user.email}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      // Ensure the response has the expected structure
+      const adminData = response.data || {};
+      
+      setUserData({
+        name: adminData.name || adminData.displayName || "Admin",
+        email: adminData.email || user.email,
+        role: adminData.role || adminData.position || "Administrator",
+        avatarURL: adminData.avatarURL || adminData.photoURL || "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
+        loading: false,
+        error: null
+      });
+    } catch (error) {
+      console.error("Failed to fetch admin data:", error);
+      setUserData({
+        name: "Admin",
+        email: user?.email || "",
+        role: "Administrator",
+        avatarURL: "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
+        loading: false,
+        error: error.response?.data?.message || error.message
+      });
+    }
+  }, []);
+
   useEffect(() => {
-    const auth = getAuth();
+    if (darkMode) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target) &&
+        !event.target.closest('.profile-btn')) {
+        setShowNotifications(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        try {
-          const token = await user.getIdToken();
-
-          const response = await axios.get(`/api/employees/by-email?email=${user.email}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          setUserData({
-            name: response.data.firstName || response.data.name || "",
-            surname: response.data.lastName || response.data.surname || "",
-            email: response.data.email || user.email,
-            bio: response.data.bio || "No bio",
-            education: response.data.education || "No data",
-            languages: Array.isArray(response.data.languages)
-              ? response.data.languages.join(", ")
-              : response.data.languages || "No data",
-            workHistory: Array.isArray(response.data.workHistory)
-              ? response.data.workHistory.join(", ")
-              : response.data.workHistory || "No data",
-            departament: response.data.departament || "No data",
-            organization: response.data.organization || "No data",
-            birthDate: response.data.birthDate || "No data",
-            avatarURL: response.data.avatarURL || "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
-            loading: false,
-            error: null
-          });
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
-          setUserData({
-            ...userData,
-            loading: false,
-            error: error.response?.data?.message || error.message
-          });
-        }
+        fetchAdminData(user);
       } else {
-        setUserData({
-          ...userData,
+        setUserData(prev => ({
+          ...prev,
           loading: false,
           error: "No user logged in"
-        });
+        }));
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [auth, fetchAdminData]);
+
+  if (userData.loading) {
+    return (
+      <div className="admin-header">
+        <div className="admin-breadcrumbs">
+          <span className="path">Admin / {activeMenuItem}</span>
+          <span className="current-page">{activeMenuItem}</span>
+        </div>
+        <div className="loading-spinner">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-header">
@@ -85,42 +110,56 @@ const AdminHeader = ({
 
       <div className="admin-header-actions">
         <div className="admin-action-icons">
-          <button
-            onClick={toggleDarkMode}
-            className="admin-icon-btn"
-          >
-            <img
-              src={
-                darkMode
-                  ? "https://img.icons8.com/?size=100&id=83221&format=png&color=A3AED0"
-                  : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
-              }
-              alt={darkMode ? "Light Mode" : "Dark Mode"}
-              style={{ width: "24px", height: "24px" }}
-            />
-          </button>
-          <div className="admin-profile-dropdown">
-            <button className="profile-btn">
+          <div className="admin-profile-dropdown" ref={notificationRef}>
+            <button
+              className="profile-btn"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
               <img
-                src="https://randomuser.me/api/portraits/men/75.jpg"
+                src={userData.avatarURL}
                 alt="Admin"
+                className="admin-avatar"
               />
-              <span>Admin User</span>
+              <span>{userData.name || "Admin"}</span>
               <i className="fas fa-chevron-down"></i>
             </button>
-            <div className="admin-dropdown-content">
-              <div className="admin-dropdown-header">
-                <img
-                  src="https://randomuser.me/api/portraits/men/75.jpg"
-                  alt="Admin"
-                />
-                <div>
-                  <h4>Admin User</h4>
-                  <p>Super Administrator</p>
+
+            {showNotifications && (
+              <div className="admin-dropdown-content">
+                <button
+                  className="dark-mode-toggle-icon"
+                  onClick={toggleDarkMode}
+                  aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+                >
+                  <img
+                    src={
+                      darkMode
+                        ? "https://img.icons8.com/?size=100&id=83221&format=png&color=FFFFFF"
+                        : "https://img.icons8.com/?size=100&id=96393&format=png&color=A3AED0"
+                    }
+                    alt=""
+                    className="dark-mode-icon"
+                  />
+                </button>
+
+                <div className="admin-dropdown-header">
+                  <img
+                    src={userData.avatarURL}
+                    alt="Admin"
+                    className="admin-avatar-large"
+                  />
+                  <div>
+                    <h4>{userData.name}</h4>
+                    <p>{userData.email}</p>
+                    {userData.role && (
+                      <div className="employee-department-badge">
+                        {userData.role}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <button className="employee-logout-btn" onClick={() => {
-                  const auth = getAuth();
+
+                <button className="employee-logout-btn" onClick={() => {
                   auth.signOut();
                   window.location.href = "/";
                 }}>
@@ -131,7 +170,8 @@ const AdminHeader = ({
                   />
                   <span>Logout</span>
                 </button>
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
