@@ -1125,13 +1125,13 @@ body.adm-dark-theme .leave-filter-tab.active {
   }
 }
 
-/* Performance Tab Refresh Button - Enhanced specificity */
+/* Performance Tab Refresh Button - Modified to be smaller */
 .refresh-btn,
 button.refresh-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.6rem 1rem; /* Reduced padding */
   background: var(--primary);
   color: white;
   border: none;
@@ -1139,9 +1139,10 @@ button.refresh-btn {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* Reduced font size */
   font-family: inherit;
   box-shadow: 0 2px 8px rgba(67, 97, 238, 0.2);
+  height: 36px; /* Added fixed height */
 }
 
 .refresh-btn:hover,
