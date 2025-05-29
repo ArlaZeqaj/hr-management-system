@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { getIdToken } from "firebase/auth";
@@ -23,6 +23,10 @@ Chart.register(...registerables);
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return JSON.parse(localStorage.getItem("darkMode")) || false;
+  });
 
   // Set active menu item based on current route
   const getActiveMenuItem = () => {
@@ -89,7 +93,6 @@ const AdminDashboard = () => {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
   ///tasks
   //const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState(INITIAL_TASK_STATE);
@@ -127,12 +130,6 @@ const AdminDashboard = () => {
     });
   };
 
-  const [notifications, setNotifications] = useState({
-    "Item updates": true,
-    "New hires": true,
-    "Payroll alerts": false,
-    "System updates": true,
-  });
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeTab, setActiveTab] = useState("overview");
   // New state to store employee count
@@ -180,6 +177,15 @@ const AdminDashboard = () => {
     };
 
     fetchBudgetData();
+  }, []);
+
+  // Dark theme effect
+  useEffect(() => {
+    document.body.classList.toggle("dark-theme", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
   }, []);
 
   // per te bere edit nje task
@@ -922,17 +928,6 @@ const AdminDashboard = () => {
     },
   ];
 
-  const toggleNotification = (notification) => {
-    setNotifications((prev) => ({
-      ...prev,
-      [notification]: !prev[notification],
-    }));
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
   // /////
   const handleTaskComplete = (taskId) => {
     setTasks(
@@ -1007,12 +1002,8 @@ const AdminDashboard = () => {
       <div className="admin-main-content">
         <AdminHeader
           activeMenuItem={activeMenuItem}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
           darkMode={darkMode}
           toggleDarkMode={toggleDarkMode}
-          notifications={notifications}
-          toggleNotification={toggleNotification}
         />
 
         <div className="dashboard-content">

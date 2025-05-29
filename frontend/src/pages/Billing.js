@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AdminSidebar from "./Admin/AdminSidebar";
 import AdminHeader from "./Admin/AdminHeader";
@@ -30,7 +30,9 @@ export default () => {
   const [cardData, setCardData] = useState({});
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem());
   const [showModal, setShowModal] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return JSON.parse(localStorage.getItem("darkMode")) || false;
+  });
 
   const [cardForm, setCardForm] = useState({
     number: "",
@@ -153,22 +155,15 @@ export default () => {
     };
   }, [showModal]);
 
-  // Theme init
-  useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    if (savedMode !== null) {
-      setDarkMode(savedMode === "true");
-    }
-  }, []);
 
+  // Dark theme effect
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-    localStorage.setItem("darkMode", darkMode);
+    document.body.classList.toggle("dark-theme", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
+  }, []);
 
   // ✅ FETCH CARD DATA USING FIREBASE TOKEN
   useEffect(() => {
@@ -285,25 +280,6 @@ export default () => {
     }
   };
 
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    if (newMode) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-  };
-
-  useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedMode);
-    if (savedMode) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-  }, []);
 
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);

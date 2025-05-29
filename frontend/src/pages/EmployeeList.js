@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { auth } from "../config/firebaseConfig"
 import { signOut, onAuthStateChanged } from "firebase/auth"
@@ -23,7 +23,9 @@ export default function EmployeePage() {
   const [sortBy, setSortBy] = useState("newest")
   const [currentPage, setCurrentPage] = useState(1)
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    return JSON.parse(localStorage.getItem("darkMode")) || false;
+  });
   const [showNotifications, setShowNotifications] = useState(false)
   const [profileImage, setProfileImage] = useState(
     "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/2bb4edd4-293b-43c8-b39f-493a2edb1d91",
@@ -345,14 +347,14 @@ export default function EmployeePage() {
     }
   }, [sortBy])
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-    if (!darkMode) {
-      document.body.classList.add("dark-theme")
-    } else {
-      document.body.classList.remove("dark-theme")
-    }
-  }
+      // Dark theme effect
+  useEffect(() => {
+    document.body.classList.toggle("dark-theme", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]

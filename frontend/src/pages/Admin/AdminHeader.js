@@ -31,20 +31,20 @@ const AdminHeader = ({
       const adminData = response.data || {};
       
       setUserData({
-        name: adminData.name || adminData.displayName || "Admin",
+        name: adminData.name || "Admin",
         email: adminData.email || user.email,
         role: adminData.role || adminData.position || "Administrator",
-        avatarURL: adminData.avatarURL || adminData.photoURL || "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
+        avatarURL: adminData.avatarURL || adminData.photoURL || "https://www.shutterstock.com/image-photo/close-photo-attractive-strong-healthy-600nw-1308189415.jpg",
         loading: false,
         error: null
       });
     } catch (error) {
       console.error("Failed to fetch admin data:", error);
       setUserData({
-        name: "Admin",
+        name: "Ziko",
         email: user?.email || "",
-        role: "Administrator",
-        avatarURL: "https://i.pinimg.com/736x/a3/a8/88/a3a888f54cbe9f0c3cdaceb6e1d48053.jpg",
+        role: "IT Admin",
+        avatarURL: "https://www.shutterstock.com/image-photo/close-photo-attractive-strong-healthy-600nw-1308189415.jpg",
         loading: false,
         error: error.response?.data?.message || error.message
       });

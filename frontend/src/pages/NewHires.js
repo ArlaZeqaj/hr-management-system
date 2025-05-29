@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { auth } from "../config/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import axios from "axios"
@@ -44,7 +44,9 @@ const NewHires = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const [showAddModal, setShowAddModal] = useState(false)
   const [currentHire, setCurrentHire] = useState(null)
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    return JSON.parse(localStorage.getItem("darkMode")) || false;
+  });
   const [activeMenuItem, setActiveMenuItem] = useState(getActiveMenuItem())
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -52,21 +54,15 @@ const NewHires = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 8
 
-  const toggleDarkMode = () => {
-    const newMode = !darkMode
-    setDarkMode(newMode)
-    document.body.classList.toggle("dark-theme", newMode)
-    localStorage.setItem("darkMode", newMode)
-  }
-
+  // Dark theme effect
   useEffect(() => {
-    const savedMode = localStorage.getItem("darkMode")
-    if (savedMode !== null) {
-      setDarkMode(savedMode === "true")
-      document.body.classList.toggle("dark-theme", savedMode === "true")
-    }
-  }, [])
-
+    document.body.classList.toggle("dark-theme", darkMode);
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }, [darkMode]);
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode(prev => !prev);
+  }, []);
+  
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem)
     // Define navigation routes
